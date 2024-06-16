@@ -1,4 +1,4 @@
-package com.example.yandex_summer_school
+package com.glootea.toodookeeper
 
 import io.flutter.embedding.android.FlutterActivity
 
