@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_summer_school/components/complex/tappable_box.dart';
+import 'package:yandex_summer_school/domain/todo.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
-import 'package:yandex_summer_school/todo_state.dart';
 
 class ImportanceSelector extends StatefulWidget {
   const ImportanceSelector({

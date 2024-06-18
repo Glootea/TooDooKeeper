@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_summer_school/components/leaf/checkbox.dart';
 import 'package:yandex_summer_school/components/leaf/icon.dart';
+import 'package:yandex_summer_school/domain/todo.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
-import 'package:yandex_summer_school/todo_state.dart';
 
 class ToDoListItemInlined extends StatefulWidget {
   const ToDoListItemInlined({required this.state, super.key});
-  final ToDoState state;
+  final ToDo state;
 
   @override
   State<ToDoListItemInlined> createState() => _ToDoListItemInlinedState();
@@ -115,7 +115,7 @@ class _ToDoListItemInlinedState extends State<ToDoListItemInlined> with SingleTi
                             ),
                             Expanded(
                               child: Text(
-                                widget.state.text,
+                                widget.state.description,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
                                 style: todoTheme.textTheme.body,

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'todo_state.dart';
+part of 'todo.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,30 +15,34 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$ToDoState {
-  String get text => throw _privateConstructorUsedError;
+mixin _$ToDo {
+  int get id => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
   bool get done => throw _privateConstructorUsedError;
   DateTime? get deadline => throw _privateConstructorUsedError;
   Importance? get importance => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ToDoStateCopyWith<ToDoState> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ToDoCopyWith<ToDo> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ToDoStateCopyWith<$Res> {
-  factory $ToDoStateCopyWith(ToDoState value, $Res Function(ToDoState) then) =
-      _$ToDoStateCopyWithImpl<$Res, ToDoState>;
+abstract class $ToDoCopyWith<$Res> {
+  factory $ToDoCopyWith(ToDo value, $Res Function(ToDo) then) =
+      _$ToDoCopyWithImpl<$Res, ToDo>;
   @useResult
   $Res call(
-      {String text, bool done, DateTime? deadline, Importance? importance});
+      {int id,
+      String description,
+      bool done,
+      DateTime? deadline,
+      Importance? importance});
 }
 
 /// @nodoc
-class _$ToDoStateCopyWithImpl<$Res, $Val extends ToDoState>
-    implements $ToDoStateCopyWith<$Res> {
-  _$ToDoStateCopyWithImpl(this._value, this._then);
+class _$ToDoCopyWithImpl<$Res, $Val extends ToDo>
+    implements $ToDoCopyWith<$Res> {
+  _$ToDoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -48,15 +52,20 @@ class _$ToDoStateCopyWithImpl<$Res, $Val extends ToDoState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? text = null,
+    Object? id = null,
+    Object? description = null,
     Object? done = null,
     Object? deadline = freezed,
     Object? importance = freezed,
   }) {
     return _then(_value.copyWith(
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
       done: null == done
           ? _value.done
@@ -75,37 +84,44 @@ class _$ToDoStateCopyWithImpl<$Res, $Val extends ToDoState>
 }
 
 /// @nodoc
-abstract class _$$ToDoStateImplCopyWith<$Res>
-    implements $ToDoStateCopyWith<$Res> {
-  factory _$$ToDoStateImplCopyWith(
-          _$ToDoStateImpl value, $Res Function(_$ToDoStateImpl) then) =
-      __$$ToDoStateImplCopyWithImpl<$Res>;
+abstract class _$$ToDoImplCopyWith<$Res> implements $ToDoCopyWith<$Res> {
+  factory _$$ToDoImplCopyWith(
+          _$ToDoImpl value, $Res Function(_$ToDoImpl) then) =
+      __$$ToDoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {String text, bool done, DateTime? deadline, Importance? importance});
+      {int id,
+      String description,
+      bool done,
+      DateTime? deadline,
+      Importance? importance});
 }
 
 /// @nodoc
-class __$$ToDoStateImplCopyWithImpl<$Res>
-    extends _$ToDoStateCopyWithImpl<$Res, _$ToDoStateImpl>
-    implements _$$ToDoStateImplCopyWith<$Res> {
-  __$$ToDoStateImplCopyWithImpl(
-      _$ToDoStateImpl _value, $Res Function(_$ToDoStateImpl) _then)
+class __$$ToDoImplCopyWithImpl<$Res>
+    extends _$ToDoCopyWithImpl<$Res, _$ToDoImpl>
+    implements _$$ToDoImplCopyWith<$Res> {
+  __$$ToDoImplCopyWithImpl(_$ToDoImpl _value, $Res Function(_$ToDoImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? text = null,
+    Object? id = null,
+    Object? description = null,
     Object? done = null,
     Object? deadline = freezed,
     Object? importance = freezed,
   }) {
-    return _then(_$ToDoStateImpl(
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
+    return _then(_$ToDoImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
       done: null == done
           ? _value.done
@@ -125,12 +141,19 @@ class __$$ToDoStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ToDoStateImpl implements _ToDoState {
-  const _$ToDoStateImpl(
-      {required this.text, required this.done, this.deadline, this.importance});
+class _$ToDoImpl extends _ToDo {
+  const _$ToDoImpl(
+      {required this.id,
+      required this.description,
+      required this.done,
+      this.deadline,
+      this.importance})
+      : super._();
 
   @override
-  final String text;
+  final int id;
+  @override
+  final String description;
   @override
   final bool done;
   @override
@@ -140,15 +163,17 @@ class _$ToDoStateImpl implements _ToDoState {
 
   @override
   String toString() {
-    return 'ToDoState(text: $text, done: $done, deadline: $deadline, importance: $importance)';
+    return 'ToDo(id: $id, description: $description, done: $done, deadline: $deadline, importance: $importance)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ToDoStateImpl &&
-            (identical(other.text, text) || other.text == text) &&
+            other is _$ToDoImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.done, done) || other.done == done) &&
             (identical(other.deadline, deadline) ||
                 other.deadline == deadline) &&
@@ -158,24 +183,28 @@ class _$ToDoStateImpl implements _ToDoState {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, text, done, deadline, importance);
+      Object.hash(runtimeType, id, description, done, deadline, importance);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ToDoStateImplCopyWith<_$ToDoStateImpl> get copyWith =>
-      __$$ToDoStateImplCopyWithImpl<_$ToDoStateImpl>(this, _$identity);
+  _$$ToDoImplCopyWith<_$ToDoImpl> get copyWith =>
+      __$$ToDoImplCopyWithImpl<_$ToDoImpl>(this, _$identity);
 }
 
-abstract class _ToDoState implements ToDoState {
-  const factory _ToDoState(
-      {required final String text,
+abstract class _ToDo extends ToDo {
+  const factory _ToDo(
+      {required final int id,
+      required final String description,
       required final bool done,
       final DateTime? deadline,
-      final Importance? importance}) = _$ToDoStateImpl;
+      final Importance? importance}) = _$ToDoImpl;
+  const _ToDo._() : super._();
 
   @override
-  String get text;
+  int get id;
+  @override
+  String get description;
   @override
   bool get done;
   @override
@@ -184,6 +213,6 @@ abstract class _ToDoState implements ToDoState {
   Importance? get importance;
   @override
   @JsonKey(ignore: true)
-  _$$ToDoStateImplCopyWith<_$ToDoStateImpl> get copyWith =>
+  _$$ToDoImplCopyWith<_$ToDoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

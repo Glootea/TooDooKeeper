@@ -4,10 +4,11 @@ import 'package:yandex_summer_school/components/leaf/todo_edit_textfield.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/deadline_selector.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/importance_selector.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
-import 'package:yandex_summer_school/todo_state.dart';
 
 class ToDoEditScreen extends StatelessWidget {
-  const ToDoEditScreen({super.key});
+  const ToDoEditScreen({this.id, this.data, super.key});
+  final int? id;
+  final String? data; // TODO: parse data from url
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class ToDoEditScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ImportanceSelector(onChanged: (value) {}),
             const Divider(),
-            DeadlineSelector(state: ToDoState(text: '', done: false, deadline: DateTime.now())),
+            // DeadlineSelector(state: ),
             const Divider(),
             const SizedBox(height: 16),
             DeleteButton(onPressed: () {}),
