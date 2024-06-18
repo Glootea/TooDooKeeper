@@ -15,6 +15,6 @@ class ThemeBloc extends Bloc<ToDoThemeEvent, ToDoTheme> {
 }
 
 @freezed
-class ToDoThemeEvent with _$ToDoThemeEvent {
+sealed class ToDoThemeEvent with _$ToDoThemeEvent {
   const factory ToDoThemeEvent.changeTheme(Brightness brightness) = _ThemeChanged;
 }

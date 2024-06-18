@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yandex_summer_school/screens/todo_list/bloc/bloc.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class ToDoListAppBar extends SliverPersistentHeaderDelegate {
-  ToDoListAppBar({required this.expandedHeight, required this.topPadding});
+  ToDoListAppBar({required this.expandedHeight, required this.topPadding, required this.state});
   final double expandedHeight;
   final double topPadding;
+  final MainState state;
 
   Summable<T> getLerpValue<T>(Summable<T> one, Summable<T> two, double factor) {
     return one + (two - one) * factor;
@@ -86,21 +88,27 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                   onPressed: () {},
                   icon: Icon(
                     Icons.filter_list_outlined,
-                    color: todoTheme.definedColors.blue,
+                    color: state.query.filterOptions?.isNotEmpty ?? false
+                        ? todoTheme.definedColors.blue
+                        : todoTheme.supportColors.overlay,
                   ),
                 ),
                 IconButton(
                   onPressed: () {},
                   icon: Icon(
                     Icons.swap_vert_outlined,
-                    color: todoTheme.definedColors.blue,
+                    color: state.query.sortOptions?.isNotEmpty ?? false
+                        ? todoTheme.definedColors.blue
+                        : todoTheme.supportColors.overlay,
                   ),
                 ),
                 IconButton(
                   onPressed: () {},
                   icon: Icon(
                     Icons.search_outlined,
-                    color: todoTheme.definedColors.blue,
+                    color: state.query.search?.isNotEmpty ?? false
+                        ? todoTheme.definedColors.blue
+                        : todoTheme.supportColors.overlay,
                   ),
                 ),
               ],

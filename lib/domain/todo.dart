@@ -3,7 +3,7 @@ import 'package:yandex_summer_school/data/data_sources/local_database.dart';
 part 'todo.freezed.dart';
 
 @freezed
-class ToDo with _$ToDo {
+sealed class ToDo with _$ToDo {
   const factory ToDo({
     required int id,
     required String description,
@@ -13,6 +13,8 @@ class ToDo with _$ToDo {
   }) = _ToDo;
 
   const ToDo._();
+
+  String get data => throw UnimplementedError(); // TODO: implement data getter for ToDo
 
   static ToDo? fromToDoItem(ToDoItem? item) {
     if (item == null) return null;
