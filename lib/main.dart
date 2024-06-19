@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:yandex_summer_school/data/data_sources/local_database.dart';
 import 'package:yandex_summer_school/data/providers/todo.dart';
+import 'package:yandex_summer_school/screens/todo_edit/bloc/bloc.dart';
 import 'package:yandex_summer_school/screens/todo_edit/to_do_edit.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/bloc.dart';
 import 'package:yandex_summer_school/screens/todo_list/todo_list.dart';
@@ -22,60 +23,65 @@ void main() {
         ),
       );
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      runApp(const MyApp());
+      final localDatabase = AppDatabase();
+      final todoProvider = ToDoProvider(localDatabase: localDatabase);
+      final router = GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => BlocProvider(
+              create: (context) => ToDoListBloc(ToDoProvider(localDatabase: localDatabase)),
+              child: const TodoListScreen(),
+            ),
+            routes: [
+              ShellRoute(
+                builder: (context, state, child) => BlocProvider(
+                  create: (context) => ToDoEditBloc(todoProvider: todoProvider),
+                  child: child,
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'edit/:id',
+                    builder: (context, state) {
+                      final idString = state.pathParameters['id'];
+                      final data = state.uri.queryParameters['data']; // from deep link
+                      if (idString == null) {
+                        return const TodoListScreen();
+                      }
+                      final id = int.parse(idString);
+                      return ToDoEditScreen(id: id, data: data);
+                    },
+                  ),
+                  GoRoute(
+                    path: 'new',
+                    builder: (context, state) => const ToDoEditScreen(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final brightness = PlatformDispatcher.instance.platformBrightness;
+      final themeBloc = ThemeBloc(brightness);
+      final app = MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: themeBloc),
+        ],
+        child: MaterialApp.router(
+          theme: ThemeData(
+              brightness: PlatformDispatcher.instance.platformBrightness,
+              scaffoldBackgroundColor: themeBloc.state.backColors.primary),
+          routerConfig: router,
+          debugShowCheckedModeBanner: false,
+        ),
+      );
+      runApp(app);
     },
     (o, s) => logger.f(o, stackTrace: s),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    final brightness = PlatformDispatcher.instance.platformBrightness;
-    final localDatabase = AppDatabase();
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => ThemeBloc(brightness)),
-      ],
-      child: MaterialApp.router(
-        theme: ThemeData(brightness: brightness),
-        routerConfig: GoRouter(
-          initialLocation: '/',
-          routes: [
-            GoRoute(
-              path: '/',
-              builder: (context, state) => BlocProvider(
-                create: (context) => ToDoListBloc(ToDoProvider(localDatabase: localDatabase)),
-                child: const TodoListScreen(),
-              ),
-              routes: [
-                GoRoute(
-                  path: 'edit/:id',
-                  builder: (context, state) {
-                    final idString = state.pathParameters['id'];
-                    final data = state.uri.queryParameters['data']; // from deep link
-                    if (idString == null) {
-                      return const TodoListScreen();
-                    }
-                    final id = int.parse(idString);
-                    return ToDoEditScreen(id: id, data: data);
-                  },
-                ),
-                GoRoute(
-                  path: 'new',
-                  builder: (context, state) => const ToDoEditScreen(),
-                ),
-              ],
-            ),
-          ],
-        ),
-        debugShowCheckedModeBanner: false,
-      ),
-    );
-  }
 }
 
 final Logger logger = Logger();

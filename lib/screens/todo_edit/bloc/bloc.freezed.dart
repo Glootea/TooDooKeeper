@@ -20,43 +20,55 @@ mixin _$ToDoEditEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo) update,
+    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(String data) parseData,
+    required TResult Function() create,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo)? update,
+    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(String data)? parseData,
+    TResult? Function()? create,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo)? update,
+    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(String data)? parseData,
+    TResult Function()? create,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LoadEvent value) load,
+    required TResult Function(LoadByIdEvent value) load,
     required TResult Function(SaveEvent value) save,
     required TResult Function(UpdateEvent value) update,
+    required TResult Function(ParseDataFromLinkEvent value) parseData,
+    required TResult Function(CreateEvent value) create,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(LoadEvent value)? load,
+    TResult? Function(LoadByIdEvent value)? load,
     TResult? Function(SaveEvent value)? save,
     TResult? Function(UpdateEvent value)? update,
+    TResult? Function(ParseDataFromLinkEvent value)? parseData,
+    TResult? Function(CreateEvent value)? create,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LoadEvent value)? load,
+    TResult Function(LoadByIdEvent value)? load,
     TResult Function(SaveEvent value)? save,
     TResult Function(UpdateEvent value)? update,
+    TResult Function(ParseDataFromLinkEvent value)? parseData,
+    TResult Function(CreateEvent value)? create,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -81,20 +93,20 @@ class _$ToDoEditEventCopyWithImpl<$Res, $Val extends ToDoEditEvent>
 }
 
 /// @nodoc
-abstract class _$$LoadEventImplCopyWith<$Res> {
-  factory _$$LoadEventImplCopyWith(
-          _$LoadEventImpl value, $Res Function(_$LoadEventImpl) then) =
-      __$$LoadEventImplCopyWithImpl<$Res>;
+abstract class _$$LoadByIdEventImplCopyWith<$Res> {
+  factory _$$LoadByIdEventImplCopyWith(
+          _$LoadByIdEventImpl value, $Res Function(_$LoadByIdEventImpl) then) =
+      __$$LoadByIdEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int id});
 }
 
 /// @nodoc
-class __$$LoadEventImplCopyWithImpl<$Res>
-    extends _$ToDoEditEventCopyWithImpl<$Res, _$LoadEventImpl>
-    implements _$$LoadEventImplCopyWith<$Res> {
-  __$$LoadEventImplCopyWithImpl(
-      _$LoadEventImpl _value, $Res Function(_$LoadEventImpl) _then)
+class __$$LoadByIdEventImplCopyWithImpl<$Res>
+    extends _$ToDoEditEventCopyWithImpl<$Res, _$LoadByIdEventImpl>
+    implements _$$LoadByIdEventImplCopyWith<$Res> {
+  __$$LoadByIdEventImplCopyWithImpl(
+      _$LoadByIdEventImpl _value, $Res Function(_$LoadByIdEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -102,7 +114,7 @@ class __$$LoadEventImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
   }) {
-    return _then(_$LoadEventImpl(
+    return _then(_$LoadByIdEventImpl(
       null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -113,8 +125,8 @@ class __$$LoadEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
-  const _$LoadEventImpl(this.id);
+class _$LoadByIdEventImpl extends LoadByIdEvent with DiagnosticableTreeMixin {
+  const _$LoadByIdEventImpl(this.id) : super._();
 
   @override
   final int id;
@@ -136,7 +148,7 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadEventImpl &&
+            other is _$LoadByIdEventImpl &&
             (identical(other.id, id) || other.id == id));
   }
 
@@ -146,15 +158,17 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadEventImplCopyWith<_$LoadEventImpl> get copyWith =>
-      __$$LoadEventImplCopyWithImpl<_$LoadEventImpl>(this, _$identity);
+  _$$LoadByIdEventImplCopyWith<_$LoadByIdEventImpl> get copyWith =>
+      __$$LoadByIdEventImplCopyWithImpl<_$LoadByIdEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo) update,
+    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(String data) parseData,
+    required TResult Function() create,
   }) {
     return load(id);
   }
@@ -164,7 +178,9 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo)? update,
+    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(String data)? parseData,
+    TResult? Function()? create,
   }) {
     return load?.call(id);
   }
@@ -174,7 +190,9 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo)? update,
+    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(String data)? parseData,
+    TResult Function()? create,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -186,9 +204,11 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LoadEvent value) load,
+    required TResult Function(LoadByIdEvent value) load,
     required TResult Function(SaveEvent value) save,
     required TResult Function(UpdateEvent value) update,
+    required TResult Function(ParseDataFromLinkEvent value) parseData,
+    required TResult Function(CreateEvent value) create,
   }) {
     return load(this);
   }
@@ -196,9 +216,11 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(LoadEvent value)? load,
+    TResult? Function(LoadByIdEvent value)? load,
     TResult? Function(SaveEvent value)? save,
     TResult? Function(UpdateEvent value)? update,
+    TResult? Function(ParseDataFromLinkEvent value)? parseData,
+    TResult? Function(CreateEvent value)? create,
   }) {
     return load?.call(this);
   }
@@ -206,9 +228,11 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LoadEvent value)? load,
+    TResult Function(LoadByIdEvent value)? load,
     TResult Function(SaveEvent value)? save,
     TResult Function(UpdateEvent value)? update,
+    TResult Function(ParseDataFromLinkEvent value)? parseData,
+    TResult Function(CreateEvent value)? create,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -218,12 +242,13 @@ class _$LoadEventImpl with DiagnosticableTreeMixin implements LoadEvent {
   }
 }
 
-abstract class LoadEvent implements ToDoEditEvent {
-  const factory LoadEvent(final int id) = _$LoadEventImpl;
+abstract class LoadByIdEvent extends ToDoEditEvent {
+  const factory LoadByIdEvent(final int id) = _$LoadByIdEventImpl;
+  const LoadByIdEvent._() : super._();
 
   int get id;
   @JsonKey(ignore: true)
-  _$$LoadEventImplCopyWith<_$LoadEventImpl> get copyWith =>
+  _$$LoadByIdEventImplCopyWith<_$LoadByIdEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -245,8 +270,8 @@ class __$$SaveEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
-  const _$SaveEventImpl();
+class _$SaveEventImpl extends SaveEvent with DiagnosticableTreeMixin {
+  const _$SaveEventImpl() : super._();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -273,7 +298,9 @@ class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo) update,
+    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(String data) parseData,
+    required TResult Function() create,
   }) {
     return save();
   }
@@ -283,7 +310,9 @@ class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo)? update,
+    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(String data)? parseData,
+    TResult? Function()? create,
   }) {
     return save?.call();
   }
@@ -293,7 +322,9 @@ class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo)? update,
+    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(String data)? parseData,
+    TResult Function()? create,
     required TResult orElse(),
   }) {
     if (save != null) {
@@ -305,9 +336,11 @@ class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LoadEvent value) load,
+    required TResult Function(LoadByIdEvent value) load,
     required TResult Function(SaveEvent value) save,
     required TResult Function(UpdateEvent value) update,
+    required TResult Function(ParseDataFromLinkEvent value) parseData,
+    required TResult Function(CreateEvent value) create,
   }) {
     return save(this);
   }
@@ -315,9 +348,11 @@ class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(LoadEvent value)? load,
+    TResult? Function(LoadByIdEvent value)? load,
     TResult? Function(SaveEvent value)? save,
     TResult? Function(UpdateEvent value)? update,
+    TResult? Function(ParseDataFromLinkEvent value)? parseData,
+    TResult? Function(CreateEvent value)? create,
   }) {
     return save?.call(this);
   }
@@ -325,9 +360,11 @@ class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LoadEvent value)? load,
+    TResult Function(LoadByIdEvent value)? load,
     TResult Function(SaveEvent value)? save,
     TResult Function(UpdateEvent value)? update,
+    TResult Function(ParseDataFromLinkEvent value)? parseData,
+    TResult Function(CreateEvent value)? create,
     required TResult orElse(),
   }) {
     if (save != null) {
@@ -337,8 +374,9 @@ class _$SaveEventImpl with DiagnosticableTreeMixin implements SaveEvent {
   }
 }
 
-abstract class SaveEvent implements ToDoEditEvent {
+abstract class SaveEvent extends ToDoEditEvent {
   const factory SaveEvent() = _$SaveEventImpl;
+  const SaveEvent._() : super._();
 }
 
 /// @nodoc
@@ -347,7 +385,7 @@ abstract class _$$UpdateEventImplCopyWith<$Res> {
           _$UpdateEventImpl value, $Res Function(_$UpdateEventImpl) then) =
       __$$UpdateEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ToDo todo});
+  $Res call({ToDo todo, bool avoidDebounce});
 
   $ToDoCopyWith<$Res> get todo;
 }
@@ -364,12 +402,17 @@ class __$$UpdateEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? todo = null,
+    Object? avoidDebounce = null,
   }) {
     return _then(_$UpdateEventImpl(
       todo: null == todo
           ? _value.todo
           : todo // ignore: cast_nullable_to_non_nullable
               as ToDo,
+      avoidDebounce: null == avoidDebounce
+          ? _value.avoidDebounce
+          : avoidDebounce // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 
@@ -384,15 +427,19 @@ class __$$UpdateEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
-  const _$UpdateEventImpl({required this.todo});
+class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
+  const _$UpdateEventImpl({required this.todo, this.avoidDebounce = false})
+      : super._();
 
   @override
   final ToDo todo;
+  @override
+  @JsonKey()
+  final bool avoidDebounce;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoEditEvent.update(todo: $todo)';
+    return 'ToDoEditEvent.update(todo: $todo, avoidDebounce: $avoidDebounce)';
   }
 
   @override
@@ -400,7 +447,8 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'ToDoEditEvent.update'))
-      ..add(DiagnosticsProperty('todo', todo));
+      ..add(DiagnosticsProperty('todo', todo))
+      ..add(DiagnosticsProperty('avoidDebounce', avoidDebounce));
   }
 
   @override
@@ -408,11 +456,13 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UpdateEventImpl &&
-            (identical(other.todo, todo) || other.todo == todo));
+            (identical(other.todo, todo) || other.todo == todo) &&
+            (identical(other.avoidDebounce, avoidDebounce) ||
+                other.avoidDebounce == avoidDebounce));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, todo);
+  int get hashCode => Object.hash(runtimeType, todo, avoidDebounce);
 
   @JsonKey(ignore: true)
   @override
@@ -425,9 +475,11 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo) update,
+    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(String data) parseData,
+    required TResult Function() create,
   }) {
-    return update(todo);
+    return update(todo, avoidDebounce);
   }
 
   @override
@@ -435,9 +487,11 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo)? update,
+    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(String data)? parseData,
+    TResult? Function()? create,
   }) {
-    return update?.call(todo);
+    return update?.call(todo, avoidDebounce);
   }
 
   @override
@@ -445,11 +499,13 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo)? update,
+    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(String data)? parseData,
+    TResult Function()? create,
     required TResult orElse(),
   }) {
     if (update != null) {
-      return update(todo);
+      return update(todo, avoidDebounce);
     }
     return orElse();
   }
@@ -457,9 +513,11 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LoadEvent value) load,
+    required TResult Function(LoadByIdEvent value) load,
     required TResult Function(SaveEvent value) save,
     required TResult Function(UpdateEvent value) update,
+    required TResult Function(ParseDataFromLinkEvent value) parseData,
+    required TResult Function(CreateEvent value) create,
   }) {
     return update(this);
   }
@@ -467,9 +525,11 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(LoadEvent value)? load,
+    TResult? Function(LoadByIdEvent value)? load,
     TResult? Function(SaveEvent value)? save,
     TResult? Function(UpdateEvent value)? update,
+    TResult? Function(ParseDataFromLinkEvent value)? parseData,
+    TResult? Function(CreateEvent value)? create,
   }) {
     return update?.call(this);
   }
@@ -477,9 +537,11 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LoadEvent value)? load,
+    TResult Function(LoadByIdEvent value)? load,
     TResult Function(SaveEvent value)? save,
     TResult Function(UpdateEvent value)? update,
+    TResult Function(ParseDataFromLinkEvent value)? parseData,
+    TResult Function(CreateEvent value)? create,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -489,13 +551,308 @@ class _$UpdateEventImpl with DiagnosticableTreeMixin implements UpdateEvent {
   }
 }
 
-abstract class UpdateEvent implements ToDoEditEvent {
-  const factory UpdateEvent({required final ToDo todo}) = _$UpdateEventImpl;
+abstract class UpdateEvent extends ToDoEditEvent {
+  const factory UpdateEvent(
+      {required final ToDo todo, final bool avoidDebounce}) = _$UpdateEventImpl;
+  const UpdateEvent._() : super._();
 
   ToDo get todo;
+  bool get avoidDebounce;
   @JsonKey(ignore: true)
   _$$UpdateEventImplCopyWith<_$UpdateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ParseDataFromLinkEventImplCopyWith<$Res> {
+  factory _$$ParseDataFromLinkEventImplCopyWith(
+          _$ParseDataFromLinkEventImpl value,
+          $Res Function(_$ParseDataFromLinkEventImpl) then) =
+      __$$ParseDataFromLinkEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String data});
+}
+
+/// @nodoc
+class __$$ParseDataFromLinkEventImplCopyWithImpl<$Res>
+    extends _$ToDoEditEventCopyWithImpl<$Res, _$ParseDataFromLinkEventImpl>
+    implements _$$ParseDataFromLinkEventImplCopyWith<$Res> {
+  __$$ParseDataFromLinkEventImplCopyWithImpl(
+      _$ParseDataFromLinkEventImpl _value,
+      $Res Function(_$ParseDataFromLinkEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$ParseDataFromLinkEventImpl(
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ParseDataFromLinkEventImpl extends ParseDataFromLinkEvent
+    with DiagnosticableTreeMixin {
+  const _$ParseDataFromLinkEventImpl({required this.data}) : super._();
+
+  @override
+  final String data;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ToDoEditEvent.parseData(data: $data)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ToDoEditEvent.parseData'))
+      ..add(DiagnosticsProperty('data', data));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ParseDataFromLinkEventImpl &&
+            (identical(other.data, data) || other.data == data));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, data);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ParseDataFromLinkEventImplCopyWith<_$ParseDataFromLinkEventImpl>
+      get copyWith => __$$ParseDataFromLinkEventImplCopyWithImpl<
+          _$ParseDataFromLinkEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int id) load,
+    required TResult Function() save,
+    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(String data) parseData,
+    required TResult Function() create,
+  }) {
+    return parseData(data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int id)? load,
+    TResult? Function()? save,
+    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(String data)? parseData,
+    TResult? Function()? create,
+  }) {
+    return parseData?.call(data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int id)? load,
+    TResult Function()? save,
+    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(String data)? parseData,
+    TResult Function()? create,
+    required TResult orElse(),
+  }) {
+    if (parseData != null) {
+      return parseData(data);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadByIdEvent value) load,
+    required TResult Function(SaveEvent value) save,
+    required TResult Function(UpdateEvent value) update,
+    required TResult Function(ParseDataFromLinkEvent value) parseData,
+    required TResult Function(CreateEvent value) create,
+  }) {
+    return parseData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadByIdEvent value)? load,
+    TResult? Function(SaveEvent value)? save,
+    TResult? Function(UpdateEvent value)? update,
+    TResult? Function(ParseDataFromLinkEvent value)? parseData,
+    TResult? Function(CreateEvent value)? create,
+  }) {
+    return parseData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadByIdEvent value)? load,
+    TResult Function(SaveEvent value)? save,
+    TResult Function(UpdateEvent value)? update,
+    TResult Function(ParseDataFromLinkEvent value)? parseData,
+    TResult Function(CreateEvent value)? create,
+    required TResult orElse(),
+  }) {
+    if (parseData != null) {
+      return parseData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ParseDataFromLinkEvent extends ToDoEditEvent {
+  const factory ParseDataFromLinkEvent({required final String data}) =
+      _$ParseDataFromLinkEventImpl;
+  const ParseDataFromLinkEvent._() : super._();
+
+  String get data;
+  @JsonKey(ignore: true)
+  _$$ParseDataFromLinkEventImplCopyWith<_$ParseDataFromLinkEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CreateEventImplCopyWith<$Res> {
+  factory _$$CreateEventImplCopyWith(
+          _$CreateEventImpl value, $Res Function(_$CreateEventImpl) then) =
+      __$$CreateEventImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$CreateEventImplCopyWithImpl<$Res>
+    extends _$ToDoEditEventCopyWithImpl<$Res, _$CreateEventImpl>
+    implements _$$CreateEventImplCopyWith<$Res> {
+  __$$CreateEventImplCopyWithImpl(
+      _$CreateEventImpl _value, $Res Function(_$CreateEventImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$CreateEventImpl extends CreateEvent with DiagnosticableTreeMixin {
+  const _$CreateEventImpl() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ToDoEditEvent.create()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'ToDoEditEvent.create'));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$CreateEventImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int id) load,
+    required TResult Function() save,
+    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(String data) parseData,
+    required TResult Function() create,
+  }) {
+    return create();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int id)? load,
+    TResult? Function()? save,
+    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(String data)? parseData,
+    TResult? Function()? create,
+  }) {
+    return create?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int id)? load,
+    TResult Function()? save,
+    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(String data)? parseData,
+    TResult Function()? create,
+    required TResult orElse(),
+  }) {
+    if (create != null) {
+      return create();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadByIdEvent value) load,
+    required TResult Function(SaveEvent value) save,
+    required TResult Function(UpdateEvent value) update,
+    required TResult Function(ParseDataFromLinkEvent value) parseData,
+    required TResult Function(CreateEvent value) create,
+  }) {
+    return create(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadByIdEvent value)? load,
+    TResult? Function(SaveEvent value)? save,
+    TResult? Function(UpdateEvent value)? update,
+    TResult? Function(ParseDataFromLinkEvent value)? parseData,
+    TResult? Function(CreateEvent value)? create,
+  }) {
+    return create?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadByIdEvent value)? load,
+    TResult Function(SaveEvent value)? save,
+    TResult Function(UpdateEvent value)? update,
+    TResult Function(ParseDataFromLinkEvent value)? parseData,
+    TResult Function(CreateEvent value)? create,
+    required TResult orElse(),
+  }) {
+    if (create != null) {
+      return create(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CreateEvent extends ToDoEditEvent {
+  const factory CreateEvent() = _$CreateEventImpl;
+  const CreateEvent._() : super._();
 }
 
 /// @nodoc
@@ -504,24 +861,24 @@ mixin _$ToDoEditState {
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
-    required TResult Function(String data) save,
+    required TResult Function(String error) error,
+    required TResult Function() save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(ToDo todo)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
-    TResult? Function(String data)? save,
+    TResult? Function(String error)? error,
+    TResult? Function()? save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(ToDo todo)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
-    TResult Function(String data)? save,
+    TResult Function(String error)? error,
+    TResult Function()? save,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -654,8 +1011,8 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
-    required TResult Function(String data) save,
+    required TResult Function(String error) error,
+    required TResult Function() save,
   }) {
     return $default(todo);
   }
@@ -665,8 +1022,8 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(ToDo todo)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
-    TResult? Function(String data)? save,
+    TResult? Function(String error)? error,
+    TResult? Function()? save,
   }) {
     return $default?.call(todo);
   }
@@ -676,8 +1033,8 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(ToDo todo)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
-    TResult Function(String data)? save,
+    TResult Function(String error)? error,
+    TResult Function()? save,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -779,8 +1136,8 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
-    required TResult Function(String data) save,
+    required TResult Function(String error) error,
+    required TResult Function() save,
   }) {
     return loading();
   }
@@ -790,8 +1147,8 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(ToDo todo)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
-    TResult? Function(String data)? save,
+    TResult? Function(String error)? error,
+    TResult? Function()? save,
   }) {
     return loading?.call();
   }
@@ -801,8 +1158,8 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(ToDo todo)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
-    TResult Function(String data)? save,
+    TResult Function(String error)? error,
+    TResult Function()? save,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -858,6 +1215,8 @@ abstract class _$$ErrorStateImplCopyWith<$Res> {
   factory _$$ErrorStateImplCopyWith(
           _$ErrorStateImpl value, $Res Function(_$ErrorStateImpl) then) =
       __$$ErrorStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String error});
 }
 
 /// @nodoc
@@ -867,42 +1226,68 @@ class __$$ErrorStateImplCopyWithImpl<$Res>
   __$$ErrorStateImplCopyWithImpl(
       _$ErrorStateImpl _value, $Res Function(_$ErrorStateImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorStateImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
-  const _$ErrorStateImpl();
+  const _$ErrorStateImpl(this.error);
+
+  @override
+  final String error;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoEditState.error()';
+    return 'ToDoEditState.error(error: $error)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('type', 'ToDoEditState.error'));
+    properties
+      ..add(DiagnosticsProperty('type', 'ToDoEditState.error'))
+      ..add(DiagnosticsProperty('error', error));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ErrorStateImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$ErrorStateImpl &&
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, error);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ErrorStateImplCopyWith<_$ErrorStateImpl> get copyWith =>
+      __$$ErrorStateImplCopyWithImpl<_$ErrorStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
-    required TResult Function(String data) save,
+    required TResult Function(String error) error,
+    required TResult Function() save,
   }) {
-    return error();
+    return error(this.error);
   }
 
   @override
@@ -910,10 +1295,10 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(ToDo todo)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
-    TResult? Function(String data)? save,
+    TResult? Function(String error)? error,
+    TResult? Function()? save,
   }) {
-    return error?.call();
+    return error?.call(this.error);
   }
 
   @override
@@ -921,12 +1306,12 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(ToDo todo)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
-    TResult Function(String data)? save,
+    TResult Function(String error)? error,
+    TResult Function()? save,
     required TResult orElse(),
   }) {
     if (error != null) {
-      return error();
+      return error(this.error);
     }
     return orElse();
   }
@@ -970,7 +1355,12 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
 }
 
 abstract class ErrorState implements ToDoEditState {
-  const factory ErrorState() = _$ErrorStateImpl;
+  const factory ErrorState(final String error) = _$ErrorStateImpl;
+
+  String get error;
+  @JsonKey(ignore: true)
+  _$$ErrorStateImplCopyWith<_$ErrorStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -978,8 +1368,6 @@ abstract class _$$SaveStateImplCopyWith<$Res> {
   factory _$$SaveStateImplCopyWith(
           _$SaveStateImpl value, $Res Function(_$SaveStateImpl) then) =
       __$$SaveStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String data});
 }
 
 /// @nodoc
@@ -989,68 +1377,42 @@ class __$$SaveStateImplCopyWithImpl<$Res>
   __$$SaveStateImplCopyWithImpl(
       _$SaveStateImpl _value, $Res Function(_$SaveStateImpl) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? data = null,
-  }) {
-    return _then(_$SaveStateImpl(
-      data: null == data
-          ? _value.data
-          : data // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$SaveStateImpl with DiagnosticableTreeMixin implements SaveState {
-  const _$SaveStateImpl({required this.data});
-
-  @override
-  final String data;
+  const _$SaveStateImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoEditState.save(data: $data)';
+    return 'ToDoEditState.save()';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ToDoEditState.save'))
-      ..add(DiagnosticsProperty('data', data));
+    properties.add(DiagnosticsProperty('type', 'ToDoEditState.save'));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SaveStateImpl &&
-            (identical(other.data, data) || other.data == data));
+        (other.runtimeType == runtimeType && other is _$SaveStateImpl);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, data);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SaveStateImplCopyWith<_$SaveStateImpl> get copyWith =>
-      __$$SaveStateImplCopyWithImpl<_$SaveStateImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
-    required TResult Function(String data) save,
+    required TResult Function(String error) error,
+    required TResult Function() save,
   }) {
-    return save(data);
+    return save();
   }
 
   @override
@@ -1058,10 +1420,10 @@ class _$SaveStateImpl with DiagnosticableTreeMixin implements SaveState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(ToDo todo)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
-    TResult? Function(String data)? save,
+    TResult? Function(String error)? error,
+    TResult? Function()? save,
   }) {
-    return save?.call(data);
+    return save?.call();
   }
 
   @override
@@ -1069,12 +1431,12 @@ class _$SaveStateImpl with DiagnosticableTreeMixin implements SaveState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(ToDo todo)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
-    TResult Function(String data)? save,
+    TResult Function(String error)? error,
+    TResult Function()? save,
     required TResult orElse(),
   }) {
     if (save != null) {
-      return save(data);
+      return save();
     }
     return orElse();
   }
@@ -1118,10 +1480,5 @@ class _$SaveStateImpl with DiagnosticableTreeMixin implements SaveState {
 }
 
 abstract class SaveState implements ToDoEditState {
-  const factory SaveState({required final String data}) = _$SaveStateImpl;
-
-  String get data;
-  @JsonKey(ignore: true)
-  _$$SaveStateImplCopyWith<_$SaveStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory SaveState() = _$SaveStateImpl;
 }

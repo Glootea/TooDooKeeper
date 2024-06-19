@@ -11,10 +11,17 @@ sealed class ToDo with _$ToDo {
     DateTime? deadline,
     Importance? importance,
   }) = _ToDo;
+  const factory ToDo.empty({
+    @Default(0) int id,
+    @Default('') String description,
+    @Default(false) bool done,
+    @Default(null) DateTime? deadline,
+    @Default(null) Importance? importance,
+  }) = _ToDoEmpty;
 
   const ToDo._();
 
-  String get data => throw UnimplementedError(); // TODO: implement data getter for ToDo
+  String get dataToSend => throw UnimplementedError(); // TODO: implement data getter for ToDo
 
   static ToDo? fromToDoItem(ToDoItem? item) {
     if (item == null) return null;
