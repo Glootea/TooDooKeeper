@@ -1,13 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:yandex_summer_school/components/leaf/checkbox.dart';
 import 'package:yandex_summer_school/components/leaf/icon.dart';
 import 'package:yandex_summer_school/domain/todo.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class ToDoListItemInlined extends StatefulWidget {
-  const ToDoListItemInlined({required this.state, super.key});
+  const ToDoListItemInlined({required this.state, required this.onToggleDone, required this.onDelete, super.key});
   final ToDo state;
+  final void Function(ToDo state) onToggleDone;
+  final void Function(ToDo state) onDelete;
 
   @override
   State<ToDoListItemInlined> createState() => _ToDoListItemInlinedState();
@@ -23,15 +28,22 @@ class _ToDoListItemInlinedState extends State<ToDoListItemInlined> with SingleTi
 
   double animationStartPosition = 0;
   double animationEndPosition = 0;
-
+  final animationDuration = const Duration(seconds: 1);
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _controller = AnimationController(vsync: this, duration: animationDuration);
     _controller.addListener(() {
       setState(() {
         currentPosition = _animation.value * (animationEndPosition - animationStartPosition) + animationStartPosition;
       });
+      final width = MediaQuery.sizeOf(context).width;
+
+      if (currentPosition >= width) {
+        widget.onToggleDone(widget.state);
+      } else if (currentPosition <= -width) {
+        widget.onDelete(widget.state);
+      }
     });
   }
 
@@ -88,15 +100,17 @@ class _ToDoListItemInlinedState extends State<ToDoListItemInlined> with SingleTi
               Positioned(
                 left: currentPosition,
                 child: GestureDetector(
+                  onTap: () => context.push('/edit/${widget.state.id}'),
                   onPanDown: (details) => _controller.stop(),
                   onPanUpdate: (details) => setState(() => currentPosition += details.delta.dx),
                   onPanEnd: (_) {
                     if (currentPosition < -threshold) {
-                      _runAnimation(currentPosition, -width * 2);
+                      _runAnimation(currentPosition, -width * 2); // to left/delete
                     } else if (currentPosition > threshold) {
-                      _runAnimation(currentPosition, width * 2);
+                      _runAnimation(currentPosition, width * 2); // to right/toggle done
+                      Timer(animationDuration, () => _runAnimation(currentPosition, 0));
                     } else {
-                      _runAnimation(currentPosition, 0);
+                      _runAnimation(currentPosition, 0); // reset
                     }
                   },
                   child: SizedBox(
@@ -109,7 +123,7 @@ class _ToDoListItemInlinedState extends State<ToDoListItemInlined> with SingleTi
                         child: Row(
                           children: [
                             ToDoCheckbox(
-                              onChanged: (_) {},
+                              onChanged: (value) {},
                               value: false,
                               importance: widget.state.importance,
                             ),

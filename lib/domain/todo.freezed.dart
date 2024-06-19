@@ -402,7 +402,7 @@ class __$$ToDoEmptyImplCopyWithImpl<$Res>
 
 class _$ToDoEmptyImpl extends _ToDoEmpty {
   const _$ToDoEmptyImpl(
-      {this.id = 0,
+      {this.id = idEmpty,
       this.description = '',
       this.done = false,
       this.deadline = null,

@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_summer_school/components/complex/tappable_box.dart';
 import 'package:yandex_summer_school/components/leaf/switch.dart';
-import 'package:yandex_summer_school/domain/todo.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class DeadlineSelector extends StatefulWidget {
-  const DeadlineSelector({required this.deadline, super.key});
-
+  const DeadlineSelector({required this.deadline, required this.onChanged, super.key});
   final DateTime? deadline;
+  final void Function(DateTime?) onChanged;
 
   @override
   State<DeadlineSelector> createState() => _DeadlineSelectorState();
 }
 
 class _DeadlineSelectorState extends State<DeadlineSelector> {
-  void onChanged(bool value) {
-    if (value) {
-      showDatePicker(
-        context: context,
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(const Duration(days: 365)),
-        initialDate: DateTime.now(),
-      );
-    }
+  Future<void> _onChanged(bool value) async {
+    final newDate = value
+        ? await showDatePicker(
+            context: context,
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 365)),
+            initialDate: DateTime.now(),
+          )
+        : null;
+    widget.onChanged(newDate);
   }
 
   @override
@@ -31,7 +31,7 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
     final todoTheme = context.watch<ThemeBloc>().state;
 
     return TappableBox(
-      onTap: () => onChanged(widget.deadline == null),
+      onTap: () => _onChanged(widget.deadline == null),
       builder: (context, actionKey) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -39,7 +39,7 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Сделать до', style: todoTheme.textTheme.body),
-              ToDoSwitch(value: widget.deadline != null, key: actionKey, onChanged: onChanged),
+              ToDoSwitch(value: widget.deadline != null, key: actionKey, onChanged: _onChanged),
             ],
           ),
           if (widget.deadline != null)

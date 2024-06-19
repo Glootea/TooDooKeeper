@@ -9,13 +9,14 @@ class DebounceTransformer<T extends Debouncable> {
   Stream<T> transform({required Duration duration, required Stream<T> stream}) {
     stream.listen(
       (data) {
-        logger.d("Debounce received: $data");
+        logger.d('Debounce received: $data');
         if (data.avoidDebounce) {
           _streamController.add(data);
           logger.d('$data has been sent without debounce');
           return;
         }
         _timer?.cancel();
+        logger.d('Debounce timer has been canceled');
         _timer = Timer(duration, () {
           logger.d('Throw with debounce: $data');
           _streamController.add(data);

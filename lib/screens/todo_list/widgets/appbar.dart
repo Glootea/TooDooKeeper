@@ -48,6 +48,8 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
       extendFactor,
     ).value.translate(0, topPadding);
 
+    bool overlayOpened = false;
+
     return ConstrainedBox(
       constraints: BoxConstraints.expand(height: expandedHeight + topPadding),
       child: Stack(
@@ -85,7 +87,16 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (overlayOpened) return;
+                    overlayOpened = true;
+                    final entry = ToDoOverlay(
+                      children: [Text('Здесь будут фильтры', style: todoTheme.textTheme.body)],
+                      position: iconPosition + const Offset(0, 40),
+                      onClose: () => overlayOpened = false,
+                    );
+                    Overlay.of(context).insert(entry);
+                  },
                   icon: Icon(
                     Icons.filter_list_outlined,
                     color: state.query.filterOptions?.isNotEmpty ?? false
@@ -94,19 +105,19 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (overlayOpened) return;
+                    overlayOpened = true;
+                    final entry = ToDoOverlay(
+                      children: [Text('Здесь будет сортировка', style: todoTheme.textTheme.body)],
+                      position: iconPosition + const Offset(0, 40),
+                      onClose: () => overlayOpened = false,
+                    );
+                    Overlay.of(context).insert(entry);
+                  },
                   icon: Icon(
                     Icons.swap_vert_outlined,
                     color: state.query.sortOptions?.isNotEmpty ?? false
-                        ? todoTheme.definedColors.blue
-                        : todoTheme.supportColors.overlay,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.search_outlined,
-                    color: state.query.search?.isNotEmpty ?? false
                         ? todoTheme.definedColors.blue
                         : todoTheme.supportColors.overlay,
                   ),
@@ -169,4 +180,48 @@ class ToDoDouble implements Summable<double> {
 
   @override
   ToDoDouble operator -(Summable<double> other) => ToDoDouble(value - other.value);
+}
+
+class ToDoOverlay extends OverlayEntry {
+  ToDoOverlay({required this.children, required this.position, required this.onClose})
+      : super(
+          builder: (context) {
+            return Column(children: children);
+          },
+        );
+  final List<Widget> children;
+  final Offset position;
+  final void Function() onClose;
+  @override
+  WidgetBuilder get builder => (context) {
+        final todoTheme = context.watch<ThemeBloc>().state;
+        return Positioned(
+          right: position.dx,
+          top: position.dy, // aligned to right border as icons are
+          child: Material(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: todoTheme.backColors.elevated,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    ...children,
+                    const SizedBox(height: 16),
+                    OutlinedButton(
+                      onPressed: () {
+                        remove();
+                        onClose();
+                      },
+                      child: Text('Закрыть', style: todoTheme.textTheme.button),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      };
 }

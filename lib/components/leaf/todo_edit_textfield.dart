@@ -5,8 +5,8 @@ import 'package:yandex_summer_school/theme/theme_bloc.dart';
 class ToDoEditTextField extends StatelessWidget {
   const ToDoEditTextField({this.onSubmitted, this.onChanged, super.key});
 
-  final void Function(String)? onChanged;
-  final void Function(String)? onSubmitted;
+  final void Function(String value)? onChanged;
+  final void Function(String value)? onSubmitted;
 
   @override
   Widget build(BuildContext context) {

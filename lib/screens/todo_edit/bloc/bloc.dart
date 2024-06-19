@@ -62,7 +62,6 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     try {
       final todo = (state as MainState).todo;
       await todoProvider.updateTodo(todo: todo);
-      emit(const SaveState());
     } on Exception catch (e, s) {
       // TODO: handle properly
       if (kDebugMode) {
@@ -74,7 +73,6 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
 
   Future<void> _onUpdateEvent(UpdateEvent event, Emitter<ToDoEditState> emit) async {
     emit(MainState(todo: event.todo));
-    return todoProvider.updateTodo(todo: event.todo);
   }
 
   Future<void> _onParseDataFromLinkEvent(ParseDataFromLinkEvent event, Emitter<ToDoEditState> emit) async {

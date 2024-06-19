@@ -23,6 +23,7 @@ class ToDoEditScreen extends StatelessWidget {
           context.pop();
         }
       },
+      buildWhen: (previous, current) => previous.runtimeType != current.runtimeType,
       builder: (context, state) {
         logger.d('Received state: $state');
         switch (state) {
@@ -41,12 +42,14 @@ class ToDoEditScreen extends StatelessWidget {
 
   Scaffold _buildMain(BuildContext context) {
     final todoTheme = context.watch<ThemeBloc>().state;
+    final bloc = context.read<ToDoEditBloc>();
+    final state = bloc.state as MainState;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close_outlined)),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () => bloc.add(const SaveEvent()),
             child: Text(
               'Сохранить',
               style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.blue),
@@ -60,17 +63,24 @@ class ToDoEditScreen extends StatelessWidget {
           children: [
             BlocSelector<ToDoEditBloc, ToDoEditState, String>(
               selector: (state) => (state as MainState).todo.description,
-              builder: (context, data) => const ToDoEditTextField(),
+              builder: (context, data) => ToDoEditTextField(
+                onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(description: value))),
+              ),
             ),
             const SizedBox(height: 16),
             BlocSelector<ToDoEditBloc, ToDoEditState, Importance?>(
               selector: (state) => (state as MainState).todo.importance,
-              builder: (context, data) => ImportanceSelector(onChanged: (value) {}),
+              builder: (context, data) => ImportanceSelector(
+                onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(importance: value))),
+              ),
             ),
             const Divider(),
             BlocSelector<ToDoEditBloc, ToDoEditState, DateTime?>(
               selector: (state) => (state as MainState).todo.deadline,
-              builder: (context, data) => DeadlineSelector(deadline: data),
+              builder: (context, data) => DeadlineSelector(
+                deadline: data,
+                onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(deadline: value))),
+              ),
             ),
             const Divider(),
             const SizedBox(height: 16),
@@ -97,19 +107,18 @@ class DeleteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoTheme = context.watch<ThemeBloc>().state;
-
+    final color = canDelete ? todoTheme.definedColors.red : todoTheme.supportColors.overlay;
     return InkWell(
       onTap: canDelete ? onPressed : null,
       child: SizedBox(
         height: 40,
         child: Row(
           children: [
-            Icon(Icons.delete, color: todoTheme.definedColors.red),
+            Icon(Icons.delete, color: color),
             const SizedBox(width: 8),
             Text(
               'Удалить',
-              style: todoTheme.textTheme.body
-                  .copyWith(color: canDelete ? todoTheme.definedColors.red : todoTheme.supportColors.overlay),
+              style: todoTheme.textTheme.body.copyWith(color: color),
             ),
           ],
         ),

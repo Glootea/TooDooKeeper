@@ -75,6 +75,8 @@ class TodoListScreen extends StatelessWidget {
                         )
                       : ToDoListItemInlined(
                           state: state.todos[index],
+                          onToggleDone: (toDo) {},
+                          onDelete: (toDo) {},
                         ),
                 );
               },

@@ -2,6 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:yandex_summer_school/data/data_sources/local_database.dart';
 part 'todo.freezed.dart';
 
+const idEmpty = -1;
+
 @freezed
 sealed class ToDo with _$ToDo {
   const factory ToDo({
@@ -12,7 +14,7 @@ sealed class ToDo with _$ToDo {
     Importance? importance,
   }) = _ToDo;
   const factory ToDo.empty({
-    @Default(0) int id,
+    @Default(idEmpty) int id,
     @Default('') String description,
     @Default(false) bool done,
     @Default(null) DateTime? deadline,
@@ -22,6 +24,7 @@ sealed class ToDo with _$ToDo {
   const ToDo._();
 
   String get dataToSend => throw UnimplementedError(); // TODO: implement data getter for ToDo
+  bool get created => id != idEmpty;
 
   static ToDo? fromToDoItem(ToDoItem? item) {
     if (item == null) return null;

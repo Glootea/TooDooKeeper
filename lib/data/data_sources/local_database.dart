@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:yandex_summer_school/data/data_sources/database_connection_shared.dart';
+import 'package:yandex_summer_school/domain/todo.dart';
 
 part 'local_database.g.dart';
 
@@ -26,7 +27,25 @@ class AppDatabase extends _$AppDatabase {
     return (select(toDoItems)..where((t) => t.id.equals(id))).getSingleOrNull();
   }
 
-  Future<void> updateTodo({required ToDoItem todo}) async => update(toDoItems).replace(todo);
+  Future<void> updateTodo({required ToDoItem todo}) {
+    final companion = todo.id == idEmpty
+        ? ToDoItemsCompanion.insert(
+            // new
+            description: todo.description,
+            isDone: Value(todo.isDone),
+            deadline: Value(todo.deadline),
+            importance: Value(todo.importance),
+          )
+        : ToDoItemsCompanion(
+            // already in database
+            id: Value(todo.id),
+            description: Value(todo.description),
+            isDone: Value(todo.isDone),
+            deadline: Value(todo.deadline),
+            importance: Value(todo.importance),
+          );
+    return into(toDoItems).insert(companion);
+  }
 
   Future<int> addTodo({required ToDoItem todo}) async => into(toDoItems).insert(todo);
 

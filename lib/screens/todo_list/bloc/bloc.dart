@@ -29,6 +29,7 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
   Future<void> _onLoadEvent(LoadEvent event, Emitter<ToDoListState> emit) async {
     try {
       final todos = await todoProvider.getToDoList();
+      logger.d(todos);
       emit(ToDoListState(todos: todos, query: const ToDoListQuery()));
     } on Exception catch (e, s) {
       // TODO: handle properly
