@@ -6,10 +6,12 @@ import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class ImportanceSelector extends StatefulWidget {
   const ImportanceSelector({
+    required this.value,
     required this.onChanged,
     super.key,
   });
 
+  final Importance? value;
   final void Function(Importance? value) onChanged;
 
   @override
@@ -28,6 +30,7 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
           Text('Важность', style: todoTheme.textTheme.body),
           DropdownButton<Importance?>(
             key: actionKey,
+            value: widget.value,
             onChanged: widget.onChanged,
             underline: const SizedBox(),
             items: [

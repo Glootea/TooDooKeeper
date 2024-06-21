@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yandex_summer_school/components/leaf/checkbox.dart';
 import 'package:yandex_summer_school/components/leaf/icon.dart';
 import 'package:yandex_summer_school/domain/todo.dart';
+import 'package:yandex_summer_school/main.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class ToDoListItemInlined extends StatefulWidget {
@@ -100,9 +102,17 @@ class _ToDoListItemInlinedState extends State<ToDoListItemInlined> with SingleTi
               Positioned(
                 left: currentPosition,
                 child: GestureDetector(
-                  onTap: () => context.push('/edit/${widget.state.id}'),
+                  onTap: () => context.push('/edit/${widget.state.id}').whenComplete(() => logger.d('Returned')),
                   onPanDown: (details) => _controller.stop(),
-                  onPanUpdate: (details) => setState(() => currentPosition += details.delta.dx),
+                  onPanUpdate: (details) => setState(() {
+                    final delta = details.delta.dx;
+                    if ((currentPosition + delta > threshold && currentPosition < threshold) ||
+                        (currentPosition + delta < -threshold && currentPosition > -threshold)) {
+                      // indicate start of area where action is activated
+                      HapticFeedback.heavyImpact().whenComplete(() => logger.i('Indicate user of possible action'));
+                    }
+                    currentPosition += delta;
+                  }),
                   onPanEnd: (_) {
                     if (currentPosition < -threshold) {
                       _runAnimation(currentPosition, -width * 2); // to left/delete

@@ -11,18 +11,11 @@ import 'package:yandex_summer_school/screens/todo_edit/widgets/importance_select
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class ToDoEditScreen extends StatelessWidget {
-  const ToDoEditScreen({this.id, this.data, super.key});
-  final int? id;
-  final String? data; // TODO: parse data from url
+  const ToDoEditScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ToDoEditBloc, ToDoEditState>(
-      listener: (context, state) {
-        if (state is SaveState) {
-          context.pop();
-        }
-      },
+    return BlocBuilder<ToDoEditBloc, ToDoEditState>(
       buildWhen: (previous, current) => previous.runtimeType != current.runtimeType,
       builder: (context, state) {
         logger.d('Received state: $state');
@@ -46,10 +39,13 @@ class ToDoEditScreen extends StatelessWidget {
     final state = bloc.state as MainState;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close_outlined)),
+        leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close_outlined)),
         actions: [
           TextButton(
-            onPressed: () => bloc.add(const SaveEvent()),
+            onPressed: () {
+              context.pop();
+              bloc.add(const SaveEvent());
+            },
             child: Text(
               'Сохранить',
               style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.blue),
@@ -64,6 +60,7 @@ class ToDoEditScreen extends StatelessWidget {
             BlocSelector<ToDoEditBloc, ToDoEditState, String>(
               selector: (state) => (state as MainState).todo.description,
               builder: (context, data) => ToDoEditTextField(
+                value: data,
                 onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(description: value))),
               ),
             ),
@@ -71,6 +68,7 @@ class ToDoEditScreen extends StatelessWidget {
             BlocSelector<ToDoEditBloc, ToDoEditState, Importance?>(
               selector: (state) => (state as MainState).todo.importance,
               builder: (context, data) => ImportanceSelector(
+                value: data,
                 onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(importance: value))),
               ),
             ),
@@ -78,13 +76,13 @@ class ToDoEditScreen extends StatelessWidget {
             BlocSelector<ToDoEditBloc, ToDoEditState, DateTime?>(
               selector: (state) => (state as MainState).todo.deadline,
               builder: (context, data) => DeadlineSelector(
-                deadline: data,
+                value: data,
                 onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(deadline: value))),
               ),
             ),
             const Divider(),
             const SizedBox(height: 16),
-            DeleteButton(onPressed: () {}, canDelete: id != null),
+            DeleteButton(onPressed: () {}, canDelete: state.todo.id != idEmpty),
           ],
         ),
       ),

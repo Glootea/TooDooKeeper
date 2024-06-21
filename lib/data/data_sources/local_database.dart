@@ -44,7 +44,7 @@ class AppDatabase extends _$AppDatabase {
             deadline: Value(todo.deadline),
             importance: Value(todo.importance),
           );
-    return into(toDoItems).insert(companion);
+    return into(toDoItems).insert(companion, mode: InsertMode.insertOrReplace);
   }
 
   Future<int> addTodo({required ToDoItem todo}) async => into(toDoItems).insert(todo);
@@ -55,5 +55,17 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 1;
 
   @override
-  MigrationStrategy get migration => MigrationStrategy();
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) async {
+          await m.createAll();
+          await into(toDoItems).insert(
+            const ToDoItem(
+              id: 1,
+              description: 'Добро пожаловать в приложение',
+              isDone: false,
+              importance: 'Importance.high',
+            ),
+          );
+        },
+      );
 }

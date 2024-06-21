@@ -12,8 +12,10 @@ class TodoListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ToDoListBloc, ToDoListState>(
+      buildWhen: (previous, current) => previous.runtimeType != current.runtimeType,
       builder: (context, state) {
         final todoTheme = context.watch<ThemeBloc>().state;
+        print("Build TodoListScreen with $state");
         return Scaffold(
           backgroundColor: todoTheme.backColors.primary,
           body: switch (state) {
@@ -57,7 +59,7 @@ class TodoListScreen extends StatelessWidget {
                       ? SizedBox(
                           height: 48,
                           child: InkWell(
-                            onTap: () => context.push('/new'),
+                            onTap: () => context.go('/new'),
                             child: ColoredBox(
                               color: Colors.transparent,
                               child: Padding(

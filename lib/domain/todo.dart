@@ -52,9 +52,9 @@ enum Importance {
 
   static Importance? fromString(String? value) {
     switch (value) {
-      case 'low':
+      case 'Importance.low':
         return Importance.low;
-      case 'high':
+      case 'Importance.high':
         return Importance.high;
       default:
         return null;

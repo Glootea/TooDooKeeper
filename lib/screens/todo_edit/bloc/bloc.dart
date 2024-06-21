@@ -36,9 +36,9 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
           .transform(duration: const Duration(milliseconds: 500), stream: events)
           .asyncExpand(mapper),
     );
+    logger.d(id);
 
     if (id != null) {
-      logger.d('id');
       add(LoadByIdEvent(id!));
     } else if (data != null) {
       logger.d('data');
@@ -51,6 +51,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
 
   Future<void> _onLoadByIdEvent(LoadByIdEvent event, Emitter<ToDoEditState> emit) async {
     final todo = await todoProvider.getToDoById(id: event.id);
+    logger.d("Loaded TODO: " + todo.toString());
     if (todo == null) {
       emit(const ToDoEditState.error('ToDo не найден'));
     } else {

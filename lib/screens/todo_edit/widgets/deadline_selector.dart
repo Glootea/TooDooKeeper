@@ -5,8 +5,8 @@ import 'package:yandex_summer_school/components/leaf/switch.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class DeadlineSelector extends StatefulWidget {
-  const DeadlineSelector({required this.deadline, required this.onChanged, super.key});
-  final DateTime? deadline;
+  const DeadlineSelector({required this.value, required this.onChanged, super.key});
+  final DateTime? value;
   final void Function(DateTime?) onChanged;
 
   @override
@@ -31,7 +31,7 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
     final todoTheme = context.watch<ThemeBloc>().state;
 
     return TappableBox(
-      onTap: () => _onChanged(widget.deadline == null),
+      onTap: () => _onChanged(widget.value == null),
       builder: (context, actionKey) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -39,12 +39,12 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Сделать до', style: todoTheme.textTheme.body),
-              ToDoSwitch(value: widget.deadline != null, key: actionKey, onChanged: _onChanged),
+              ToDoSwitch(value: widget.value != null, key: actionKey, onChanged: _onChanged),
             ],
           ),
-          if (widget.deadline != null)
+          if (widget.value != null)
             Text(
-              widget.deadline.toString(), // TODO: convert to date string with month name
+              widget.value.toString(), // TODO: convert to date string with month name
               style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.blue),
             ),
         ],

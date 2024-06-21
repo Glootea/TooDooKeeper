@@ -1,22 +1,26 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:yandex_summer_school/data/data_sources/local_database.dart';
 import 'package:yandex_summer_school/data/providers/todo.dart';
 import 'package:yandex_summer_school/screens/todo_edit/bloc/bloc.dart';
-import 'package:yandex_summer_school/screens/todo_edit/to_do_edit.dart';
+import 'package:yandex_summer_school/screens/todo_edit/screen.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/bloc.dart';
-import 'package:yandex_summer_school/screens/todo_list/todo_list.dart';
+import 'package:yandex_summer_school/screens/todo_list/screen.dart';
 import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 void main() {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      usePathUrlStrategy();
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
@@ -35,29 +39,28 @@ void main() {
               child: const TodoListScreen(),
             ),
             routes: [
-              ShellRoute(
-                builder: (context, state, child) => BlocProvider(
+              GoRoute(
+                path: 'edit/:id',
+                builder: (context, state) {
+                  logger.d(state.pathParameters);
+                  final idString = state.pathParameters['id'];
+                  final data = state.uri.queryParameters['data']; // from deep link
+                  if (idString == null) {
+                    return const TodoListScreen();
+                  }
+                  final id = int.parse(idString);
+                  return BlocProvider(
+                    create: (context) => ToDoEditBloc(todoProvider: todoProvider, id: id, data: data),
+                    child: const ToDoEditScreen(),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'new',
+                builder: (context, state) => BlocProvider(
                   create: (context) => ToDoEditBloc(todoProvider: todoProvider),
-                  child: child,
+                  child: const ToDoEditScreen(),
                 ),
-                routes: [
-                  GoRoute(
-                    path: 'edit/:id',
-                    builder: (context, state) {
-                      final idString = state.pathParameters['id'];
-                      final data = state.uri.queryParameters['data']; // from deep link
-                      if (idString == null) {
-                        return const TodoListScreen();
-                      }
-                      final id = int.parse(idString);
-                      return ToDoEditScreen(id: id, data: data);
-                    },
-                  ),
-                  GoRoute(
-                    path: 'new',
-                    builder: (context, state) => const ToDoEditScreen(),
-                  ),
-                ],
               ),
             ],
           ),
@@ -72,8 +75,9 @@ void main() {
         ],
         child: MaterialApp.router(
           theme: ThemeData(
-              brightness: PlatformDispatcher.instance.platformBrightness,
-              scaffoldBackgroundColor: themeBloc.state.backColors.primary),
+            brightness: PlatformDispatcher.instance.platformBrightness,
+            scaffoldBackgroundColor: themeBloc.state.backColors.primary,
+          ),
           routerConfig: router,
           debugShowCheckedModeBanner: false,
         ),
