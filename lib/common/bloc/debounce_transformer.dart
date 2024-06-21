@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:yandex_summer_school/main.dart';
-import 'package:yandex_summer_school/screens/todo_edit/bloc/bloc.dart';
 
 class DebounceTransformer<T extends Debouncable> {
   final StreamController<T> _streamController = StreamController<T>();
@@ -27,4 +25,12 @@ class DebounceTransformer<T extends Debouncable> {
     );
     return _streamController.stream.asBroadcastStream();
   }
+}
+
+/// Implement in order for events to be debounced
+abstract interface class Debouncable {
+  /// Default value is false
+  ///
+  /// Pass to event to set custom behavior for the event
+  bool get avoidDebounce => false;
 }

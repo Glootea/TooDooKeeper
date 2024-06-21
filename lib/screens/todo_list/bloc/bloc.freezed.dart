@@ -20,21 +20,21 @@ mixin _$ToDoListState {
   TResult when<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
+    required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
+    TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -181,7 +181,7 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   TResult when<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
+    required TResult Function(String message) error,
   }) {
     return $default(todos, query);
   }
@@ -191,7 +191,7 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
+    TResult? Function(String message)? error,
   }) {
     return $default?.call(todos, query);
   }
@@ -201,7 +201,7 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -303,7 +303,7 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   TResult when<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
+    required TResult Function(String message) error,
   }) {
     return loading();
   }
@@ -313,7 +313,7 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
+    TResult? Function(String message)? error,
   }) {
     return loading?.call();
   }
@@ -323,7 +323,7 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -376,6 +376,8 @@ abstract class _$$ErrorStateImplCopyWith<$Res> {
   factory _$$ErrorStateImplCopyWith(
           _$ErrorStateImpl value, $Res Function(_$ErrorStateImpl) then) =
       __$$ErrorStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
 }
 
 /// @nodoc
@@ -385,41 +387,67 @@ class __$$ErrorStateImplCopyWithImpl<$Res>
   __$$ErrorStateImplCopyWithImpl(
       _$ErrorStateImpl _value, $Res Function(_$ErrorStateImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$ErrorStateImpl(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
-  const _$ErrorStateImpl();
+  const _$ErrorStateImpl({required this.message});
+
+  @override
+  final String message;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoListState.error()';
+    return 'ToDoListState.error(message: $message)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('type', 'ToDoListState.error'));
+    properties
+      ..add(DiagnosticsProperty('type', 'ToDoListState.error'))
+      ..add(DiagnosticsProperty('message', message));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ErrorStateImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$ErrorStateImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ErrorStateImplCopyWith<_$ErrorStateImpl> get copyWith =>
+      __$$ErrorStateImplCopyWithImpl<_$ErrorStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query) $default, {
     required TResult Function() loading,
-    required TResult Function() error,
+    required TResult Function(String message) error,
   }) {
-    return error();
+    return error(message);
   }
 
   @override
@@ -427,9 +455,9 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult? Function()? loading,
-    TResult? Function()? error,
+    TResult? Function(String message)? error,
   }) {
-    return error?.call();
+    return error?.call(message);
   }
 
   @override
@@ -437,11 +465,11 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(List<ToDo> todos, ToDoListQuery query)? $default, {
     TResult Function()? loading,
-    TResult Function()? error,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (error != null) {
-      return error();
+      return error(message);
     }
     return orElse();
   }
@@ -482,7 +510,12 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
 }
 
 abstract class ErrorState implements ToDoListState {
-  const factory ErrorState() = _$ErrorStateImpl;
+  const factory ErrorState({required final String message}) = _$ErrorStateImpl;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$ErrorStateImplCopyWith<_$ErrorStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:yandex_summer_school/data/providers/todo.dart';
-import 'package:yandex_summer_school/debounce_transformer.dart';
-import 'package:yandex_summer_school/domain/todo.dart';
+import 'package:yandex_summer_school/common/data/providers/todo.dart';
+import 'package:yandex_summer_school/common/entities/todo.dart';
 import 'package:yandex_summer_school/main.dart';
 
 part 'bloc.freezed.dart';
@@ -11,7 +10,7 @@ part 'bloc.freezed.dart';
 class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   ToDoEditBloc({
     required this.todoProvider,
-    this.id,
+    this.passedId,
     this.data,
   }) : super(const ToDoEditState.loading()) {
     logger.d('create ToDoEditBloc');
@@ -32,14 +31,11 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
             await _onCreateEvent(event, emit);
         }
       },
-      transformer: (events, mapper) => DebounceTransformer<ToDoEditEvent>()
-          .transform(duration: const Duration(milliseconds: 500), stream: events)
-          .asyncExpand(mapper),
     );
-    logger.d(id);
+    logger.d(passedId);
 
-    if (id != null) {
-      add(LoadByIdEvent(id!));
+    if (passedId != null) {
+      add(LoadByIdEvent(passedId!));
     } else if (data != null) {
       logger.d('data');
       add(ParseDataFromLinkEvent(data: data!));
@@ -51,7 +47,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
 
   Future<void> _onLoadByIdEvent(LoadByIdEvent event, Emitter<ToDoEditState> emit) async {
     final todo = await todoProvider.getToDoById(id: event.id);
-    logger.d("Loaded TODO: " + todo.toString());
+    logger.d('Loaded TODO: $todo');
     if (todo == null) {
       emit(const ToDoEditState.error('ToDo не найден'));
     } else {
@@ -62,7 +58,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   Future<void> _onSaveEvent(SaveEvent event, Emitter<ToDoEditState> emit) async {
     try {
       final todo = (state as MainState).todo;
-      await todoProvider.updateTodo(todo: todo);
+      await todoProvider.createOrUpdateTodo(todo: todo);
     } on Exception catch (e, s) {
       // TODO: handle properly
       if (kDebugMode) {
@@ -77,29 +73,28 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   }
 
   Future<void> _onParseDataFromLinkEvent(ParseDataFromLinkEvent event, Emitter<ToDoEditState> emit) async {
-    emit(const MainState(todo: ToDo.empty())); // TODO: parse data to todo
+    add(const ToDoEditEvent.create());
+    // emit(const MainState(todo: ToDo.empty())); // TODO: parse data to todo
   }
 
   Future<void> _onCreateEvent(CreateEvent event, Emitter<ToDoEditState> emit) async {
-    emit(const MainState(todo: ToDo.empty()));
+    const todo = ToDo.justCreated();
+    emit(const MainState(todo: todo));
   }
 
   final ToDoProvider todoProvider;
-  final int? id;
+  final int? passedId;
   final String? data;
 }
 
 @freezed
-sealed class ToDoEditEvent with _$ToDoEditEvent implements Debouncable {
+sealed class ToDoEditEvent with _$ToDoEditEvent {
   const ToDoEditEvent._();
   const factory ToDoEditEvent.load(int id) = LoadByIdEvent;
   const factory ToDoEditEvent.save() = SaveEvent;
-  const factory ToDoEditEvent.update({required ToDo todo, @Default(false) bool avoidDebounce}) = UpdateEvent;
+  const factory ToDoEditEvent.update({required ToDo todo}) = UpdateEvent;
   const factory ToDoEditEvent.parseData({required String data}) = ParseDataFromLinkEvent;
   const factory ToDoEditEvent.create() = CreateEvent;
-
-  @override
-  bool get avoidDebounce => true;
 }
 
 @freezed
@@ -108,11 +103,4 @@ sealed class ToDoEditState with _$ToDoEditState {
   const factory ToDoEditState.loading() = LoadingState;
   const factory ToDoEditState.error(String error) = ErrorState;
   const factory ToDoEditState.save() = SaveState;
-}
-
-abstract interface class Debouncable {
-  /// Override to set default behavior
-  ///
-  /// Pass to event to set custom behavior for the event
-  bool get avoidDebounce;
 }

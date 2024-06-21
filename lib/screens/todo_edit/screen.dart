@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:yandex_summer_school/components/complex/error_screen.dart';
-import 'package:yandex_summer_school/components/leaf/todo_edit_textfield.dart';
-import 'package:yandex_summer_school/domain/todo.dart';
+import 'package:yandex_summer_school/common/entities/todo.dart';
+import 'package:yandex_summer_school/common/ui/complex/error_screen.dart';
+import 'package:yandex_summer_school/common/ui/leaf/todo_edit_textfield.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/main.dart';
 import 'package:yandex_summer_school/screens/todo_edit/bloc/bloc.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/deadline_selector.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/importance_selector.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 class ToDoEditScreen extends StatelessWidget {
   const ToDoEditScreen({super.key});
@@ -39,15 +40,15 @@ class ToDoEditScreen extends StatelessWidget {
     final state = bloc.state as MainState;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close_outlined)),
+        leading: IconButton(onPressed: () => context.pushReplacement('/'), icon: const Icon(Icons.close_outlined)),
         actions: [
           TextButton(
             onPressed: () {
-              context.pop();
+              context.pushReplacement('/');
               bloc.add(const SaveEvent());
             },
             child: Text(
-              'Сохранить',
+              AppLocalizations.of(context)!.save,
               style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.blue),
             ),
           ),
@@ -82,7 +83,7 @@ class ToDoEditScreen extends StatelessWidget {
             ),
             const Divider(),
             const SizedBox(height: 16),
-            DeleteButton(onPressed: () {}, canDelete: state.todo.id != idEmpty),
+            DeleteButton(onPressed: () {}, canDelete: state.todo.id != null),
           ],
         ),
       ),
@@ -115,7 +116,7 @@ class DeleteButton extends StatelessWidget {
             Icon(Icons.delete, color: color),
             const SizedBox(width: 8),
             Text(
-              'Удалить',
+              AppLocalizations.of(context)!.delete,
               style: todoTheme.textTheme.body.copyWith(color: color),
             ),
           ],

@@ -4,17 +4,19 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:yandex_summer_school/data/data_sources/local_database.dart';
-import 'package:yandex_summer_school/data/providers/todo.dart';
+import 'package:yandex_summer_school/common/data/data_sources/local_database.dart';
+import 'package:yandex_summer_school/common/data/providers/todo.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_edit/bloc/bloc.dart';
 import 'package:yandex_summer_school/screens/todo_edit/screen.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/bloc.dart';
 import 'package:yandex_summer_school/screens/todo_list/screen.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
 
 void main() {
   runZonedGuarded(
@@ -50,7 +52,7 @@ void main() {
                   }
                   final id = int.parse(idString);
                   return BlocProvider(
-                    create: (context) => ToDoEditBloc(todoProvider: todoProvider, id: id, data: data),
+                    create: (context) => ToDoEditBloc(todoProvider: todoProvider, passedId: id, data: data),
                     child: const ToDoEditScreen(),
                   );
                 },
@@ -74,6 +76,11 @@ void main() {
           BlocProvider.value(value: themeBloc),
         ],
         child: MaterialApp.router(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
           theme: ThemeData(
             brightness: PlatformDispatcher.instance.platformBrightness,
             scaffoldBackgroundColor: themeBloc.state.backColors.primary,

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:yandex_summer_school/data/providers/todo.dart';
-import 'package:yandex_summer_school/domain/todo.dart';
+import 'package:yandex_summer_school/common/data/providers/todo.dart';
+import 'package:yandex_summer_school/common/entities/todo.dart';
 import 'package:yandex_summer_school/main.dart';
 part 'bloc.freezed.dart';
 
@@ -33,10 +33,8 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
       emit(ToDoListState(todos: todos, query: const ToDoListQuery()));
     } on Exception catch (e, s) {
       // TODO: handle properly
-      if (kDebugMode) {
-        logger.e(e, stackTrace: s);
-      }
-      emit(const ToDoListState.error());
+      logger.e(e, stackTrace: s);
+      emit(ToDoListState.error(message: e.toString()));
     }
   }
 
@@ -51,7 +49,7 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
       if (kDebugMode) {
         logger.e(e, stackTrace: s);
       }
-      emit(const ToDoListState.error());
+      emit(ToDoListState.error(message: e.toString()));
     }
   }
 
@@ -63,13 +61,13 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
       final newValue = !todos[indexOfUpdateElement].done;
       todos[indexOfUpdateElement] = todos[indexOfUpdateElement].copyWith(done: newValue);
       emit(ToDoListState(todos: todos, query: currentState.query));
-      await todoProvider.updateTodo(todo: todos[indexOfUpdateElement]);
+      await todoProvider.createOrUpdateTodo(todo: todos[indexOfUpdateElement]);
     } on Exception catch (e, s) {
       // TODO: handle properly
       if (kDebugMode) {
         logger.e(e, stackTrace: s);
       }
-      emit(const ToDoListState.error());
+      emit(ToDoListState.error(message: e.toString()));
     }
   }
 }
@@ -83,7 +81,7 @@ sealed class ToDoListState with _$ToDoListState {
 
   const factory ToDoListState.loading() = LoadingState;
 
-  const factory ToDoListState.error() = ErrorState;
+  const factory ToDoListState.error({required String message}) = ErrorState;
 }
 
 @freezed

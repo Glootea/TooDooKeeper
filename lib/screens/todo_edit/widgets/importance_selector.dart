@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_summer_school/components/complex/tappable_box.dart';
-import 'package:yandex_summer_school/domain/todo.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/common/entities/todo.dart';
+import 'package:yandex_summer_school/common/ui/complex/tappable_box.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 
 class ImportanceSelector extends StatefulWidget {
   const ImportanceSelector({
@@ -27,7 +28,10 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
       builder: (context, actionKey) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Важность', style: todoTheme.textTheme.body),
+          Text(
+            AppLocalizations.of(context)!.importance,
+            style: todoTheme.textTheme.body,
+          ),
           DropdownButton<Importance?>(
             key: actionKey,
             value: widget.value,
@@ -35,19 +39,22 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
             underline: const SizedBox(),
             items: [
               DropdownMenuItem(
-                child: Text('Нет', style: todoTheme.textTheme.body),
+                child: Text(
+                  AppLocalizations.of(context)!.none,
+                  style: todoTheme.textTheme.body,
+                ),
               ),
               DropdownMenuItem(
                 value: Importance.low,
                 child: Text(
-                  'Низкая',
+                  AppLocalizations.of(context)!.low,
                   style: todoTheme.textTheme.body,
                 ),
               ),
               DropdownMenuItem(
                 value: Importance.high,
                 child: Text(
-                  'Высокая',
+                  AppLocalizations.of(context)!.high,
                   style: todoTheme.textTheme.body,
                 ),
               ),

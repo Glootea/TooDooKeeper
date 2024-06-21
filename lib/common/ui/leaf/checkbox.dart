@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_summer_school/domain/todo.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
+import 'package:yandex_summer_school/common/entities/todo.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 
 class ToDoCheckbox extends StatelessWidget {
   const ToDoCheckbox({

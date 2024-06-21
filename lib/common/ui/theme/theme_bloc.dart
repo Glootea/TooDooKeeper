@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:yandex_summer_school/theme/theme.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme.dart';
 part 'theme_bloc.freezed.dart';
 
 class ThemeBloc extends Bloc<ToDoThemeEvent, ToDoTheme> {

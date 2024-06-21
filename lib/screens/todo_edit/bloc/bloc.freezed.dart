@@ -20,7 +20,7 @@ mixin _$ToDoEditEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(ToDo todo) update,
     required TResult Function(String data) parseData,
     required TResult Function() create,
   }) =>
@@ -29,7 +29,7 @@ mixin _$ToDoEditEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(ToDo todo)? update,
     TResult? Function(String data)? parseData,
     TResult? Function()? create,
   }) =>
@@ -38,7 +38,7 @@ mixin _$ToDoEditEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(ToDo todo)? update,
     TResult Function(String data)? parseData,
     TResult Function()? create,
     required TResult orElse(),
@@ -166,7 +166,7 @@ class _$LoadByIdEventImpl extends LoadByIdEvent with DiagnosticableTreeMixin {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(ToDo todo) update,
     required TResult Function(String data) parseData,
     required TResult Function() create,
   }) {
@@ -178,7 +178,7 @@ class _$LoadByIdEventImpl extends LoadByIdEvent with DiagnosticableTreeMixin {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(ToDo todo)? update,
     TResult? Function(String data)? parseData,
     TResult? Function()? create,
   }) {
@@ -190,7 +190,7 @@ class _$LoadByIdEventImpl extends LoadByIdEvent with DiagnosticableTreeMixin {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(ToDo todo)? update,
     TResult Function(String data)? parseData,
     TResult Function()? create,
     required TResult orElse(),
@@ -298,7 +298,7 @@ class _$SaveEventImpl extends SaveEvent with DiagnosticableTreeMixin {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(ToDo todo) update,
     required TResult Function(String data) parseData,
     required TResult Function() create,
   }) {
@@ -310,7 +310,7 @@ class _$SaveEventImpl extends SaveEvent with DiagnosticableTreeMixin {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(ToDo todo)? update,
     TResult? Function(String data)? parseData,
     TResult? Function()? create,
   }) {
@@ -322,7 +322,7 @@ class _$SaveEventImpl extends SaveEvent with DiagnosticableTreeMixin {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(ToDo todo)? update,
     TResult Function(String data)? parseData,
     TResult Function()? create,
     required TResult orElse(),
@@ -385,7 +385,7 @@ abstract class _$$UpdateEventImplCopyWith<$Res> {
           _$UpdateEventImpl value, $Res Function(_$UpdateEventImpl) then) =
       __$$UpdateEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ToDo todo, bool avoidDebounce});
+  $Res call({ToDo todo});
 
   $ToDoCopyWith<$Res> get todo;
 }
@@ -402,17 +402,12 @@ class __$$UpdateEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? todo = null,
-    Object? avoidDebounce = null,
   }) {
     return _then(_$UpdateEventImpl(
       todo: null == todo
           ? _value.todo
           : todo // ignore: cast_nullable_to_non_nullable
               as ToDo,
-      avoidDebounce: null == avoidDebounce
-          ? _value.avoidDebounce
-          : avoidDebounce // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 
@@ -428,18 +423,14 @@ class __$$UpdateEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
-  const _$UpdateEventImpl({required this.todo, this.avoidDebounce = false})
-      : super._();
+  const _$UpdateEventImpl({required this.todo}) : super._();
 
   @override
   final ToDo todo;
-  @override
-  @JsonKey()
-  final bool avoidDebounce;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoEditEvent.update(todo: $todo, avoidDebounce: $avoidDebounce)';
+    return 'ToDoEditEvent.update(todo: $todo)';
   }
 
   @override
@@ -447,8 +438,7 @@ class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'ToDoEditEvent.update'))
-      ..add(DiagnosticsProperty('todo', todo))
-      ..add(DiagnosticsProperty('avoidDebounce', avoidDebounce));
+      ..add(DiagnosticsProperty('todo', todo));
   }
 
   @override
@@ -456,13 +446,11 @@ class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UpdateEventImpl &&
-            (identical(other.todo, todo) || other.todo == todo) &&
-            (identical(other.avoidDebounce, avoidDebounce) ||
-                other.avoidDebounce == avoidDebounce));
+            (identical(other.todo, todo) || other.todo == todo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, todo, avoidDebounce);
+  int get hashCode => Object.hash(runtimeType, todo);
 
   @JsonKey(ignore: true)
   @override
@@ -475,11 +463,11 @@ class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(ToDo todo) update,
     required TResult Function(String data) parseData,
     required TResult Function() create,
   }) {
-    return update(todo, avoidDebounce);
+    return update(todo);
   }
 
   @override
@@ -487,11 +475,11 @@ class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(ToDo todo)? update,
     TResult? Function(String data)? parseData,
     TResult? Function()? create,
   }) {
-    return update?.call(todo, avoidDebounce);
+    return update?.call(todo);
   }
 
   @override
@@ -499,13 +487,13 @@ class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(ToDo todo)? update,
     TResult Function(String data)? parseData,
     TResult Function()? create,
     required TResult orElse(),
   }) {
     if (update != null) {
-      return update(todo, avoidDebounce);
+      return update(todo);
     }
     return orElse();
   }
@@ -552,12 +540,10 @@ class _$UpdateEventImpl extends UpdateEvent with DiagnosticableTreeMixin {
 }
 
 abstract class UpdateEvent extends ToDoEditEvent {
-  const factory UpdateEvent(
-      {required final ToDo todo, final bool avoidDebounce}) = _$UpdateEventImpl;
+  const factory UpdateEvent({required final ToDo todo}) = _$UpdateEventImpl;
   const UpdateEvent._() : super._();
 
   ToDo get todo;
-  bool get avoidDebounce;
   @JsonKey(ignore: true)
   _$$UpdateEventImplCopyWith<_$UpdateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -641,7 +627,7 @@ class _$ParseDataFromLinkEventImpl extends ParseDataFromLinkEvent
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(ToDo todo) update,
     required TResult Function(String data) parseData,
     required TResult Function() create,
   }) {
@@ -653,7 +639,7 @@ class _$ParseDataFromLinkEventImpl extends ParseDataFromLinkEvent
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(ToDo todo)? update,
     TResult? Function(String data)? parseData,
     TResult? Function()? create,
   }) {
@@ -665,7 +651,7 @@ class _$ParseDataFromLinkEventImpl extends ParseDataFromLinkEvent
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(ToDo todo)? update,
     TResult Function(String data)? parseData,
     TResult Function()? create,
     required TResult orElse(),
@@ -774,7 +760,7 @@ class _$CreateEventImpl extends CreateEvent with DiagnosticableTreeMixin {
   TResult when<TResult extends Object?>({
     required TResult Function(int id) load,
     required TResult Function() save,
-    required TResult Function(ToDo todo, bool avoidDebounce) update,
+    required TResult Function(ToDo todo) update,
     required TResult Function(String data) parseData,
     required TResult Function() create,
   }) {
@@ -786,7 +772,7 @@ class _$CreateEventImpl extends CreateEvent with DiagnosticableTreeMixin {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int id)? load,
     TResult? Function()? save,
-    TResult? Function(ToDo todo, bool avoidDebounce)? update,
+    TResult? Function(ToDo todo)? update,
     TResult? Function(String data)? parseData,
     TResult? Function()? create,
   }) {
@@ -798,7 +784,7 @@ class _$CreateEventImpl extends CreateEvent with DiagnosticableTreeMixin {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? load,
     TResult Function()? save,
-    TResult Function(ToDo todo, bool avoidDebounce)? update,
+    TResult Function(ToDo todo)? update,
     TResult Function(String data)? parseData,
     TResult Function()? create,
     required TResult orElse(),

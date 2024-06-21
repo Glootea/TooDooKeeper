@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 
 class ToDoSwitch extends StatelessWidget {
   const ToDoSwitch({required this.value, required this.onChanged, super.key});

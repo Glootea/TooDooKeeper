@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_summer_school/components/complex/tappable_box.dart';
-import 'package:yandex_summer_school/components/leaf/switch.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:yandex_summer_school/common/ui/complex/tappable_box.dart';
+import 'package:yandex_summer_school/common/ui/leaf/switch.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 
 class DeadlineSelector extends StatefulWidget {
   const DeadlineSelector({required this.value, required this.onChanged, super.key});
@@ -14,8 +16,8 @@ class DeadlineSelector extends StatefulWidget {
 }
 
 class _DeadlineSelectorState extends State<DeadlineSelector> {
-  Future<void> _onChanged(bool value) async {
-    final newDate = value
+  Future<void> _onChanged(bool requiresDate) async {
+    final newDate = requiresDate
         ? await showDatePicker(
             context: context,
             firstDate: DateTime.now(),
@@ -38,13 +40,13 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Сделать до', style: todoTheme.textTheme.body),
+              Text(AppLocalizations.of(context)!.deadline, style: todoTheme.textTheme.body),
               ToDoSwitch(value: widget.value != null, key: actionKey, onChanged: _onChanged),
             ],
           ),
           if (widget.value != null)
             Text(
-              widget.value.toString(), // TODO: convert to date string with month name
+              DateFormat.yMMMd().format(widget.value!),
               style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.blue),
             ),
         ],

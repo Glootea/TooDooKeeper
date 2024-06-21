@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 
 class ToDoEditTextField extends StatefulWidget {
   const ToDoEditTextField({required this.value, this.onSubmitted, this.onChanged, super.key});
@@ -42,11 +43,11 @@ class _ToDoEditTextFieldState extends State<ToDoEditTextField> {
           maxLines: null,
           controller: controller,
           onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-          decoration: const InputDecoration(
-            constraints: BoxConstraints(minHeight: 104),
+          decoration: InputDecoration(
+            constraints: const BoxConstraints(minHeight: 104),
             border: InputBorder.none,
-            hintText: 'Что надо сделать...',
-            contentPadding: EdgeInsets.all(8),
+            hintText: AppLocalizations.of(context)!.needToBeDone,
+            contentPadding: const EdgeInsets.all(8),
           ),
         ),
       ),

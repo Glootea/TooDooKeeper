@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ToDo {
-  int get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   bool get done => throw _privateConstructorUsedError;
   DateTime? get deadline => throw _privateConstructorUsedError;
@@ -26,9 +26,9 @@ mixin _$ToDo {
     TResult Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)
         $default, {
-    required TResult Function(int id, String description, bool done,
+    required TResult Function(int? id, String description, bool done,
             DateTime? deadline, Importance? importance)
-        empty,
+        justCreated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,9 +36,9 @@ mixin _$ToDo {
     TResult? Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)?
         $default, {
-    TResult? Function(int id, String description, bool done, DateTime? deadline,
-            Importance? importance)?
-        empty,
+    TResult? Function(int? id, String description, bool done,
+            DateTime? deadline, Importance? importance)?
+        justCreated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -46,28 +46,28 @@ mixin _$ToDo {
     TResult Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)?
         $default, {
-    TResult Function(int id, String description, bool done, DateTime? deadline,
+    TResult Function(int? id, String description, bool done, DateTime? deadline,
             Importance? importance)?
-        empty,
+        justCreated,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
     TResult Function(_ToDo value) $default, {
-    required TResult Function(_ToDoEmpty value) empty,
+    required TResult Function(_ToDoEmpty value) justCreated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_ToDo value)? $default, {
-    TResult? Function(_ToDoEmpty value)? empty,
+    TResult? Function(_ToDoEmpty value)? justCreated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_ToDo value)? $default, {
-    TResult Function(_ToDoEmpty value)? empty,
+    TResult Function(_ToDoEmpty value)? justCreated,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -110,7 +110,7 @@ class _$ToDoCopyWithImpl<$Res, $Val extends ToDo>
   }) {
     return _then(_value.copyWith(
       id: null == id
-          ? _value.id
+          ? _value.id!
           : id // ignore: cast_nullable_to_non_nullable
               as int,
       description: null == description
@@ -247,9 +247,9 @@ class _$ToDoImpl extends _ToDo {
     TResult Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)
         $default, {
-    required TResult Function(int id, String description, bool done,
+    required TResult Function(int? id, String description, bool done,
             DateTime? deadline, Importance? importance)
-        empty,
+        justCreated,
   }) {
     return $default(id, description, done, deadline, importance);
   }
@@ -260,9 +260,9 @@ class _$ToDoImpl extends _ToDo {
     TResult? Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)?
         $default, {
-    TResult? Function(int id, String description, bool done, DateTime? deadline,
-            Importance? importance)?
-        empty,
+    TResult? Function(int? id, String description, bool done,
+            DateTime? deadline, Importance? importance)?
+        justCreated,
   }) {
     return $default?.call(id, description, done, deadline, importance);
   }
@@ -273,9 +273,9 @@ class _$ToDoImpl extends _ToDo {
     TResult Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)?
         $default, {
-    TResult Function(int id, String description, bool done, DateTime? deadline,
+    TResult Function(int? id, String description, bool done, DateTime? deadline,
             Importance? importance)?
-        empty,
+        justCreated,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -288,7 +288,7 @@ class _$ToDoImpl extends _ToDo {
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
     TResult Function(_ToDo value) $default, {
-    required TResult Function(_ToDoEmpty value) empty,
+    required TResult Function(_ToDoEmpty value) justCreated,
   }) {
     return $default(this);
   }
@@ -297,7 +297,7 @@ class _$ToDoImpl extends _ToDo {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_ToDo value)? $default, {
-    TResult? Function(_ToDoEmpty value)? empty,
+    TResult? Function(_ToDoEmpty value)? justCreated,
   }) {
     return $default?.call(this);
   }
@@ -306,7 +306,7 @@ class _$ToDoImpl extends _ToDo {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_ToDo value)? $default, {
-    TResult Function(_ToDoEmpty value)? empty,
+    TResult Function(_ToDoEmpty value)? justCreated,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -349,7 +349,7 @@ abstract class _$$ToDoEmptyImplCopyWith<$Res> implements $ToDoCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String description,
       bool done,
       DateTime? deadline,
@@ -367,17 +367,17 @@ class __$$ToDoEmptyImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? description = null,
     Object? done = null,
     Object? deadline = freezed,
     Object? importance = freezed,
   }) {
     return _then(_$ToDoEmptyImpl(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -402,7 +402,7 @@ class __$$ToDoEmptyImplCopyWithImpl<$Res>
 
 class _$ToDoEmptyImpl extends _ToDoEmpty {
   const _$ToDoEmptyImpl(
-      {this.id = idEmpty,
+      {this.id = null,
       this.description = '',
       this.done = false,
       this.deadline = null,
@@ -411,7 +411,7 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
 
   @override
   @JsonKey()
-  final int id;
+  final int? id;
   @override
   @JsonKey()
   final String description;
@@ -427,7 +427,7 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
 
   @override
   String toString() {
-    return 'ToDo.empty(id: $id, description: $description, done: $done, deadline: $deadline, importance: $importance)';
+    return 'ToDo.justCreated(id: $id, description: $description, done: $done, deadline: $deadline, importance: $importance)';
   }
 
   @override
@@ -461,11 +461,11 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
     TResult Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)
         $default, {
-    required TResult Function(int id, String description, bool done,
+    required TResult Function(int? id, String description, bool done,
             DateTime? deadline, Importance? importance)
-        empty,
+        justCreated,
   }) {
-    return empty(id, description, done, deadline, importance);
+    return justCreated(id, description, done, deadline, importance);
   }
 
   @override
@@ -474,11 +474,11 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
     TResult? Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)?
         $default, {
-    TResult? Function(int id, String description, bool done, DateTime? deadline,
-            Importance? importance)?
-        empty,
+    TResult? Function(int? id, String description, bool done,
+            DateTime? deadline, Importance? importance)?
+        justCreated,
   }) {
-    return empty?.call(id, description, done, deadline, importance);
+    return justCreated?.call(id, description, done, deadline, importance);
   }
 
   @override
@@ -487,13 +487,13 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
     TResult Function(int id, String description, bool done, DateTime? deadline,
             Importance? importance)?
         $default, {
-    TResult Function(int id, String description, bool done, DateTime? deadline,
+    TResult Function(int? id, String description, bool done, DateTime? deadline,
             Importance? importance)?
-        empty,
+        justCreated,
     required TResult orElse(),
   }) {
-    if (empty != null) {
-      return empty(id, description, done, deadline, importance);
+    if (justCreated != null) {
+      return justCreated(id, description, done, deadline, importance);
     }
     return orElse();
   }
@@ -502,29 +502,29 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
     TResult Function(_ToDo value) $default, {
-    required TResult Function(_ToDoEmpty value) empty,
+    required TResult Function(_ToDoEmpty value) justCreated,
   }) {
-    return empty(this);
+    return justCreated(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_ToDo value)? $default, {
-    TResult? Function(_ToDoEmpty value)? empty,
+    TResult? Function(_ToDoEmpty value)? justCreated,
   }) {
-    return empty?.call(this);
+    return justCreated?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_ToDo value)? $default, {
-    TResult Function(_ToDoEmpty value)? empty,
+    TResult Function(_ToDoEmpty value)? justCreated,
     required TResult orElse(),
   }) {
-    if (empty != null) {
-      return empty(this);
+    if (justCreated != null) {
+      return justCreated(this);
     }
     return orElse();
   }
@@ -532,7 +532,7 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
 
 abstract class _ToDoEmpty extends ToDo {
   const factory _ToDoEmpty(
-      {final int id,
+      {final int? id,
       final String description,
       final bool done,
       final DateTime? deadline,
@@ -540,7 +540,7 @@ abstract class _ToDoEmpty extends ToDo {
   const _ToDoEmpty._() : super._();
 
   @override
-  int get id;
+  int? get id;
   @override
   String get description;
   @override

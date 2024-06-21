@@ -1,0 +1,18 @@
+{
+    "@@locale": "en",
+    "close": "Close",
+    "error": "Error",
+    "create": "Create",
+    "myTasks": "My tasks",
+    "completed": "Completed",
+    "filtersStub": "There will be filters",
+    "sortStub": "There will be sort options",
+    "save": "Save",
+    "delete": "Delete",
+    "importance": "Importance",
+    "none": "None",
+    "low": "Low",
+    "high": "High",
+    "deadline": "Deadline",
+    "needToBeDone": "Something needs to be done..."
+}

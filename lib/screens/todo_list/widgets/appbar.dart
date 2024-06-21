@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/bloc.dart';
-import 'package:yandex_summer_school/theme/theme_bloc.dart';
+import 'package:yandex_summer_school/screens/todo_list/widgets/overlay_container.dart';
 
 class ToDoListAppBar extends SliverPersistentHeaderDelegate {
   ToDoListAppBar({required this.expandedHeight, required this.topPadding, required this.state});
@@ -19,36 +21,33 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
     final shadowColor = todoTheme.backColors.primary;
 
     const expandedTitleOffset = ToDoOffset(Offset(60, 82));
-    const collapsedTitleOffset = ToDoOffset(Offset(48, 24));
+    const collapsedTitleOffset = ToDoOffset(Offset(48, 28));
+
     final subtitleOffset = ToDoOffset(Offset(60, 124 + topPadding));
-    const expanedIconOffset = ToDoOffset(Offset(20, 108)); // x - from right side as it aligns from there
+
+    const expanedIconOffset = ToDoOffset(Offset(20, 124)); // x - from right side as it aligns from there
+    const collapsedIconOffset = ToDoOffset(Offset(20, 24)); // x - from right side as it aligns from there
+
     const expandedFontSize = ToDoDouble(32);
     const collapsedFontSize = ToDoDouble(24);
-
-    final collapsedIconOffset = ToDoOffset(
-      Offset(
-        20, // x - from right side as it aligns from there
-        16 - ((Theme.of(context).iconTheme.size ?? 24) / 2),
-      ),
-    );
 
     final extendFactor = (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0);
 
     final titleFontSize = getLerpValue(expandedFontSize, collapsedFontSize, extendFactor).value;
-
     final titlePosition = getLerpValue(
       expandedTitleOffset,
       collapsedTitleOffset,
       extendFactor,
     ).value.translate(0, -titleFontSize / 2 + topPadding);
 
+    final iconSize = Theme.of(context).iconTheme.size ?? 24;
     final iconPosition = getLerpValue(
       expanedIconOffset,
       collapsedIconOffset,
       extendFactor,
-    ).value.translate(0, topPadding);
+    ).value.translate(0, -iconSize / 2 + topPadding);
 
-    bool overlayOpened = false;
+    var overlayOpened = false;
 
     return ConstrainedBox(
       constraints: BoxConstraints.expand(height: expandedHeight + topPadding),
@@ -71,13 +70,16 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
           Positioned(
             left: titlePosition.dx,
             top: titlePosition.dy,
-            child: Text('Мои дела', style: todoTheme.textTheme.largeTitle.copyWith(fontSize: titleFontSize)),
+            child: Text(
+              AppLocalizations.of(context)!.myTasks,
+              style: todoTheme.textTheme.largeTitle.copyWith(fontSize: titleFontSize),
+            ),
           ),
           Positioned(
             left: subtitleOffset.value.dx,
             top: subtitleOffset.value.dy,
             child: Text(
-              'Выполнено - 5',
+              '${AppLocalizations.of(context)!.completed}: ',
               style: todoTheme.textTheme.body.copyWith(color: todoTheme.labelTheme.tertiary),
             ),
           ),
@@ -90,8 +92,13 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                   onPressed: () {
                     if (overlayOpened) return;
                     overlayOpened = true;
-                    final entry = ToDoOverlay(
-                      children: [Text('Здесь будут фильтры', style: todoTheme.textTheme.body)],
+                    final entry = ToDoOverlayContainer(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.filtersStub,
+                          style: todoTheme.textTheme.body,
+                        ),
+                      ],
                       position: iconPosition + const Offset(0, 40),
                       onClose: () => overlayOpened = false,
                     );
@@ -108,8 +115,13 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                   onPressed: () {
                     if (overlayOpened) return;
                     overlayOpened = true;
-                    final entry = ToDoOverlay(
-                      children: [Text('Здесь будет сортировка', style: todoTheme.textTheme.body)],
+                    final entry = ToDoOverlayContainer(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.sortStub,
+                          style: todoTheme.textTheme.body,
+                        ),
+                      ],
                       position: iconPosition + const Offset(0, 40),
                       onClose: () => overlayOpened = false,
                     );
@@ -180,48 +192,4 @@ class ToDoDouble implements Summable<double> {
 
   @override
   ToDoDouble operator -(Summable<double> other) => ToDoDouble(value - other.value);
-}
-
-class ToDoOverlay extends OverlayEntry {
-  ToDoOverlay({required this.children, required this.position, required this.onClose})
-      : super(
-          builder: (context) {
-            return Column(children: children);
-          },
-        );
-  final List<Widget> children;
-  final Offset position;
-  final void Function() onClose;
-  @override
-  WidgetBuilder get builder => (context) {
-        final todoTheme = context.watch<ThemeBloc>().state;
-        return Positioned(
-          right: position.dx,
-          top: position.dy, // aligned to right border as icons are
-          child: Material(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: todoTheme.backColors.elevated,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    ...children,
-                    const SizedBox(height: 16),
-                    OutlinedButton(
-                      onPressed: () {
-                        remove();
-                        onClose();
-                      },
-                      child: Text('Закрыть', style: todoTheme.textTheme.button),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      };
 }
