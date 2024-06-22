@@ -24,9 +24,9 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.yandex_summer_school"
+    namespace = "com.glootea.toodookeeper"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion "26.1.10909125"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.yandex_summer_school"
+        applicationId = "com.glootea.toodookeeper"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = flutter.minSdkVersion
@@ -45,11 +45,20 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+            resValue "string", "app_name", "TooDooKeeper debug"
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
+            resValue "string", "app_name", "TooDooKeeper"
         }
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
