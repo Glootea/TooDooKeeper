@@ -7,7 +7,7 @@
 Список всех to-do с возможностью добавления новых. Каждый to-do содержит краткую информацию. Возможно отметить выполнение нажатием на checkbox или смещением задачи вправо. Смещение влево удалит задачу. Разные уровни важности отмечаются значками. Крайняя дата показывается при наличии. При нажатии на задачу можно перейти к ее редактированию.
 ### Edit
 Содержит поле ввода описания, выбор важности задачи и ее дедлайна. Можно сохранить или удалить to-do, а также отметить изменения.
-### Скриншоты
+## Скриншоты
 <p align="middle">
   <img src="https://drive.google.com/uc?export=view&id=1XeMCnd7hd7teW9KCkR8XbKPVx9lSR-FU" width="24%" />
   <img src="https://drive.google.com/uc?export=view&id=16FHGB6nV2r39DZm601Gyj-a3AU2BkAgF" width="24%" />
@@ -22,7 +22,7 @@
   <img src="https://drive.google.com/uc?export=view&id=1Gn6vxcsLkoGSGjYVn-cSxGMVqQ_zKWrY" width="24%" />
 </p>
 
-### Прочее
+## Прочее
 Само приложение поддерживает edge-to-edge, корректно обрабатывая различные способы навигации. Иконка приложения адаптируется под material you. Debug и release сборки разделены, что облегчает пользование и тестирование.
 <p align="middle">
   <img src="https://drive.google.com/uc?export=view&id=1kwvhxBl-MzXAgj7o8qdqR5mmthfZUvU4" width="32%" />
