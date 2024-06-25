@@ -18,5 +18,6 @@
     "shareError": "Error occurred while sharing your todo",
     "copiedToDo": "ToDo has been copied to clipboard",
     "unsupportedOnPlatform": "This function has not been implemented on this platform yet",
-    "share": "Share/Export"
+    "share": "Share/Export",
+    "prepareShareLink": "Preparing share link..."
 }

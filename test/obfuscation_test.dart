@@ -3,8 +3,11 @@ import 'package:yandex_summer_school/common/data/data_sources/obfuscation/gzip.d
 
 void main() {
   group('GZip obfuscation', () {
+    late final GZipObfuscation obfuscation;
+    setUpAll(() {
+      obfuscation = GZipObfuscation();
+    });
     test('English text', () {
-      final obfuscation = GZipObfuscation();
       const text = 'Hello, World!';
       final encrypted = obfuscation.encrypt(text);
       expect(encrypted, isNot(text));
@@ -13,7 +16,6 @@ void main() {
     });
 
     test('Russian text', () {
-      final obfuscation = GZipObfuscation();
       const text = 'Привет, Мир!';
       final encrypted = obfuscation.encrypt(text);
       expect(encrypted, isNot(text));
@@ -22,7 +24,6 @@ void main() {
     });
 
     test('Markdown text', () {
-      final obfuscation = GZipObfuscation();
       const text = '## **Hello, World!**'
           ' - list1'
           ' - list2'

@@ -23,13 +23,14 @@ class MainActivity: FlutterActivity() {
 
                     val shareIntent = Intent.createChooser(sendIntent, null)
                     startActivity(shareIntent)
-                    result.success(null)
+                     result.success(null)
                 } catch (e: Exception) {
-                   result.error(e.message ?: "Share exception", e.localizedMessage, e.stackTrace)
+                    result.error(e.message ?: "Share exception", e.localizedMessage, e.stackTrace)
                 }
 
+            } else {
+                result.error("Not method found", "No method found: ${call.method}", null)   
             }
-            result.error("Not method found", "No method found: ${call.method}", null)
         }
     }
 }

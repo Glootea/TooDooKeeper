@@ -8,27 +8,27 @@ void main() {
     setUpAll(() {
       shareProvider = ShareProvider(obfuscation: GZipObfuscation());
     });
-    test('English text', () {
+    test('English text', () async {
       const text = 'Hello, World!';
-      final encrypted = shareProvider.getShareLink(text);
+      final encrypted = await shareProvider.getShareLink(text);
       final decrypted = shareProvider.getSharedData(encrypted);
       expect(decrypted, text);
     });
 
-    test('Russian text', () {
+    test('Russian text', () async {
       const text = 'Привет, Мир!';
-      final encrypted = shareProvider.getShareLink(text);
+      final encrypted = await shareProvider.getShareLink(text);
       final decrypted = shareProvider.getSharedData(encrypted);
       expect(decrypted, text);
     });
 
-    test('Markdown text', () {
+    test('Markdown text', () async {
       const text = '## **Hello, World!**'
           ' - list1'
           ' - list2'
           ' > blockquote '
           '[Ссылка](https://yandex.ru)';
-      final encrypted = shareProvider.getShareLink(text);
+      final encrypted = await shareProvider.getShareLink(text);
       final decrypted = shareProvider.getSharedData(encrypted);
       expect(decrypted, text);
     });

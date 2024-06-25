@@ -25,8 +25,18 @@ sealed class ToDo with _$ToDo {
   const ToDo._();
 
   factory ToDo.fromJson(Map<String, dynamic> json) => _$ToDoFromJson(json);
+  factory ToDo.justCreatedFromJson(String json) {
+    final jsonMap = jsonDecode(json) as Map<String, dynamic>;
+    final parsed = _$ToDoFromJson(jsonMap);
+    return ToDo.justCreated(
+      deadline: parsed.deadline,
+      description: parsed.description,
+      done: parsed.done,
+      importance: parsed.importance,
+    );
+  }
 
-  String get dataToExport => jsonEncode((this as _ToDo).toJson());
+  String get dataToExport => jsonEncode(toJson());
 }
 
 enum Importance {
