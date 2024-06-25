@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:yandex_summer_school/common/data/data_sources/local_database.dart';
+import 'package:yandex_summer_school/common/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/common/entities/todo.dart';
 
 class ToDoProvider {

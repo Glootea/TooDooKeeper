@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:yandex_summer_school/common/data/data_sources/database_connection_shared.dart';
+import 'package:yandex_summer_school/common/data/data_sources/local_database/database_connection_shared.dart';
 
 part 'local_database.g.dart';
 

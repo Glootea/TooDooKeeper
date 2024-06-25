@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'todo.freezed.dart';
+part 'todo.g.dart';
 
-@freezed
+@Freezed(toJson: true, fromJson: true)
 sealed class ToDo with _$ToDo {
   const factory ToDo({
     required int id,
@@ -21,7 +24,9 @@ sealed class ToDo with _$ToDo {
 
   const ToDo._();
 
-  String get dataToExport => throw UnimplementedError(); // TODO: implement data getter for ToDo
+  factory ToDo.fromJson(Map<String, dynamic> json) => _$ToDoFromJson(json);
+
+  String get dataToExport => jsonEncode((this as _ToDo).toJson());
 }
 
 enum Importance {

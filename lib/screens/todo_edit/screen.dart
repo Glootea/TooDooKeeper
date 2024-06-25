@@ -10,6 +10,7 @@ import 'package:yandex_summer_school/screens/todo_edit/bloc/bloc.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/deadline_selector.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/delete_button.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/importance_selector.dart';
+import 'package:yandex_summer_school/screens/todo_edit/widgets/share_button.dart';
 
 class ToDoEditScreen extends StatelessWidget {
   const ToDoEditScreen({super.key});
@@ -78,6 +79,7 @@ class _MainScreen extends StatelessWidget {
               onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(deadline: value))),
             ),
             const Divider(),
+            const ShareButton(),
             const SizedBox(height: 16),
             DeleteButton(onPressed: () {}, canDelete: state.todo.id != null),
           ],

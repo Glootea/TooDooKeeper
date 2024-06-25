@@ -14,6 +14,19 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+ToDo _$ToDoFromJson(Map<String, dynamic> json) {
+  switch (json['runtimeType']) {
+    case 'default':
+      return _ToDo.fromJson(json);
+    case 'justCreated':
+      return _ToDoEmpty.fromJson(json);
+
+    default:
+      throw CheckedFromJsonException(json, 'runtimeType', 'ToDo',
+          'Invalid union type "${json['runtimeType']}"!');
+  }
+}
+
 /// @nodoc
 mixin _$ToDo {
   int? get id => throw _privateConstructorUsedError;
@@ -71,7 +84,7 @@ mixin _$ToDo {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ToDoCopyWith<ToDo> get copyWith => throw _privateConstructorUsedError;
 }
@@ -190,15 +203,20 @@ class __$$ToDoImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$ToDoImpl extends _ToDo {
   const _$ToDoImpl(
       {required this.id,
       required this.description,
       required this.done,
       this.deadline,
-      this.importance})
-      : super._();
+      this.importance,
+      final String? $type})
+      : $type = $type ?? 'default',
+        super._();
+
+  factory _$ToDoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ToDoImplFromJson(json);
 
   @override
   final int id;
@@ -210,6 +228,9 @@ class _$ToDoImpl extends _ToDo {
   final DateTime? deadline;
   @override
   final Importance? importance;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString() {
@@ -231,6 +252,7 @@ class _$ToDoImpl extends _ToDo {
                 other.importance == importance));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, description, done, deadline, importance);
@@ -314,6 +336,13 @@ class _$ToDoImpl extends _ToDo {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ToDoImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _ToDo extends ToDo {
@@ -324,6 +353,8 @@ abstract class _ToDo extends ToDo {
       final DateTime? deadline,
       final Importance? importance}) = _$ToDoImpl;
   const _ToDo._() : super._();
+
+  factory _ToDo.fromJson(Map<String, dynamic> json) = _$ToDoImpl.fromJson;
 
   @override
   int get id;
@@ -399,15 +430,20 @@ class __$$ToDoEmptyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$ToDoEmptyImpl extends _ToDoEmpty {
   const _$ToDoEmptyImpl(
       {this.id = null,
       this.description = '',
       this.done = false,
       this.deadline = null,
-      this.importance = null})
-      : super._();
+      this.importance = null,
+      final String? $type})
+      : $type = $type ?? 'justCreated',
+        super._();
+
+  factory _$ToDoEmptyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ToDoEmptyImplFromJson(json);
 
   @override
   @JsonKey()
@@ -424,6 +460,9 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   @override
   @JsonKey()
   final Importance? importance;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString() {
@@ -445,6 +484,7 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
                 other.importance == importance));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, description, done, deadline, importance);
@@ -528,6 +568,13 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ToDoEmptyImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _ToDoEmpty extends ToDo {
@@ -538,6 +585,9 @@ abstract class _ToDoEmpty extends ToDo {
       final DateTime? deadline,
       final Importance? importance}) = _$ToDoEmptyImpl;
   const _ToDoEmpty._() : super._();
+
+  factory _ToDoEmpty.fromJson(Map<String, dynamic> json) =
+      _$ToDoEmptyImpl.fromJson;
 
   @override
   int? get id;

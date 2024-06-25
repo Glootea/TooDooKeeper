@@ -14,5 +14,9 @@
     "low": "Low",
     "high": "High",
     "deadline": "Deadline",
-    "needToBeDone": "Something needs to be done..."
+    "needToBeDone": "Something needs to be done...",
+    "shareError": "Error occurred while sharing your todo",
+    "copiedToDo": "ToDo has been copied to clipboard",
+    "unsupportedOnPlatform": "This function has not been implemented on this platform yet",
+    "share": "Share/Export"
 }

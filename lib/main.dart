@@ -10,7 +10,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:yandex_summer_school/common/data/data_sources/local_database.dart';
+import 'package:yandex_summer_school/common/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/common/data/providers/todo.dart';
 import 'package:yandex_summer_school/common/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_edit/bloc/bloc.dart';
@@ -35,6 +35,12 @@ void main() {
 
       final router = GoRouter(
         initialLocation: '/',
+        redirect: (context, state) {
+          if (state.path == '/edit' && !state.uri.queryParameters.containsKey('data')) {
+            return '/new';
+          }
+          return null;
+        },
         routes: [
           GoRoute(
             path: '/',
@@ -48,13 +54,23 @@ void main() {
                 builder: (context, state) {
                   logger.d(state.pathParameters);
                   final idString = state.pathParameters['id'];
-                  final data = state.uri.queryParameters['data']; // from deep link
                   if (idString == null) {
                     return const TodoListScreen();
                   }
                   final id = int.parse(idString);
                   return BlocProvider(
-                    create: (context) => ToDoEditBloc(todoProvider: todoProvider, passedId: id, data: data),
+                    create: (context) => ToDoEditBloc(todoProvider: todoProvider, passedId: id),
+                    child: const ToDoEditScreen(),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'edit',
+                builder: (context, state) {
+                  logger.d(state.pathParameters);
+                  final data = state.uri.queryParameters['data']; // from deep link
+                  return BlocProvider(
+                    create: (context) => ToDoEditBloc(todoProvider: todoProvider, data: data),
                     child: const ToDoEditScreen(),
                   );
                 },
@@ -73,7 +89,7 @@ void main() {
 
       final brightness = PlatformDispatcher.instance.platformBrightness;
       final themeBloc = ThemeBloc(brightness);
-
+      final theme = themeBloc.state;
       final app = MultiBlocProvider(
         providers: [
           BlocProvider.value(value: themeBloc),
@@ -87,7 +103,12 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           theme: ThemeData(
             brightness: PlatformDispatcher.instance.platformBrightness,
-            scaffoldBackgroundColor: themeBloc.state.backColors.primary,
+            scaffoldBackgroundColor: theme.backColors.primary,
+            snackBarTheme: SnackBarThemeData(
+              contentTextStyle: theme.textTheme.body,
+              backgroundColor: theme.backColors.secondary,
+            ),
+            dividerColor: theme.supportColors.separator,
           ),
           routerConfig: router,
           debugShowCheckedModeBanner: false,
