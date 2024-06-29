@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:yandex_summer_school/core/ui/complex/tappable_box.dart';
-import 'package:yandex_summer_school/core/ui/leaf/date_text.dart';
-import 'package:yandex_summer_school/core/ui/leaf/switch.dart';
+import 'package:yandex_summer_school/core/ui/leaf/todo_date_text.dart';
+import 'package:yandex_summer_school/core/ui/leaf/todo_switch.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class DeadlineSelector extends StatefulWidget {

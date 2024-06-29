@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yandex_summer_school/core/ui/complex/error_screen.dart';
 import 'package:yandex_summer_school/core/ui/complex/loading_screen.dart';
-import 'package:yandex_summer_school/core/ui/leaf/textfield.dart';
+import 'package:yandex_summer_school/core/ui/leaf/todo_textfield.dart';
 import 'package:yandex_summer_school/screens/todo_edit/bloc/todo_edit_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/todo_edit_app_bar.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/todo_edit_deadline_selector.dart';
