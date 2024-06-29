@@ -1,16 +1,44 @@
-# yandex_summer_school
+# TooDooKeeper
+Приложение для сохранения to-do. Каждая задача может включать описание, крайний срок выполнения и важность.
 
-A new Flutter project.
+[Скачать актуальную версию приложенения](https://disk.yandex.ru/d/dC19bKlyPLOG5Q)
+## Приложение состоит из 2 экранов:
+### To-do list
+Список всех to-do с возможностью добавления новых. Каждый to-do содержит краткую информацию. Возможно отметить выполнение нажатием на checkbox или смещением задачи вправо. Смещение влево удалит задачу. Разные уровни важности отмечаются значками. Крайняя дата показывается при наличии. При нажатии на задачу можно перейти к ее редактированию. Список to-do сортируется по важности и факту выполнения, выполненные задачи можно скрыть
+### Edit
+Содержит поле ввода описания, выбор важности задачи и ее дедлайна. Можно сохранить или удалить to-do, а также отметить изменения.
+## Скриншоты
+<p align="middle">
+  <img src="https://drive.google.com/uc?export=view&id=1wY71XHbRueFAVCm2K1D9DIFJwfP6v3uE" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=1wC1g6NGjFBkq-Thou-aR-P8JwlBu1Ikn" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=1wKp4iEO__03SP9mFr2NRRAEII8gEQwCO" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=1wGIIrYZ-210_KkmOr3kCi9u9qQ08uByp" width="24%" />
+</p>
+<p align="middle">
+  <img src="https://drive.google.com/uc?export=view&id=1XeMCnd7hd7teW9KCkR8XbKPVx9lSR-FU" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=16FHGB6nV2r39DZm601Gyj-a3AU2BkAgF" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=1chJwp8OHlwCwQ0C_6xng4Btmoulkvt-e" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=12q1gnMUoRyFse_E_9e8AWFObv0oI5jpO" width="24%" />
+</p>
 
-## Getting Started
+# Библиотеки
+В качестве стейт-менеджмента используется [bloc](https://pub.dev/packages/flutter_bloc), локальная база данных - [drift](https://pub.dev/packages/drift), работа с бэкендом осуществляется с помощью [dio](https://pub.dev/packages/dio), интернализация - [flutter_localizations](https://api.flutter.dev/flutter/flutter_localizations/flutter_localizations-library.html) и [intl](https://pub.dev/packages/intl). Уникальные ключи для id to-do и deviceID создаются через [uuid](https://pub.dev/packages/uuid). Линтер - [very_good_analysis](https://pub.dev/packages/very_good_analysis).
 
-This project is a starting point for a Flutter application.
+## Прочее
+Само приложение поддерживает edge-to-edge, корректно обрабатывая различные способы навигации. Иконка приложения адаптируется под material you. Debug и release сборки разделены, что облегчает пользование и тестирование.
+<p align="middle">
+  <img src="https://drive.google.com/uc?export=view&id=1kwvhxBl-MzXAgj7o8qdqR5mmthfZUvU4" width="32%" />
+  <img src="https://drive.google.com/uc?export=view&id=1kr6m2PLQYP7NbQ5chIzYzSih4Llb4Hyn" width="32%" />
+  <img src="https://drive.google.com/uc?export=view&id=1kgkwOMpDS6NVQVdA83rJMlmdquuQhYn1" width="32%" />
+</p>
 
-A few resources to get you started if this is your first Flutter project:
+## Yandex LoginSDK
+Получение токенов, необходимых для взаимодействия с бэкендом, с последующим сохранением в [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Поделиться по ссылке
+[Видео](https://drive.google.com/file/d/1oUf2CsXi2GpA8HbKefmwbAN3MM9_CS_6/preview)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+После создания задачи можно нажать кнопку поделиться (пока только на android) или скопировать ссылку, которая проходит через сервис сокращения (spoo.me). Когда получатель откроет ссылку, он попадет на экран редактирования с полностью заполненной задачей, которую можно изменить и сохранить. Для этого в настройках необходимо разрешить приложению открывать ссылки.
+
+## Предиктивый жест назад (только на android >= 14)
+

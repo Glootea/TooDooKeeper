@@ -4,7 +4,12 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
-
+dependencies {
+    implementation "com.yandex.android:authsdk:3.1.0"
+    implementation 'androidx.activity:activity-ktx:1.9.0'
+    implementation 'androidx.fragment:fragment-ktx:1.8.0'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+}
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
@@ -24,9 +29,9 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.yandex_summer_school"
+    namespace = "com.glootea.toodookeeper"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion "26.1.10909125"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -35,21 +40,31 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.yandex_summer_school"
+        applicationId = "com.glootea.toodookeeper"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+        manifestPlaceholders += [YANDEX_CLIENT_ID:"5c5db07bbbb1440385bf545f0c310062"]
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+            resValue "string", "app_name", "TooDooKeeper debug"
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
+            resValue "string", "app_name", "TooDooKeeper"
         }
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
