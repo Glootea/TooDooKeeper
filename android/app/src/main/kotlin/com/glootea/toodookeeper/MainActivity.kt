@@ -1,5 +1,6 @@
 package com.glootea.toodookeeper
 
+
 import android.content.Intent
 import com.yandex.authsdk.YandexAuthException
 import com.yandex.authsdk.YandexAuthLoginOptions
@@ -102,5 +103,3 @@ class MainActivity : FlutterActivity() {
     }
 
 }
-
-

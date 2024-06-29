@@ -15,6 +15,7 @@
   <img src="https://drive.google.com/uc?export=view&id=1wGIIrYZ-210_KkmOr3kCi9u9qQ08uByp" width="24%" />
 </p>
 <p align="middle">
+
   <img src="https://drive.google.com/uc?export=view&id=1XeMCnd7hd7teW9KCkR8XbKPVx9lSR-FU" width="24%" />
   <img src="https://drive.google.com/uc?export=view&id=16FHGB6nV2r39DZm601Gyj-a3AU2BkAgF" width="24%" />
   <img src="https://drive.google.com/uc?export=view&id=1chJwp8OHlwCwQ0C_6xng4Btmoulkvt-e" width="24%" />
@@ -23,6 +24,12 @@
 
 # Библиотеки
 В качестве стейт-менеджмента используется [bloc](https://pub.dev/packages/flutter_bloc), локальная база данных - [drift](https://pub.dev/packages/drift), работа с бэкендом осуществляется с помощью [dio](https://pub.dev/packages/dio), интернализация - [flutter_localizations](https://api.flutter.dev/flutter/flutter_localizations/flutter_localizations-library.html) и [intl](https://pub.dev/packages/intl). Уникальные ключи для id to-do и deviceID создаются через [uuid](https://pub.dev/packages/uuid). Линтер - [very_good_analysis](https://pub.dev/packages/very_good_analysis).
+<p align="middle">
+  <img src="https://drive.google.com/uc?export=view&id=1SkhO-lwbi1GFurndsEaJ6M54xTqO_lt3" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=1-SdnkRJFtRAQ677J9uGmjiglmXBxON2W" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=1uXCfI2woOEUwhpfIxZC-qNZzF7DU9Pjd" width="24%" />
+  <img src="https://drive.google.com/uc?export=view&id=1Gn6vxcsLkoGSGjYVn-cSxGMVqQ_zKWrY" width="24%" />
+</p>
 
 ## Прочее
 Само приложение поддерживает edge-to-edge, корректно обрабатывая различные способы навигации. Иконка приложения адаптируется под material you. Debug и release сборки разделены, что облегчает пользование и тестирование.
@@ -41,4 +48,3 @@
 После создания задачи можно нажать кнопку поделиться (пока только на android) или скопировать ссылку, которая проходит через сервис сокращения (spoo.me). Когда получатель откроет ссылку, он попадет на экран редактирования с полностью заполненной задачей, которую можно изменить и сохранить. Для этого в настройках необходимо разрешить приложению открывать ссылки.
 
 ## Предиктивый жест назад (только на android >= 14)
-
