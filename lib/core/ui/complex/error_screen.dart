@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({this.error, super.key});
@@ -7,7 +7,7 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Align(child: Text(AppLocalizations.of(context)!.error)),
+      body: Align(child: Text(context.loc.error)),
     );
   }
 }

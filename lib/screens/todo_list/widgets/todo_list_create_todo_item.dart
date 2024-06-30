@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class CreateTodoItem extends StatelessWidget {
@@ -19,7 +19,7 @@ class CreateTodoItem extends StatelessWidget {
           child: Align(
             alignment: Alignment.topLeft,
             child: Text(
-              AppLocalizations.of(context)!.create,
+              context.loc.create,
               style: todoTheme.textTheme.body.copyWith(color: todoTheme.labelTheme.tertiary),
             ),
           ),

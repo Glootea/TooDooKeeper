@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yandex_summer_school/core/data/data_sources/online_database/yandex_online_database.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
-import 'package:yandex_summer_school/main.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 
 import 'secret.dart';
 

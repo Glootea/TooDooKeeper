@@ -14,6 +14,7 @@ import 'package:yandex_summer_school/core/data/data_sources/local_database/local
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
 import 'package:yandex_summer_school/core/data/providers/online/yandex_online_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/screens/auth_screen.dart';
@@ -172,5 +173,3 @@ class InitScreen extends StatelessWidget {
     );
   }
 }
-
-final Logger logger = Logger();

@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:yandex_summer_school/core/data/data_sources/auth/auth_method_abst.dart';
-import 'package:yandex_summer_school/main.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 
 class YandexAuth extends AuthMethod {
   YandexAuth._();
@@ -29,7 +29,7 @@ class YandexAuth extends AuthMethod {
     final savedKey = await _secureStorage.read(key: _keyString);
     final savedExpires = await _secureStorage.read(key: _keyExpires);
     if (savedKey != null && savedExpires != null) {
-      if (int.parse(savedExpires) > DateTime.now().millisecondsSinceEpoch) {
+      if (!_keyExpired(savedExpires)) {
         authToken = savedKey;
         return true;
       } else {
@@ -41,13 +41,7 @@ class YandexAuth extends AuthMethod {
     if (data == null) throw Exception('Failed to login user as no data was provided');
     logger.i(data);
     if (data['success'] as bool? ?? false) {
-      final token = data['token'];
-      final expiresIn = data['expiresIn'];
-      if (token == null || expiresIn == null) throw Exception('Failed to login user as no data was provided');
-      await _secureStorage.write(key: _keyString, value: token as String);
-      final expires = DateTime.now().add(Duration(minutes: expiresIn as int));
-      await _secureStorage.write(key: _keyExpires, value: expires.millisecondsSinceEpoch.toString());
-      authToken = token;
+      authToken = await _storeToken(data);
       return true;
     }
     if (data['cancelled'] as bool? ?? false) {
@@ -56,6 +50,22 @@ class YandexAuth extends AuthMethod {
     }
     logger.e(data['error']);
     return false;
+  }
+
+  bool _keyExpired(String expiresString) {
+    final expires = int.tryParse(expiresString);
+    if (expires == null) return true;
+    return expires > DateTime.now().millisecondsSinceEpoch;
+  }
+
+  Future<String> _storeToken(Map<Object?, Object?> data) async {
+    final token = data['token'];
+    final expiresIn = data['expiresIn'];
+    if (token == null || expiresIn == null) throw Exception('Failed to login user as no data was provided');
+    await _secureStorage.write(key: _keyString, value: token as String);
+    final expires = DateTime.now().add(Duration(minutes: expiresIn as int));
+    await _secureStorage.write(key: _keyExpires, value: expires.millisecondsSinceEpoch.toString());
+    return token;
   }
 
   @override

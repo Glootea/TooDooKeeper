@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_list/widgets/todo_list_overlay_container.dart';
@@ -64,7 +64,7 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
               left: titlePosition.dx,
               top: titlePosition.dy,
               child: Text(
-                AppLocalizations.of(context)!.myTasks,
+                context.loc.myTasks,
                 style: todoTheme.textTheme.largeTitle.copyWith(fontSize: titleFontSize),
               ),
             ),
@@ -75,7 +75,7 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                 builder: (context, state) {
                   if (state is MainState) {
                     return Text(
-                      '${AppLocalizations.of(context)!.completed} - ${state.todos.where((t) => t.done).length}',
+                      '${context.loc.completed} - ${state.todos.where((t) => t.done).length}',
                       style: todoTheme.textTheme.body.copyWith(color: todoTheme.labelTheme.tertiary),
                     );
                   }
@@ -102,7 +102,7 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                       final entry = ToDoOverlayContainer(
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.filtersStub,
+                            context.loc.filtersStub,
                             style: todoTheme.textTheme.body,
                           ),
                         ],
@@ -125,7 +125,7 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                       final entry = ToDoOverlayContainer(
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.sortStub,
+                            context.loc.sortStub,
                             style: todoTheme.textTheme.body,
                           ),
                         ],

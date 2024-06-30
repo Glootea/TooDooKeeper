@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/complex/error_screen.dart';
 import 'package:yandex_summer_school/core/ui/complex/loading_screen.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_textfield.dart';
@@ -51,10 +51,10 @@ class _MainScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is MainState) {
           final message = switch (state.message) {
-            ToDoEditMessage.copiedToDo => AppLocalizations.of(context)!.copiedToDo,
-            ToDoEditMessage.shareError => AppLocalizations.of(context)!.shareError,
-            ToDoEditMessage.unsupportedOnPlatform => AppLocalizations.of(context)!.unsupportedOnPlatform,
-            ToDoEditMessage.prepareShareLink => AppLocalizations.of(context)!.prepareShareLink,
+            ToDoEditMessage.copiedToDo => context.loc.copiedToDo,
+            ToDoEditMessage.shareError => context.loc.shareError,
+            ToDoEditMessage.unsupportedOnPlatform => context.loc.unsupportedOnPlatform,
+            ToDoEditMessage.prepareShareLink => context.loc.prepareShareLink,
             null => null,
           };
           if (message != null) {

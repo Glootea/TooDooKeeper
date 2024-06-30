@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme.dart';
-import 'package:yandex_summer_school/main.dart';
 part 'theme_bloc.freezed.dart';
 
 class ThemeBloc extends Bloc<ToDoThemeEvent, ToDoTheme> {

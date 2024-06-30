@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class LogoutButton extends StatelessWidget {
@@ -19,7 +19,7 @@ class LogoutButton extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Text(
-            AppLocalizations.of(context)!.logout,
+            context.loc.logout,
             style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.red),
           ),
         ],

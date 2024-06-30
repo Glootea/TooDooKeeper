@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:yandex_summer_school/main.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 
 class UrlShortener {
   static Future<String> shortenUrl(String url) async {

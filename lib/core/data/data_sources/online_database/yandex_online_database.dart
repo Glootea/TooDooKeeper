@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' hide Options
 import 'package:uuid/uuid.dart';
 import 'package:yandex_summer_school/core/data/data_sources/online_database/online_database_abst.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
-import 'package:yandex_summer_school/main.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 
 class YandexOnlineDatabase implements OnlineDatabase {
   YandexOnlineDatabase._(
@@ -126,7 +126,7 @@ class YandexOnlineDatabase implements OnlineDatabase {
         logger.i('Received data for createToDo');
         return _parseElement(data);
       }
-      throw Exception('Data has not been received for getToDoById');
+      throw Exception('Data has not been received for createToDo');
     } catch (e) {
       logger.e('Failed to create to do: $e');
       return null;
@@ -146,9 +146,9 @@ class YandexOnlineDatabase implements OnlineDatabase {
         logger.i('Received data for updateToDo');
         return _parseElement(data);
       }
-      throw Exception('Data has not been received for getToDoById');
-    } catch (e) {
-      logger.e('Failed to update to do: $e');
+      throw Exception('Data has not been received for updateToDo');
+    } catch (e, s) {
+      logger.e('Failed to update to do: $e, stackTrace: $s');
       return null;
     }
   }
@@ -165,9 +165,9 @@ class YandexOnlineDatabase implements OnlineDatabase {
         logger.i('Received data for deleteToDo');
         return _parseElement(data);
       }
-      throw Exception('Data has not been received for getToDoById');
-    } catch (e) {
-      logger.e('Failed to delete to do: $e');
+      throw Exception('Data has not been received for deleteToDo');
+    } catch (e, s) {
+      logger.e('Failed to delete to do: $e, stackTrace: $s');
       return null;
     }
   }

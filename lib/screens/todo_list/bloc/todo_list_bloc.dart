@@ -4,30 +4,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
-import 'package:yandex_summer_school/main.dart';
+import 'package:yandex_summer_school/core/logger.dart';
+
+part 'todo_list_states.dart';
+part 'todo_list_events.dart';
 part 'todo_list_bloc.freezed.dart';
 
 class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
   ToDoListBloc(this.todoProvider) : super(const ToDoListState.loading()) {
     on<ToDoListEvent>(
-      (event, emit) async {
+      (event, emit) {
         logger.d(event);
-        switch (event) {
-          case LoadEvent():
-            await _onLoadEvent(event, emit);
-          case DeleteEvent():
-            await _onDeleteEvent(event, emit);
-          case ToggleDoneEvent():
-            await _onToggleDone(event, emit);
-          case LogoutEvent():
-            await _onLogoutEvent(event, emit);
-          case CreateEvent():
-            await _onCreateEvent(event, emit);
-          case SaveJustCreatedEvent():
-            await _onSaveEvent(event, emit);
-          case ToggleVisibilityEvent():
-            _onToggleVisibility(event, emit);
-        }
+        return event.map<Future<void>>(
+          load: (event) async => _onLoadEvent(event, emit),
+          delete: (event) => _onDeleteEvent(event, emit),
+          toggleDone: (event) => _onToggleDone(event, emit),
+          logout: (event) => _onLogoutEvent(event, emit),
+          create: (event) => _onCreateEvent(event, emit),
+          saveJustCreated: (event) => _onSaveEvent(event, emit),
+          toggleVisibility: (event) async => _onToggleVisibility(event, emit),
+        );
       },
       transformer: sequential(),
     );
@@ -98,40 +94,3 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     emit(MainState(todos: currentState.todos, query: currentState.query, showDone: !currentState.showDone));
   }
 }
-
-@Freezed(equal: false)
-sealed class ToDoListState with _$ToDoListState {
-  const factory ToDoListState({
-    required List<ToDo> todos,
-    required ToDoListQuery query,
-    required bool showDone,
-  }) = MainState;
-
-  const factory ToDoListState.loading() = LoadingState;
-
-  const factory ToDoListState.error({required String message}) = ErrorState;
-}
-
-@freezed
-sealed class ToDoListEvent with _$ToDoListEvent {
-  const factory ToDoListEvent.load() = LoadEvent;
-  const factory ToDoListEvent.delete(String id) = DeleteEvent;
-  const factory ToDoListEvent.toggleDone(String id) = ToggleDoneEvent;
-  const factory ToDoListEvent.logout() = LogoutEvent;
-  const factory ToDoListEvent.create() = CreateEvent;
-  const factory ToDoListEvent.saveJustCreated(String description) = SaveJustCreatedEvent;
-  const factory ToDoListEvent.toggleVisibility() = ToggleVisibilityEvent;
-}
-
-@freezed
-sealed class ToDoListQuery with _$ToDoListQuery {
-  const factory ToDoListQuery({
-    String? search,
-    List<SortOption>? sortOptions,
-    List<FilterOption>? filterOptions,
-  }) = _ToDoListQuery;
-}
-
-class SortOption {}
-
-class FilterOption {}

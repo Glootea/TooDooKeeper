@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class ToDoEditTextField extends StatefulWidget {
@@ -53,7 +53,7 @@ class _ToDoEditTextFieldState extends State<ToDoEditTextField> {
             decoration: InputDecoration(
               constraints: const BoxConstraints(minHeight: 104),
               border: InputBorder.none,
-              hintText: AppLocalizations.of(context)!.needToBeDone,
+              hintText: context.loc.needToBeDone,
               contentPadding: const EdgeInsets.all(8),
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/complex/tappable_box.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
@@ -29,7 +29,7 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            AppLocalizations.of(context)!.importance,
+            context.loc.importance,
             style: todoTheme.textTheme.body,
           ),
           DropdownButton<Importance>(
@@ -41,7 +41,7 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
               DropdownMenuItem(
                 value: Importance.basic,
                 child: Text(
-                  AppLocalizations.of(context)!.none,
+                  context.loc.none,
                   style: todoTheme.textTheme.body,
                 ),
               ),
@@ -57,7 +57,7 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
                       ),
                     ),
                     Text(
-                      AppLocalizations.of(context)!.low,
+                      context.loc.low,
                       style: todoTheme.textTheme.body,
                     ),
                   ],
@@ -72,7 +72,7 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
                       child: Image.asset('assets/double-exclamation-mark.png'),
                     ),
                     Text(
-                      AppLocalizations.of(context)!.high,
+                      context.loc.high,
                       style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.red),
                     ),
                   ],

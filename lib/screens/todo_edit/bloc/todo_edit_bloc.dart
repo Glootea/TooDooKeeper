@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +9,10 @@ import 'package:yandex_summer_school/core/data/data_sources/online_database/yand
 import 'package:yandex_summer_school/core/data/providers/share_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
-import 'package:yandex_summer_school/main.dart';
+import 'package:yandex_summer_school/core/logger.dart';
+
+part 'todo_edit_events.dart';
+part 'todo_edit_states.dart';
 part 'todo_edit_bloc.freezed.dart';
 
 class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
@@ -20,29 +22,29 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     this.data,
   }) : super(const ToDoEditState.loading()) {
     on<ToDoEditEvent>(
-      (event, emit) async {
-        switch (event) {
-          case CreateEvent():
-            await _onCreateEvent(event, emit);
-          case LoadByIdEvent():
-            await _onLoadByIdEvent(event, emit);
-          case ParseDataFromLinkEvent():
-            await _onParseDataFromLinkEvent(event, emit);
-          case SaveEvent():
-            await _onSaveEvent(event, emit);
-          case UpdateEvent():
-            await _onUpdateEvent(event, emit);
-          case ShareExportEvent():
-            await _onShareExportEvent(event, emit);
-          case ShareCopyEvent():
-            await _onShareCopyEvent(event, emit);
-          case DeleteEvent():
-            await _onDeleteEvent(event, emit);
-        }
+      (event, emit) {
+        return event.map<Future<void>>(
+          load: (event) => _onLoadByIdEvent(event, emit),
+          save: (event) => _onSaveEvent(event, emit),
+          update: (event) => _onUpdateEvent(event, emit),
+          parseData: (event) => _onParseDataFromLinkEvent(event, emit),
+          create: (event) => _onCreateEvent(event, emit),
+          shareExport: (event) => _onShareExportEvent(event, emit),
+          shareCopy: (event) => _onShareCopyEvent(event, emit),
+          delete: (event) => _onDeleteEvent(event, emit),
+        );
       },
       transformer: sequential(),
     );
 
+    _addInitialEvent();
+  }
+
+  final ToDoProvider todoProvider;
+  final String? passedId;
+  final String? data;
+
+  void _addInitialEvent() {
     if (passedId != null) {
       add(LoadByIdEvent(passedId!));
     } else if (data != null) {
@@ -135,7 +137,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     final obfuscation = GZipObfuscation();
     final shareProvider = ShareProvider(obfuscation: obfuscation);
     final exportText = await shareProvider.getShareLink(text, tryShort: true);
-    return exportText;
+    return exportText; // TODO: show guide for activating deep links in settings with 'don't show again' option
   }
 
   Future<void> _onDeleteEvent(DeleteEvent event, Emitter<ToDoEditState> emit) async {
@@ -149,32 +151,4 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
       emit(const ToDoEditState.error());
     }
   }
-
-  final ToDoProvider todoProvider;
-  final String? passedId;
-  final String? data;
 }
-
-@freezed
-sealed class ToDoEditEvent with _$ToDoEditEvent {
-  const ToDoEditEvent._();
-  const factory ToDoEditEvent.load(String id) = LoadByIdEvent;
-  const factory ToDoEditEvent.save() = SaveEvent;
-  const factory ToDoEditEvent.update({required ToDo todo}) = UpdateEvent;
-  const factory ToDoEditEvent.parseData({required String data}) = ParseDataFromLinkEvent;
-  const factory ToDoEditEvent.create() = CreateEvent;
-  const factory ToDoEditEvent.shareExport() = ShareExportEvent;
-  const factory ToDoEditEvent.shareCopy() = ShareCopyEvent;
-  const factory ToDoEditEvent.delete() = DeleteEvent;
-}
-
-@Freezed(equal: false)
-sealed class ToDoEditState with _$ToDoEditState {
-  const factory ToDoEditState({required ToDo todo, ToDoEditMessage? message}) = MainState;
-  const factory ToDoEditState.loading() = LoadingState;
-  const factory ToDoEditState.error() = ErrorState;
-  const factory ToDoEditState.save() = SaveState;
-  const factory ToDoEditState.saved() = SavedState;
-}
-
-enum ToDoEditMessage { unsupportedOnPlatform, shareError, copiedToDo, prepareShareLink }

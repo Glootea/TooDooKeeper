@@ -30,6 +30,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> createOrUpdateTodo({required ToDoItemsCompanion companion}) {
+    // TODO: divide into two functions
     return into(toDoItems).insertOnConflictUpdate(companion);
   }
 

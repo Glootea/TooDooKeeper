@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/complex/tappable_box.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_date_text.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_switch.dart';
@@ -52,7 +52,7 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.of(context)!.deadline, style: todoTheme.textTheme.body),
+              Text(context.loc.deadline, style: todoTheme.textTheme.body),
               ToDoSwitch(value: widget.value != null, onChanged: _onChanged),
             ],
           ),

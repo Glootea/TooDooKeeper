@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
+import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -21,7 +21,7 @@ class AuthScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              AppLocalizations.of(context)!.loginNeeded,
+              context.loc.loginNeeded,
               style: todoTheme.state.textTheme.body,
               textAlign: TextAlign.center,
             ),
@@ -39,7 +39,7 @@ class AuthScreen extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        AppLocalizations.of(context)!.loginFailed,
+                        context.loc.loginFailed,
                         style: todoTheme.state.textTheme.body,
                       ),
                     ),
@@ -48,7 +48,7 @@ class AuthScreen extends StatelessWidget {
               }
             },
             child: Text(
-              AppLocalizations.of(context)!.login,
+              context.loc.login,
               style: todoTheme.state.textTheme.button.copyWith(color: todoTheme.state.definedColors.blue),
             ),
           ),
