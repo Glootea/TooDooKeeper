@@ -5,7 +5,8 @@ import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class CreateTodoItem extends StatelessWidget {
   const CreateTodoItem({required this.onTap, super.key});
-  final void Function() onTap;
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

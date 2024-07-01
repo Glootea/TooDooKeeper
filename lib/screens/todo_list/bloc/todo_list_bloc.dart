@@ -8,6 +8,7 @@ import 'package:yandex_summer_school/core/logger.dart';
 
 part 'todo_list_states.dart';
 part 'todo_list_events.dart';
+part 'todo_list_query.dart';
 part 'todo_list_bloc.freezed.dart';
 
 class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
@@ -72,9 +73,7 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     }
   }
 
-  Future<void> _onLogoutEvent(LogoutEvent event, Emitter<ToDoListState> emit) async {
-    await todoProvider.onlineProvider.logout();
-  }
+  Future<void> _onLogoutEvent(LogoutEvent event, Emitter<ToDoListState> emit) async => todoProvider.logout();
 
   Future<void> _onCreateEvent(CreateEvent event, Emitter<ToDoListState> emit) async {
     const todo = ToDo.justCreated();

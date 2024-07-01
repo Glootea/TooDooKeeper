@@ -5,7 +5,7 @@ import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({required this.onTap, super.key});
-  final void Function() onTap;
+  final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     final todoTheme = context.watch<ThemeBloc>().state;

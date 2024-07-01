@@ -6,7 +6,8 @@ import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart'
 import 'package:yandex_summer_school/screens/todo_list/widgets/todo_list_overlay_container.dart';
 
 class ToDoListAppBar extends SliverPersistentHeaderDelegate {
-  ToDoListAppBar({required this.expandedHeight, required this.topPadding, required this.state});
+  const ToDoListAppBar({required this.expandedHeight, required this.topPadding, required this.state});
+
   final double expandedHeight;
   final double topPadding;
   final MainState state;

@@ -9,7 +9,7 @@ class ToDoOverlayContainer extends OverlayEntry {
 
   final List<Widget> children;
   final Offset position;
-  final void Function() onClose;
+  final VoidCallback onClose;
 
   @override
   WidgetBuilder get builder => (context) {

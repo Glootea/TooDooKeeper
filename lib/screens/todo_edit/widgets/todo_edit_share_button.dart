@@ -5,8 +5,8 @@ import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class ShareButton extends StatelessWidget {
   const ShareButton({required this.onCopy, required this.onShare, super.key});
-  final void Function() onCopy;
-  final void Function() onShare;
+  final VoidCallback onCopy;
+  final VoidCallback onShare;
   @override
   Widget build(BuildContext context) {
     final todoTheme = context.watch<ThemeBloc>().state;

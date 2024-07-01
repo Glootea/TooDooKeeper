@@ -49,7 +49,9 @@ class AuthScreen extends StatelessWidget {
             },
             child: Text(
               context.loc.login,
-              style: todoTheme.state.textTheme.button.copyWith(color: todoTheme.state.definedColors.blue),
+              style: todoTheme.state.textTheme.button.copyWith(
+                color: todoTheme.state.definedColors.blue,
+              ),
             ),
           ),
         ],

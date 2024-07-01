@@ -41,6 +41,8 @@ class AppDatabase extends _$AppDatabase {
     return batch((b) => b.insertAllOnConflictUpdate(toDoItems, list));
   }
 
+  Future<void> logout() async => delete(toDoItems).go();
+
   @override
   int get schemaVersion => 1;
 

@@ -117,26 +117,11 @@ class _MainScreen extends StatelessWidget {
         ..sort(
           // TODO: implement sort by query
           (a, b) => switch ((a.done, b.done)) {
-            (false, false) || (true, true) => sortByImportance(a, b),
+            (false, false) || (true, true) => a.importance.compareTo(b.importance),
             (false, true) => -1,
             (true, false) => 1,
           },
         );
     }
   }
-
-  int sortByImportance(ToDo a, ToDo b) => switch ((a.importance, b.importance)) {
-        (Importance.low, Importance.low) ||
-        (Importance.basic, Importance.basic) ||
-        (Importance.important, Importance.important) =>
-          0,
-        (Importance.low, Importance.basic) ||
-        (Importance.low, Importance.important) ||
-        (Importance.basic, Importance.important) =>
-          1,
-        (Importance.basic, Importance.low) ||
-        (Importance.important, Importance.low) ||
-        (Importance.important, Importance.basic) =>
-          -1,
-      };
 }

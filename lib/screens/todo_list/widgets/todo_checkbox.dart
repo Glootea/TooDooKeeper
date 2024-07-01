@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_summer_school/core/entities/todo.dart';
+import 'package:yandex_summer_school/core/entities/importance.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class ToDoCheckbox extends StatelessWidget {
   const ToDoCheckbox({
     required this.value,
     required this.onChanged,
-    this.importance,
+    required this.importance,
     super.key,
   });
 
@@ -20,11 +20,11 @@ class ToDoCheckbox extends StatelessWidget {
     final todoTheme = context.watch<ThemeBloc>().state;
     final fillColor = value
         ? todoTheme.definedColors.green
-        : importance == Importance.important
+        : importance == const ImportantImportance()
             ? todoTheme.definedColors.red.withOpacity(0.5)
             : todoTheme.backColors.secondary;
     final borderColor =
-        importance == Importance.important ? todoTheme.definedColors.red : todoTheme.labelTheme.tertiary;
+        importance == const ImportantImportance() ? todoTheme.definedColors.red : todoTheme.labelTheme.tertiary;
 
     return SizedBox(
       // [SizedBox] to prevent margin

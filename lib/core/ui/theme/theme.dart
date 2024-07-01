@@ -17,7 +17,7 @@ abstract class ToDoTheme {
 }
 
 class DefinedTextTheme {
-  DefinedTextTheme({required this.labelTheme});
+  const DefinedTextTheme({required this.labelTheme});
 
   @protected
   final LabelColors labelTheme;
@@ -68,7 +68,7 @@ class DefinedTextTheme {
 class LightToDoTheme extends ToDoTheme {
   LightToDoTheme()
       : super(
-          textTheme: DefinedTextTheme(labelTheme: const LightLabelColors()),
+          textTheme: const DefinedTextTheme(labelTheme: LightLabelColors()),
           supportColors: const LightSupportColors(),
           labelTheme: const LightLabelColors(),
           definedColors: const LightDefinedColors(),
@@ -79,7 +79,7 @@ class LightToDoTheme extends ToDoTheme {
 class DarkToDoTheme extends ToDoTheme {
   DarkToDoTheme()
       : super(
-          textTheme: DefinedTextTheme(labelTheme: const DarkLabelColors()),
+          textTheme: const DefinedTextTheme(labelTheme: DarkLabelColors()),
           supportColors: const DarkSupportColors(),
           labelTheme: const DarkLabelColors(),
           definedColors: const DarkDefinedColors(),

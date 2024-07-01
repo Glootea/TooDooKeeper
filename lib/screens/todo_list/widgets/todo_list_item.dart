@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:yandex_summer_school/core/entities/importance.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
-import 'package:yandex_summer_school/core/ui/leaf/todo_checkbox.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_date_text.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_icon.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart';
+import 'package:yandex_summer_school/screens/todo_list/widgets/todo_checkbox.dart';
 
 class ToDoListItem extends StatefulWidget {
   const ToDoListItem({
@@ -17,6 +18,7 @@ class ToDoListItem extends StatefulWidget {
     required this.onDelete,
     super.key,
   });
+
   final ToDo toDo;
   final void Function(ToDo state) onToggleDone;
   final void Function(ToDo state) onDelete;
@@ -82,7 +84,7 @@ class _DataPresentor extends StatelessWidget {
 
   final ToDo toDo;
   final bool done;
-  final void Function() onToggleDone;
+  final VoidCallback onToggleDone;
   @override
   Widget build(BuildContext context) {
     final todoTheme = context.watch<ThemeBloc>().state;
@@ -109,20 +111,7 @@ class _DataPresentor extends StatelessWidget {
                     importance: toDo.importance,
                   ),
                   const SizedBox(width: 8),
-                  switch (toDo.importance) {
-                    Importance.low => SizedBox(
-                        height: todoTheme.textTheme.body.fontSize,
-                        child: Image.asset(
-                          'assets/down-arrow.png',
-                          color: todoTheme.definedColors.gray,
-                        ),
-                      ),
-                    Importance.basic => const SizedBox(),
-                    Importance.important => SizedBox(
-                        height: Checkbox.width,
-                        child: Image.asset('assets/double-exclamation-mark.png'),
-                      ),
-                  },
+                  _ToDoItemImportanceIcon(toDo: toDo),
                   Expanded(
                     child: toDo.id != null
                         ? Text(
@@ -157,6 +146,7 @@ class _DataPresentor extends StatelessWidget {
 
 class _ToDoInlinedTextfield extends StatefulWidget {
   const _ToDoInlinedTextfield(this.todo);
+
   final ToDo todo;
 
   @override
@@ -166,19 +156,13 @@ class _ToDoInlinedTextfield extends StatefulWidget {
 class _ToDoInlinedTextfieldState extends State<_ToDoInlinedTextfield> {
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
+
   @override
   void initState() {
+    super.initState();
     _controller = TextEditingController();
     _focusNode = FocusNode();
     _focusNode.requestFocus();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
   }
 
   @override
@@ -207,6 +191,13 @@ class _ToDoInlinedTextfieldState extends State<_ToDoInlinedTextfield> {
         contentPadding: EdgeInsets.zero,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
   }
 }
 
@@ -243,5 +234,31 @@ class _CheckContainer extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _ToDoItemImportanceIcon extends StatelessWidget {
+  const _ToDoItemImportanceIcon({required this.toDo});
+
+  final ToDo toDo;
+
+  @override
+  Widget build(BuildContext context) {
+    final todoTheme = context.watch<ThemeBloc>().state;
+    const height = Checkbox.width;
+    return switch (toDo.importance) {
+      LowImportance() => SizedBox(
+          height: height,
+          child: Image.asset(
+            'assets/down-arrow.png',
+            color: todoTheme.definedColors.gray,
+          ),
+        ),
+      BasicImportance() => const SizedBox(height: height),
+      ImportantImportance() => SizedBox(
+          height: height,
+          child: Image.asset('assets/double-exclamation-mark.png'),
+        ),
+    };
   }
 }

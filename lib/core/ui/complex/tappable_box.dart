@@ -5,7 +5,7 @@ class SimpleTappableBox extends StatelessWidget {
   const SimpleTappableBox({required this.builder, required this.onTap, super.key});
 
   final Widget Function(BuildContext context) builder;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ComplexTappableBox extends StatefulWidget {
   const ComplexTappableBox({required this.builder, this.onTap, super.key});
 
   final Widget Function(BuildContext context, GlobalKey actionKey) builder;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
 
   @override
   State<ComplexTappableBox> createState() => _ComplexTappableBoxState();

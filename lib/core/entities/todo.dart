@@ -1,8 +1,9 @@
 // ignore_for_file: always_put_required_named_parameters_first
 
 import 'dart:convert';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:yandex_summer_school/core/entities/importance.dart';
+
 part 'todo.freezed.dart';
 
 @Freezed(fromJson: false, toJson: false)
@@ -10,7 +11,7 @@ sealed class ToDo with _$ToDo {
   const factory ToDo({
     required String id,
     required String description,
-    @Default(Importance.basic) Importance importance,
+    @Default(BasicImportance()) Importance importance,
     DateTime? deadline,
     @Default(false) bool done,
     int? color,
@@ -22,7 +23,7 @@ sealed class ToDo with _$ToDo {
   const factory ToDo.justCreated({
     String? id,
     @Default('') String description,
-    @Default(Importance.basic) Importance importance,
+    @Default(BasicImportance()) Importance importance,
     DateTime? deadline,
     @Default(false) bool done,
     int? color,
@@ -86,32 +87,4 @@ sealed class ToDo with _$ToDo {
       );
 
   bool get justCreated => id == null;
-}
-
-enum Importance {
-  low,
-  basic,
-  important;
-
-  static Importance fromString(String? value) {
-    switch (value) {
-      case 'low':
-        return Importance.low;
-      case 'basic':
-        return Importance.basic;
-      case 'important':
-        return Importance.important;
-      default:
-        throw UnsupportedError('Unknown Importance: $value');
-    }
-  }
-
-  @override
-  String toString() {
-    return switch (this) {
-      Importance.low => 'low',
-      Importance.basic => 'basic',
-      Importance.important => 'important',
-    };
-  }
 }

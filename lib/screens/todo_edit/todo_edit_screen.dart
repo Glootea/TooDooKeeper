@@ -6,7 +6,7 @@ import 'package:yandex_summer_school/core/ui/complex/error_screen.dart';
 import 'package:yandex_summer_school/core/ui/complex/loading_screen.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_textfield.dart';
 import 'package:yandex_summer_school/screens/todo_edit/bloc/todo_edit_bloc.dart';
-import 'package:yandex_summer_school/screens/todo_edit/widgets/todo_edit_app_bar.dart';
+import 'package:yandex_summer_school/screens/todo_edit/widgets/todo_edit_appbar.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/todo_edit_deadline_selector.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/todo_edit_delete_button.dart';
 import 'package:yandex_summer_school/screens/todo_edit/widgets/todo_edit_importance_selector.dart';

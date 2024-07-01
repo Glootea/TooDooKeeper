@@ -15,16 +15,11 @@ class ToDoEditTextField extends StatefulWidget {
 
 class _ToDoEditTextFieldState extends State<ToDoEditTextField> {
   late final TextEditingController controller;
-  @override
-  void initState() {
-    controller = TextEditingController(text: widget.value);
-    super.initState();
-  }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: widget.value);
   }
 
   @override
@@ -60,5 +55,11 @@ class _ToDoEditTextFieldState extends State<ToDoEditTextField> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

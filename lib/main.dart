@@ -38,7 +38,7 @@ class InitScreen extends StatelessWidget {
     final OnlineProvider onlineProvider = await YandexOnlineProvider.create();
     final todoProvider = ToDoProvider(localDatabase: AppDatabase(), onlineProvider: onlineProvider);
 
-    final router = _createRouter(todoProvider);
+    final router = _createRouter(todoProvider, onlineProvider.auth.isLoggedIn);
     final themeBloc = ThemeBloc();
 
     // Attempt to fix: https://github.com/Glootea/TooDooKeeper/pull/2#discussion_r1650971004
@@ -69,9 +69,9 @@ class InitScreen extends StatelessWidget {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoProvider todoProvider) {
+  GoRouter _createRouter(ToDoProvider todoProvider, bool userLoggedIn) {
     return GoRouter(
-      initialLocation: todoProvider.onlineProvider.auth.isLoggedIn ? '/' : '/auth',
+      initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
         if (state.path == '/edit' && !state.uri.queryParameters.containsKey('data')) return '/new';
         return null;

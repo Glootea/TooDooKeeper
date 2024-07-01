@@ -10,7 +10,7 @@ class DeleteButton extends StatelessWidget {
     super.key,
   });
 
-  final void Function() onPressed;
+  final VoidCallback onPressed;
   final bool canDelete;
 
   @override

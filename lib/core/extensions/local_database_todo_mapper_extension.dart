@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
+import 'package:yandex_summer_school/core/entities/importance.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 
 extension TodoToToDoItemsCompanionMapperExtension on ToDo {

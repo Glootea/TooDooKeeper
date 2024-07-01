@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_summer_school/core/entities/todo.dart';
+import 'package:yandex_summer_school/core/entities/importance.dart';
 import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/complex/tappable_box.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
@@ -39,14 +39,14 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
             underline: const SizedBox(),
             items: [
               DropdownMenuItem(
-                value: Importance.basic,
+                value: const BasicImportance(),
                 child: Text(
                   context.loc.none,
                   style: todoTheme.textTheme.body,
                 ),
               ),
               DropdownMenuItem(
-                value: Importance.low,
+                value: const LowImportance(),
                 child: Row(
                   children: [
                     SizedBox(
@@ -64,7 +64,7 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
                 ),
               ),
               DropdownMenuItem(
-                value: Importance.important,
+                value: const ImportantImportance(),
                 child: Row(
                   children: [
                     SizedBox(
