@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      freezed|freezed:
+        generate_for:
+          - lib/core/entities/*.dart
+          - lib/core/ui/theme/theme_bloc.dart
+          - lib/screens/todo_list/bloc/todo_list_bloc.dart
+          - lib/screens/todo_edit/bloc/todo_edit_bloc.dart
+      drift_dev|drift_dev:
+        generate_for:
+          - lib/core/data/data_sources/local_database/local_database.dart
