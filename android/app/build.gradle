@@ -4,7 +4,12 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
-
+dependencies {
+    implementation "com.yandex.android:authsdk:3.1.0"
+    implementation 'androidx.activity:activity-ktx:1.9.0'
+    implementation 'androidx.fragment:fragment-ktx:1.8.0'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+}
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
@@ -42,6 +47,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+        manifestPlaceholders += [YANDEX_CLIENT_ID:"5c5db07bbbb1440385bf545f0c310062"]
     }
 
     buildTypes {

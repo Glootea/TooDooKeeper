@@ -53,6 +53,7 @@ gen-external-apklibs
 .pub-cache/
 .pub/
 coverage/
+pubspec.lock
 # For library packages, don’t commit the pubspec.lock file.
 # Regenerating the pubspec.lock file lets you test your package against the latest compatible versions of its dependencies.
 # See https://dart.dev/guides/libraries/private-files#pubspeclock
@@ -227,3 +228,4 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,flutter
+/test/secret.dart
