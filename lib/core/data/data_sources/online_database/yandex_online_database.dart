@@ -1,25 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' hide Options;
-import 'package:uuid/uuid.dart';
 import 'package:yandex_summer_school/core/data/data_sources/online_database/online_database_abst.dart';
+import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
-class YandexOnlineDatabase implements OnlineDatabase {
-  YandexOnlineDatabase._(
-    this._dio,
-    this._secureStorage,
-    this._revision,
-    this._deviceId,
-  );
+class YandexOnlineDatabase implements RemoteDatabase {
+  YandexOnlineDatabase._(this._dio, this._secureStorage, this._revision, this._deviceIdProvider);
 
-  static Future<YandexOnlineDatabase> create(String authKey, FlutterSecureStorage secureStorage) async {
+  static Future<YandexOnlineDatabase> create(
+    String authKey,
+    DeviceIdProvider deviceIdProvider,
+    FlutterSecureStorage secureStorage,
+  ) async {
     final revision = int.parse(await secureStorage.read(key: _revisionKey) ?? '0');
-    var deviceId = await secureStorage.read(key: _deviceIDKey);
-    if (deviceId == null) {
-      deviceId = const Uuid().v4();
-      await secureStorage.write(key: _deviceIDKey, value: deviceId);
-    }
+
     final dio = Dio(
       BaseOptions(
         baseUrl: 'https://hive.mrdekk.ru/todo',
@@ -28,23 +23,19 @@ class YandexOnlineDatabase implements OnlineDatabase {
         },
       ),
     );
-    return YandexOnlineDatabase._(dio, secureStorage, revision, deviceId);
+    return YandexOnlineDatabase._(dio, secureStorage, revision, deviceIdProvider);
   }
-
-  String get deviceId => _deviceId;
 
   final FlutterSecureStorage _secureStorage;
   final Dio _dio;
-
+  final DeviceIdProvider _deviceIdProvider;
   int _revision;
-  final String _deviceId;
   static const String _revisionKey = 'revision';
-  static const String _deviceIDKey = 'deviceID';
 
   Future<void> _updateRevision(int revision) async {
     _revision = revision;
     logger.i('Got revision: $_revision');
-    return _secureStorage.write(key: _deviceId, value: revision.toString());
+    return _secureStorage.write(key: _revisionKey, value: revision.toString());
   }
 
   Future<List<ToDo>> _parseList(Map<String, dynamic> data) async {
@@ -82,7 +73,7 @@ class YandexOnlineDatabase implements OnlineDatabase {
     try {
       final response = await _dio.patch<Map<String, dynamic>>(
         '/list',
-        data: {'list': todos.map((e) => e.toJson(_deviceId)).toList()},
+        data: {'list': todos.map((e) => e.toJson(_deviceIdProvider.deviceId)).toList()},
         options: Options(headers: {'X-Last-Known-Revision': _revision}),
       );
       final data = response.data;
@@ -116,9 +107,14 @@ class YandexOnlineDatabase implements OnlineDatabase {
   @override
   Future<ToDo?> createToDo(ToDo todo) async {
     try {
+      final updatedToDo = todo.copyWith(
+        createdAt: DateTime.now(),
+        changedAt: DateTime.now(),
+      );
+      final todoJson = updatedToDo.toJson(_deviceIdProvider.deviceId);
       final response = await _dio.post<Map<String, dynamic>>(
         '/list',
-        data: {'element': todo.toJson(_deviceId)},
+        data: {'element': todoJson},
         options: Options(headers: {'X-Last-Known-Revision': _revision}),
       );
       final data = response.data;
@@ -136,9 +132,11 @@ class YandexOnlineDatabase implements OnlineDatabase {
   @override
   Future<ToDo?> updateToDo(ToDo todo) async {
     try {
+      final updatedToDo = todo.copyWith(changedAt: DateTime.now());
+      final todoJson = updatedToDo.toJson(_deviceIdProvider.deviceId);
       final response = await _dio.put<Map<String, dynamic>>(
         '/list/${todo.id}',
-        data: {'element': todo.toJson(_deviceId)},
+        data: {'element': todoJson},
         options: Options(headers: {'X-Last-Known-Revision': _revision}),
       );
       final data = response.data;

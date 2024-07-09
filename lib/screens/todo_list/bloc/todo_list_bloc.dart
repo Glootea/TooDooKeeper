@@ -55,8 +55,9 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
   Future<void> _onDeleteEvent(DeleteEvent event, Emitter<ToDoListState> emit) async {
     try {
       final currentState = state as MainState;
-      final todos = currentState.todos.toList()..removeWhere((element) => element.id == event.id);
-      final (_, networkConnectionPresent) = await todoProvider.deleteTodo(id: event.id);
+      final todo = currentState.todos.firstWhere((element) => element.id == event.id);
+      final todos = currentState.todos.toList()..remove(todo);
+      final (_, networkConnectionPresent) = await todoProvider.deleteTodo(todo: todo);
 
       emit(
         ToDoListState(
@@ -80,7 +81,7 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
       final newValue = !todos[indexOfUpdateElement].done;
       logger.d(newValue);
       todos[indexOfUpdateElement] = todos[indexOfUpdateElement].copyWith(done: newValue);
-      final (_, networkConnectionPresent) = await todoProvider.createOrUpdateTodo(todo: todos[indexOfUpdateElement]);
+      final (_, networkConnectionPresent) = await todoProvider.updateTodo(todo: todos[indexOfUpdateElement]);
       emit(
         ToDoListState(
           todos: todos,
@@ -112,7 +113,7 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
 
   Future<void> _onSaveEvent(SaveJustCreatedEvent event, Emitter<ToDoListState> emit) async {
     final currentState = state as MainState;
-    await todoProvider.createOrUpdateTodo(todo: ToDo.justCreated(description: event.description));
+    await todoProvider.createTodo(todo: ToDo.justCreated(description: event.description));
     final (todos, networkConnectionPresent) = await todoProvider.getToDoList();
     emit(
       MainState(

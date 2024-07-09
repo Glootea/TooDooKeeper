@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
+import 'package:yandex_summer_school/core/data/providers/online/remote_provider_abst.dart';
 import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
@@ -10,7 +10,7 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.read<OnlineProvider>();
+    final auth = context.read<RemoteProvider>();
     final todoTheme = context.watch<ThemeBloc>();
     return Scaffold(
       body: Column(

@@ -11,8 +11,9 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
-import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
-import 'package:yandex_summer_school/core/data/providers/online/yandex_online_provider.dart';
+import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
+import 'package:yandex_summer_school/core/data/providers/online/remote_provider_abst.dart';
+import 'package:yandex_summer_school/core/data/providers/online/yandex_remote_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme.dart';
@@ -34,11 +35,13 @@ class InitScreen extends StatelessWidget {
   const InitScreen({super.key});
   Future<void> init() async {
     await _appSetup();
+    final deviceIdProvider = await DeviceIdProvider.create();
 
-    final OnlineProvider onlineProvider = await YandexOnlineProvider.create();
-    final todoProvider = ToDoProvider(localDatabase: AppDatabase(), onlineProvider: onlineProvider);
+    final RemoteProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider);
+    final localDatabase = LocalDatabase(deviceIdProvider);
+    final todoProvider = ToDoProvider(localDatabase: localDatabase, onlineProvider: onlineProvider);
 
-    final router = _createRouter(todoProvider, onlineProvider.auth.isLoggedIn);
+    final router = _createRouter(todoProvider, deviceIdProvider, onlineProvider.auth.isLoggedIn);
     final themeBloc = ThemeBloc();
 
     // Attempt to fix: https://github.com/Glootea/TooDooKeeper/pull/2#discussion_r1650971004
@@ -49,8 +52,8 @@ class InitScreen extends StatelessWidget {
     runApp(
       Provider.value(
         value: onlineProvider,
-        child: MultiBlocProvider(
-          providers: [BlocProvider.value(value: themeBloc)],
+        child: BlocProvider.value(
+          value: themeBloc,
           child: _createApp(themeBloc, router),
         ),
       ),
@@ -69,7 +72,7 @@ class InitScreen extends StatelessWidget {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoProvider todoProvider, bool userLoggedIn) {
+  GoRouter _createRouter(ToDoProvider todoProvider, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
@@ -84,13 +87,13 @@ class InitScreen extends StatelessWidget {
             create: (context) => ToDoListBloc(todoProvider),
             child: const TodoListScreen(),
           ),
-          routes: _editRoutes(todoProvider),
+          routes: _editRoutes(todoProvider, deviceIdProvider),
         ),
       ],
     );
   }
 
-  List<RouteBase> _editRoutes(ToDoProvider todoProvider) {
+  List<RouteBase> _editRoutes(ToDoProvider todoProvider, DeviceIdProvider deviceIdProvider) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -101,7 +104,8 @@ class InitScreen extends StatelessWidget {
             return const TodoListScreen();
           }
           return BlocProvider(
-            create: (context) => ToDoEditBloc(todoProvider: todoProvider, passedId: id),
+            create: (context) =>
+                ToDoEditBloc(todoProvider: todoProvider, deviceIdProvider: deviceIdProvider, passedId: id),
             child: const ToDoEditScreen(),
           );
         },
@@ -112,7 +116,8 @@ class InitScreen extends StatelessWidget {
           logger.d(state.pathParameters);
           final data = state.uri.queryParameters['data']; // from deep link
           return BlocProvider(
-            create: (context) => ToDoEditBloc(todoProvider: todoProvider, data: data),
+            create: (context) =>
+                ToDoEditBloc(todoProvider: todoProvider, deviceIdProvider: deviceIdProvider, data: data),
             child: const ToDoEditScreen(),
           );
         },
@@ -120,7 +125,10 @@ class InitScreen extends StatelessWidget {
       GoRoute(
         path: 'new',
         builder: (context, state) => BlocProvider(
-          create: (context) => ToDoEditBloc(todoProvider: todoProvider),
+          create: (context) => ToDoEditBloc(
+            todoProvider: todoProvider,
+            deviceIdProvider: deviceIdProvider,
+          ),
           child: const ToDoEditScreen(),
         ),
       ),

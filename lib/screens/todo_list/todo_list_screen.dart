@@ -58,7 +58,6 @@ class _MainScreen extends StatelessWidget {
                   color: todoTheme.backColors.secondary,
                 ),
                 sliver: SliverList.builder(
-                  // TODO: add insert/move animation
                   itemCount: toDoListToShow.length + 1,
                   itemBuilder: (context, index) {
                     return ClipRRect(

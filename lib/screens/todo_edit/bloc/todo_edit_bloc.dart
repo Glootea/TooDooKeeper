@@ -18,11 +18,13 @@ part 'todo_edit_bloc.freezed.dart';
 class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   ToDoEditBloc({
     required ToDoProvider todoProvider,
+    required DeviceIdProvider deviceIdProvider,
     String? passedId,
     String? data,
   })  : _data = data,
         _passedId = passedId,
         _todoProvider = todoProvider,
+        _deviceIdProvider = deviceIdProvider,
         super(const ToDoEditState.loading()) {
     on<ToDoEditEvent>(
       (event, emit) {
@@ -47,7 +49,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   final String? _passedId;
   final String? _data;
 
-  DeviceIdProvider? _deviceIdProvider;
+  final DeviceIdProvider _deviceIdProvider;
 
   void _addInitialEvent() {
     if (_passedId != null) {
@@ -73,7 +75,11 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     try {
       final todo = (state as MainState).todo;
       emit(const LoadingState());
-      await _todoProvider.createOrUpdateTodo(todo: todo);
+      if (todo.justCreated) {
+        await _todoProvider.createTodo(todo: todo);
+      } else {
+        await _todoProvider.updateTodo(todo: todo);
+      }
       emit(const SavedState());
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
@@ -111,8 +117,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
       final currentState = state as MainState;
       emit(currentState.copyWith(message: ToDoEditMessage.prepareShareLink));
 
-      _deviceIdProvider ??= await DeviceIdProvider.create();
-      final exportText = await _getToDoData(_deviceIdProvider!.deviceId);
+      final exportText = await _getToDoData(_deviceIdProvider.deviceId);
 
       const platform = MethodChannel('com.glootea.toodookeeper/todo');
       await platform.invokeMethod<void>('share', {'text': exportText});
@@ -126,8 +131,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     final currentState = state as MainState;
     emit(currentState.copyWith(message: ToDoEditMessage.prepareShareLink));
 
-    _deviceIdProvider ??= await DeviceIdProvider.create();
-    final exportText = await _getToDoData(_deviceIdProvider!.deviceId);
+    final exportText = await _getToDoData(_deviceIdProvider.deviceId);
 
     emit(currentState.copyWith(message: ToDoEditMessage.copiedToDo));
     await Clipboard.setData(ClipboardData(text: exportText));
@@ -136,7 +140,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   Future<String> _getToDoData(String deviceID) async {
     final toDo = (state as MainState).todo;
     late String text;
-    text = toDo.dataToExport(deviceID); //TODO: refactor/hide realization
+    text = toDo.dataToExport(deviceID);
     final obfuscation = GZipObfuscation();
     final shareProvider = ShareProvider(obfuscation: obfuscation);
     final exportText = await shareProvider.getShareLink(text, tryShort: true);
@@ -145,9 +149,8 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
 
   Future<void> _onDeleteEvent(DeleteEvent event, Emitter<ToDoEditState> emit) async {
     try {
-      final id = (state as MainState).todo.id;
-      if (id == null) throw Exception('ID is null, so it can not be deleted');
-      await _todoProvider.deleteTodo(id: id);
+      final todo = (state as MainState).todo;
+      await _todoProvider.deleteTodo(todo: todo);
       emit(const SavedState());
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);

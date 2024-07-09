@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/database_connection_shared.dart';
+import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 
 part 'local_database.g.dart';
 
@@ -14,14 +15,17 @@ class ToDoItems extends Table {
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get changedAt => dateTime().nullable()();
   TextColumn get lastUpdatedBy => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
 
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }
 
 @DriftDatabase(tables: [ToDoItems])
-class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(connect());
+class LocalDatabase extends _$LocalDatabase {
+  LocalDatabase(this._deviceIdProvider) : super(connect());
+
+  final DeviceIdProvider _deviceIdProvider;
 
   Future<List<ToDoItem>> getToDoList() async => select(toDoItems).get();
 
@@ -29,10 +33,22 @@ class AppDatabase extends _$AppDatabase {
     return (select(toDoItems)..where((t) => t.id.equals(id))).getSingleOrNull();
   }
 
-  Future<void> createOrUpdateTodo({required ToDoItemsCompanion companion}) {
-    // TODO: divide into two functions
-    return into(toDoItems).insertOnConflictUpdate(companion);
-  }
+  Future<void> createTodo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
+        companion.copyWith(
+          changedAt: Value(DateTime.now()),
+          createdAt: Value(DateTime.now()),
+          lastUpdatedBy: Value(_deviceIdProvider.deviceId),
+        ),
+        mode: InsertMode.insert,
+      );
+
+  Future<void> updateTodo({required ToDoItemsCompanion todo}) => into(toDoItems).insert(
+        todo.copyWith(
+          changedAt: Value(DateTime.now()),
+          lastUpdatedBy: Value(_deviceIdProvider.deviceId),
+        ),
+        mode: InsertMode.insertOrReplace,
+      );
 
   Future<void> deleteTodo({required String id}) async => (delete(toDoItems)..where((t) => t.id.equals(id))).go();
 
@@ -40,6 +56,9 @@ class AppDatabase extends _$AppDatabase {
     await delete(toDoItems).go();
     return batch((b) => b.insertAllOnConflictUpdate(toDoItems, list));
   }
+
+  Future<void> markAsDeleted({required ToDoItemsCompanion todo}) =>
+      updateTodo(todo: todo.copyWith(isDeleted: const Value(true)));
 
   Future<void> logout() async => delete(toDoItems).go();
 

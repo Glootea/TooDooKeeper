@@ -68,6 +68,16 @@ class $ToDoItemsTable extends ToDoItems
   late final GeneratedColumn<String> lastUpdatedBy = GeneratedColumn<String>(
       'last_updated_by', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -78,7 +88,8 @@ class $ToDoItemsTable extends ToDoItems
         color,
         createdAt,
         changedAt,
-        lastUpdatedBy
+        lastUpdatedBy,
+        isDeleted
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -135,6 +146,10 @@ class $ToDoItemsTable extends ToDoItems
           lastUpdatedBy.isAcceptableOrUnknown(
               data['last_updated_by']!, _lastUpdatedByMeta));
     }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
     return context;
   }
 
@@ -162,6 +177,8 @@ class $ToDoItemsTable extends ToDoItems
           .read(DriftSqlType.dateTime, data['${effectivePrefix}changed_at']),
       lastUpdatedBy: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}last_updated_by']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
     );
   }
 
@@ -181,6 +198,7 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
   final DateTime createdAt;
   final DateTime? changedAt;
   final String? lastUpdatedBy;
+  final bool? isDeleted;
   const ToDoItem(
       {required this.id,
       required this.description,
@@ -190,7 +208,8 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
       this.color,
       required this.createdAt,
       this.changedAt,
-      this.lastUpdatedBy});
+      this.lastUpdatedBy,
+      this.isDeleted});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -210,6 +229,9 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
     }
     if (!nullToAbsent || lastUpdatedBy != null) {
       map['last_updated_by'] = Variable<String>(lastUpdatedBy);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
     }
     return map;
   }
@@ -232,6 +254,9 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
       lastUpdatedBy: lastUpdatedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(lastUpdatedBy),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
     );
   }
 
@@ -248,6 +273,7 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       changedAt: serializer.fromJson<DateTime?>(json['changedAt']),
       lastUpdatedBy: serializer.fromJson<String?>(json['lastUpdatedBy']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
     );
   }
   @override
@@ -263,6 +289,7 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'changedAt': serializer.toJson<DateTime?>(changedAt),
       'lastUpdatedBy': serializer.toJson<String?>(lastUpdatedBy),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
     };
   }
 
@@ -275,7 +302,8 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
           Value<int?> color = const Value.absent(),
           DateTime? createdAt,
           Value<DateTime?> changedAt = const Value.absent(),
-          Value<String?> lastUpdatedBy = const Value.absent()}) =>
+          Value<String?> lastUpdatedBy = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent()}) =>
       ToDoItem(
         id: id ?? this.id,
         description: description ?? this.description,
@@ -287,6 +315,7 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
         changedAt: changedAt.present ? changedAt.value : this.changedAt,
         lastUpdatedBy:
             lastUpdatedBy.present ? lastUpdatedBy.value : this.lastUpdatedBy,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
       );
   @override
   String toString() {
@@ -299,14 +328,15 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
           ..write('color: $color, ')
           ..write('createdAt: $createdAt, ')
           ..write('changedAt: $changedAt, ')
-          ..write('lastUpdatedBy: $lastUpdatedBy')
+          ..write('lastUpdatedBy: $lastUpdatedBy, ')
+          ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, description, importance, deadline, isDone,
-      color, createdAt, changedAt, lastUpdatedBy);
+      color, createdAt, changedAt, lastUpdatedBy, isDeleted);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -319,7 +349,8 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
           other.color == this.color &&
           other.createdAt == this.createdAt &&
           other.changedAt == this.changedAt &&
-          other.lastUpdatedBy == this.lastUpdatedBy);
+          other.lastUpdatedBy == this.lastUpdatedBy &&
+          other.isDeleted == this.isDeleted);
 }
 
 class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
@@ -332,6 +363,7 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> changedAt;
   final Value<String?> lastUpdatedBy;
+  final Value<bool?> isDeleted;
   final Value<int> rowid;
   const ToDoItemsCompanion({
     this.id = const Value.absent(),
@@ -343,6 +375,7 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
     this.createdAt = const Value.absent(),
     this.changedAt = const Value.absent(),
     this.lastUpdatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ToDoItemsCompanion.insert({
@@ -355,6 +388,7 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
     this.createdAt = const Value.absent(),
     this.changedAt = const Value.absent(),
     this.lastUpdatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         description = Value(description);
@@ -368,6 +402,7 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? changedAt,
     Expression<String>? lastUpdatedBy,
+    Expression<bool>? isDeleted,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -380,6 +415,7 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
       if (createdAt != null) 'created_at': createdAt,
       if (changedAt != null) 'changed_at': changedAt,
       if (lastUpdatedBy != null) 'last_updated_by': lastUpdatedBy,
+      if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -394,6 +430,7 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
       Value<DateTime>? createdAt,
       Value<DateTime?>? changedAt,
       Value<String?>? lastUpdatedBy,
+      Value<bool?>? isDeleted,
       Value<int>? rowid}) {
     return ToDoItemsCompanion(
       id: id ?? this.id,
@@ -405,6 +442,7 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
       createdAt: createdAt ?? this.createdAt,
       changedAt: changedAt ?? this.changedAt,
       lastUpdatedBy: lastUpdatedBy ?? this.lastUpdatedBy,
+      isDeleted: isDeleted ?? this.isDeleted,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -439,6 +477,9 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
     if (lastUpdatedBy.present) {
       map['last_updated_by'] = Variable<String>(lastUpdatedBy.value);
     }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -457,15 +498,16 @@ class ToDoItemsCompanion extends UpdateCompanion<ToDoItem> {
           ..write('createdAt: $createdAt, ')
           ..write('changedAt: $changedAt, ')
           ..write('lastUpdatedBy: $lastUpdatedBy, ')
+          ..write('isDeleted: $isDeleted, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-abstract class _$AppDatabase extends GeneratedDatabase {
-  _$AppDatabase(QueryExecutor e) : super(e);
-  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
+abstract class _$LocalDatabase extends GeneratedDatabase {
+  _$LocalDatabase(QueryExecutor e) : super(e);
+  _$LocalDatabaseManager get managers => _$LocalDatabaseManager(this);
   late final $ToDoItemsTable toDoItems = $ToDoItemsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -484,6 +526,7 @@ typedef $$ToDoItemsTableInsertCompanionBuilder = ToDoItemsCompanion Function({
   Value<DateTime> createdAt,
   Value<DateTime?> changedAt,
   Value<String?> lastUpdatedBy,
+  Value<bool?> isDeleted,
   Value<int> rowid,
 });
 typedef $$ToDoItemsTableUpdateCompanionBuilder = ToDoItemsCompanion Function({
@@ -496,11 +539,12 @@ typedef $$ToDoItemsTableUpdateCompanionBuilder = ToDoItemsCompanion Function({
   Value<DateTime> createdAt,
   Value<DateTime?> changedAt,
   Value<String?> lastUpdatedBy,
+  Value<bool?> isDeleted,
   Value<int> rowid,
 });
 
 class $$ToDoItemsTableTableManager extends RootTableManager<
-    _$AppDatabase,
+    _$LocalDatabase,
     $ToDoItemsTable,
     ToDoItem,
     $$ToDoItemsTableFilterComposer,
@@ -508,7 +552,7 @@ class $$ToDoItemsTableTableManager extends RootTableManager<
     $$ToDoItemsTableProcessedTableManager,
     $$ToDoItemsTableInsertCompanionBuilder,
     $$ToDoItemsTableUpdateCompanionBuilder> {
-  $$ToDoItemsTableTableManager(_$AppDatabase db, $ToDoItemsTable table)
+  $$ToDoItemsTableTableManager(_$LocalDatabase db, $ToDoItemsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
@@ -528,6 +572,7 @@ class $$ToDoItemsTableTableManager extends RootTableManager<
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime?> changedAt = const Value.absent(),
             Value<String?> lastUpdatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ToDoItemsCompanion(
@@ -540,6 +585,7 @@ class $$ToDoItemsTableTableManager extends RootTableManager<
             createdAt: createdAt,
             changedAt: changedAt,
             lastUpdatedBy: lastUpdatedBy,
+            isDeleted: isDeleted,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -552,6 +598,7 @@ class $$ToDoItemsTableTableManager extends RootTableManager<
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime?> changedAt = const Value.absent(),
             Value<String?> lastUpdatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ToDoItemsCompanion.insert(
@@ -564,13 +611,14 @@ class $$ToDoItemsTableTableManager extends RootTableManager<
             createdAt: createdAt,
             changedAt: changedAt,
             lastUpdatedBy: lastUpdatedBy,
+            isDeleted: isDeleted,
             rowid: rowid,
           ),
         ));
 }
 
 class $$ToDoItemsTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
+    _$LocalDatabase,
     $ToDoItemsTable,
     ToDoItem,
     $$ToDoItemsTableFilterComposer,
@@ -582,7 +630,7 @@ class $$ToDoItemsTableProcessedTableManager extends ProcessedTableManager<
 }
 
 class $$ToDoItemsTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $ToDoItemsTable> {
+    extends FilterComposer<_$LocalDatabase, $ToDoItemsTable> {
   $$ToDoItemsTableFilterComposer(super.$state);
   ColumnFilters<String> get id => $state.composableBuilder(
       column: $state.table.id,
@@ -628,10 +676,15 @@ class $$ToDoItemsTableFilterComposer
       column: $state.table.lastUpdatedBy,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$ToDoItemsTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $ToDoItemsTable> {
+    extends OrderingComposer<_$LocalDatabase, $ToDoItemsTable> {
   $$ToDoItemsTableOrderingComposer(super.$state);
   ColumnOrderings<String> get id => $state.composableBuilder(
       column: $state.table.id,
@@ -677,11 +730,16 @@ class $$ToDoItemsTableOrderingComposer
       column: $state.table.lastUpdatedBy,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-class _$AppDatabaseManager {
-  final _$AppDatabase _db;
-  _$AppDatabaseManager(this._db);
+class _$LocalDatabaseManager {
+  final _$LocalDatabase _db;
+  _$LocalDatabaseManager(this._db);
   $$ToDoItemsTableTableManager get toDoItems =>
       $$ToDoItemsTableTableManager(_db, _db.toDoItems);
 }
