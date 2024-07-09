@@ -42,8 +42,8 @@ class LocalDatabase extends _$LocalDatabase {
         mode: InsertMode.insert,
       );
 
-  Future<void> updateTodo({required ToDoItemsCompanion todo}) => into(toDoItems).insert(
-        todo.copyWith(
+  Future<void> updateTodo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
+        companion.copyWith(
           changedAt: Value(DateTime.now()),
           lastUpdatedBy: Value(_deviceIdProvider.deviceId),
         ),
@@ -58,7 +58,7 @@ class LocalDatabase extends _$LocalDatabase {
   }
 
   Future<void> markAsDeleted({required ToDoItemsCompanion todo}) =>
-      updateTodo(todo: todo.copyWith(isDeleted: const Value(true)));
+      updateTodo(companion: todo.copyWith(isDeleted: const Value(true)));
 
   Future<void> logout() async => delete(toDoItems).go();
 

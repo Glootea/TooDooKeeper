@@ -21,6 +21,7 @@ class ToDoProvider {
     if (onlineTodoList != null) {
       final merged = _merge(local: localToDoList, remote: onlineTodoList);
       await _localDatabase.setFromOnline(merged.map((toDo) => toDo.parseToDoItemCompanion).toList());
+      await _onlineProvider.database?.updateToDoList(merged);
       logger.i('Got list from online: $onlineTodoList');
       return (merged, true);
     }
@@ -36,7 +37,7 @@ class ToDoProvider {
     if (onlineToDo != null) {
       final merged = _pickActual(local: localToDo, remote: onlineToDo);
       if (merged == null) return (null, false);
-      await _localDatabase.updateTodo(todo: merged.parseToDoItemCompanion);
+      await _localDatabase.updateTodo(companion: merged.parseToDoItemCompanion);
       return (onlineToDo, true);
     }
     final parsedToDo = localToDo.parseToDo;
@@ -56,10 +57,10 @@ class ToDoProvider {
   Future<(void, bool)> updateTodo({required ToDo todo}) async {
     final onlineToDo = await _onlineProvider.database?.updateToDo(todo);
     if (onlineToDo != null) {
-      await _localDatabase.updateTodo(todo: onlineToDo.parseToDoItemCompanion);
+      await _localDatabase.updateTodo(companion: onlineToDo.parseToDoItemCompanion);
       return (null, true);
     }
-    await _localDatabase.updateTodo(todo: todo.parseToDoItemCompanion);
+    await _localDatabase.updateTodo(companion: todo.parseToDoItemCompanion);
     return (null, false);
   }
 

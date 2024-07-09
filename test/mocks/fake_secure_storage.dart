@@ -1,14 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
-void main() {
-  group('YandexOnlineDatabase test', () {
-    test('create todo', () async {});
-  });
-}
-
-class MockStorage extends FlutterSecureStorage {
+class FakeStorage extends FlutterSecureStorage {
   int revision = 0;
   @override
   Future<String?> read({
