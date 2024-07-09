@@ -1,17 +1,16 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-part 'importance.freezed.dart';
+enum Importance implements Comparable<Importance> {
+  low._(1),
+  basic._(2),
+  important._(3);
 
-@freezed
-sealed class Importance implements Comparable<Importance> {
-  const factory Importance.low() = LowImportance;
-  const factory Importance.basic() = BasicImportance;
-  const factory Importance.important() = ImportantImportance;
+  const Importance._(this.value);
+  final int value;
 
   static Importance fromString(String? value) {
     return switch (value) {
-      'low' => const LowImportance(),
-      'basic' => const BasicImportance(),
-      'important' => const ImportantImportance(),
+      'low' => Importance.low,
+      'basic' => Importance.basic,
+      'important' => Importance.important,
       _ => throw UnsupportedError('Unknown Importance: $value'),
     };
   }
@@ -19,27 +18,12 @@ sealed class Importance implements Comparable<Importance> {
   @override
   String toString() {
     return switch (this) {
-      LowImportance() => 'low',
-      BasicImportance() => 'basic',
-      ImportantImportance() => 'important',
+      Importance.low => 'low',
+      Importance.basic => 'basic',
+      Importance.important => 'important',
     };
   }
 
   @override
-  int compareTo(Importance other) {
-    return switch ((this, other)) {
-      (LowImportance(), LowImportance()) ||
-      (BasicImportance(), BasicImportance()) ||
-      (ImportantImportance(), ImportantImportance()) =>
-        0,
-      (LowImportance(), BasicImportance()) ||
-      (LowImportance(), ImportantImportance()) ||
-      (BasicImportance(), ImportantImportance()) =>
-        1,
-      (BasicImportance(), LowImportance()) ||
-      (ImportantImportance(), LowImportance()) ||
-      (ImportantImportance(), BasicImportance()) =>
-        -1,
-    };
-  }
+  int compareTo(Importance other) => value.compareTo(other.value);
 }

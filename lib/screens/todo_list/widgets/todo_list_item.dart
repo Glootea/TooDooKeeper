@@ -247,15 +247,15 @@ class _ToDoItemImportanceIcon extends StatelessWidget {
     final todoTheme = context.watch<ThemeBloc>().state;
     const height = Checkbox.width;
     return switch (toDo.importance) {
-      LowImportance() => SizedBox(
+      Importance.low => SizedBox(
           height: height,
           child: Image.asset(
             'assets/down-arrow.png',
             color: todoTheme.definedColors.gray,
           ),
         ),
-      BasicImportance() => const SizedBox(height: height),
-      ImportantImportance() => SizedBox(
+      Importance.basic => const SizedBox(height: height),
+      Importance.important => SizedBox(
           height: height,
           child: Image.asset('assets/double-exclamation-mark.png'),
         ),

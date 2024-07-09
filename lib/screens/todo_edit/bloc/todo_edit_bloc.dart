@@ -60,7 +60,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   }
 
   Future<void> _onLoadByIdEvent(LoadByIdEvent event, Emitter<ToDoEditState> emit) async {
-    final todo = await _todoProvider.getToDoById(id: event.id);
+    final (todo, _) = await _todoProvider.getToDoById(id: event.id);
     logger.d('Loaded TODO: $todo');
     if (todo == null) {
       emit(const ToDoEditState.error());

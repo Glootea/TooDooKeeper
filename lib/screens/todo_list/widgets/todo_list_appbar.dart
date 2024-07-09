@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart';
+import 'package:yandex_summer_school/screens/todo_list/widgets/todo_list_network_error_dialog.dart';
 import 'package:yandex_summer_school/screens/todo_list/widgets/todo_list_overlay_container.dart';
 
 class ToDoListAppBar extends SliverPersistentHeaderDelegate {
@@ -64,9 +65,28 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
             Positioned(
               left: titlePosition.dx,
               top: titlePosition.dy,
-              child: Text(
-                context.loc.myTasks,
-                style: todoTheme.textTheme.largeTitle.copyWith(fontSize: titleFontSize),
+              child: InkWell(
+                onTap: () => state.networkConnectionPresent
+                    ? null
+                    : showDialog<AlertDialog>(
+                        context: context,
+                        builder: (BuildContext context) => const TodoListNetworkErrorDialog(),
+                      ),
+                child: Row(
+                  children: [
+                    Text(
+                      context.loc.myTasks,
+                      style: todoTheme.textTheme.largeTitle.copyWith(
+                        fontSize: titleFontSize,
+                        color: state.networkConnectionPresent ? null : todoTheme.definedColors.red,
+                      ),
+                    ),
+                    if (!state.networkConnectionPresent) ...[
+                      const SizedBox(width: 8),
+                      Icon(Icons.warning_amber_outlined, color: todoTheme.definedColors.red),
+                    ],
+                  ],
+                ),
               ),
             ),
             Positioned(

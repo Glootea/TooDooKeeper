@@ -143,8 +143,6 @@ abstract class $ToDoCopyWith<$Res> {
       DateTime createdAt,
       DateTime changedAt,
       String lastUpdatedBy});
-
-  $ImportanceCopyWith<$Res> get importance;
 }
 
 /// @nodoc
@@ -209,14 +207,6 @@ class _$ToDoCopyWithImpl<$Res, $Val extends ToDo>
               as String,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ImportanceCopyWith<$Res> get importance {
-    return $ImportanceCopyWith<$Res>(_value.importance, (value) {
-      return _then(_value.copyWith(importance: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -236,9 +226,6 @@ abstract class _$$ToDoImplCopyWith<$Res> implements $ToDoCopyWith<$Res> {
       DateTime createdAt,
       DateTime changedAt,
       String lastUpdatedBy});
-
-  @override
-  $ImportanceCopyWith<$Res> get importance;
 }
 
 /// @nodoc
@@ -308,7 +295,7 @@ class _$ToDoImpl extends _ToDo {
   const _$ToDoImpl(
       {required this.id,
       required this.description,
-      this.importance = const BasicImportance(),
+      this.importance = Importance.basic,
       this.deadline,
       this.done = false,
       this.color,
@@ -555,9 +542,6 @@ abstract class _$$ToDoEmptyImplCopyWith<$Res> implements $ToDoCopyWith<$Res> {
       DateTime? createdAt,
       DateTime? changedAt,
       String? lastUpdatedBy});
-
-  @override
-  $ImportanceCopyWith<$Res> get importance;
 }
 
 /// @nodoc
@@ -628,7 +612,7 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   const _$ToDoEmptyImpl(
       {this.id,
       this.description = '',
-      this.importance = const BasicImportance(),
+      this.importance = Importance.basic,
       this.deadline,
       this.done = false,
       this.color,

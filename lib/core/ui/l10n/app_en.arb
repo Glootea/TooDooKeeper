@@ -23,5 +23,8 @@
     "login": "Login",
     "logout": "Logout",
     "loginFailed": "Login failed",
-    "loginNeeded": "You must login via Yandex Passport to use online features"
+    "loginNeeded": "You must login via Yandex Passport to use online features",
+    "ok": "Ok",
+    "networkError": "Network error",
+    "networkErrorDescription": "Please check your internet connection.\n\nNone of your data will be lost as it will be merged based on the latest change during successful network request"
 }

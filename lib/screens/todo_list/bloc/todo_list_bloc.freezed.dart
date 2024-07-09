@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ToDoListState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)
         $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
@@ -26,7 +27,8 @@ mixin _$ToDoListState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult? Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
@@ -34,7 +36,8 @@ mixin _$ToDoListState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
@@ -89,7 +92,11 @@ abstract class _$$MainStateImplCopyWith<$Res> {
           _$MainStateImpl value, $Res Function(_$MainStateImpl) then) =
       __$$MainStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<ToDo> todos, ToDoListQuery query, bool showDone});
+  $Res call(
+      {List<ToDo> todos,
+      bool networkConnectionPresent,
+      ToDoListQuery query,
+      bool showDone});
 
   $ToDoListQueryCopyWith<$Res> get query;
 }
@@ -106,6 +113,7 @@ class __$$MainStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? todos = null,
+    Object? networkConnectionPresent = null,
     Object? query = null,
     Object? showDone = null,
   }) {
@@ -114,6 +122,10 @@ class __$$MainStateImplCopyWithImpl<$Res>
           ? _value._todos
           : todos // ignore: cast_nullable_to_non_nullable
               as List<ToDo>,
+      networkConnectionPresent: null == networkConnectionPresent
+          ? _value.networkConnectionPresent
+          : networkConnectionPresent // ignore: cast_nullable_to_non_nullable
+              as bool,
       query: null == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
@@ -139,6 +151,7 @@ class __$$MainStateImplCopyWithImpl<$Res>
 class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   const _$MainStateImpl(
       {required final List<ToDo> todos,
+      required this.networkConnectionPresent,
       required this.query,
       required this.showDone})
       : _todos = todos;
@@ -152,13 +165,15 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   }
 
   @override
+  final bool networkConnectionPresent;
+  @override
   final ToDoListQuery query;
   @override
   final bool showDone;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoListState(todos: $todos, query: $query, showDone: $showDone)';
+    return 'ToDoListState(todos: $todos, networkConnectionPresent: $networkConnectionPresent, query: $query, showDone: $showDone)';
   }
 
   @override
@@ -167,6 +182,8 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
     properties
       ..add(DiagnosticsProperty('type', 'ToDoListState'))
       ..add(DiagnosticsProperty('todos', todos))
+      ..add(DiagnosticsProperty(
+          'networkConnectionPresent', networkConnectionPresent))
       ..add(DiagnosticsProperty('query', query))
       ..add(DiagnosticsProperty('showDone', showDone));
   }
@@ -180,36 +197,39 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)
         $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
   }) {
-    return $default(todos, query, showDone);
+    return $default(todos, networkConnectionPresent, query, showDone);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult? Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
   }) {
-    return $default?.call(todos, query, showDone);
+    return $default?.call(todos, networkConnectionPresent, query, showDone);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(todos, query, showDone);
+      return $default(todos, networkConnectionPresent, query, showDone);
     }
     return orElse();
   }
@@ -252,10 +272,12 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
 abstract class MainState implements ToDoListState {
   const factory MainState(
       {required final List<ToDo> todos,
+      required final bool networkConnectionPresent,
       required final ToDoListQuery query,
       required final bool showDone}) = _$MainStateImpl;
 
   List<ToDo> get todos;
+  bool get networkConnectionPresent;
   ToDoListQuery get query;
   bool get showDone;
   @JsonKey(ignore: true)
@@ -298,7 +320,8 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)
         $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
@@ -309,7 +332,8 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult? Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
@@ -320,7 +344,8 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
@@ -432,7 +457,8 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)
         $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
@@ -443,7 +469,8 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult? Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
@@ -454,7 +481,8 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(List<ToDo> todos, ToDoListQuery query, bool showDone)?
+    TResult Function(List<ToDo> todos, bool networkConnectionPresent,
+            ToDoListQuery query, bool showDone)?
         $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,

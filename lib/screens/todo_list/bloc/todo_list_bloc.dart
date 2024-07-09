@@ -37,8 +37,15 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
   Future<void> _onLoadEvent(LoadEvent event, Emitter<ToDoListState> emit) async {
     try {
       emit(const LoadingState());
-      final todos = await todoProvider.getToDoList();
-      emit(ToDoListState(todos: todos, query: const ToDoListQuery(), showDone: true));
+      final (todos, networkConnectionPresent) = await todoProvider.getToDoList();
+      emit(
+        ToDoListState(
+          todos: todos,
+          networkConnectionPresent: networkConnectionPresent,
+          query: const ToDoListQuery(),
+          showDone: true,
+        ),
+      );
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
       emit(ToDoListState.error(message: e.toString()));
@@ -49,8 +56,16 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     try {
       final currentState = state as MainState;
       final todos = currentState.todos.toList()..removeWhere((element) => element.id == event.id);
-      emit(ToDoListState(todos: todos, query: currentState.query, showDone: currentState.showDone));
-      await todoProvider.deleteTodo(id: event.id);
+      final (_, networkConnectionPresent) = await todoProvider.deleteTodo(id: event.id);
+
+      emit(
+        ToDoListState(
+          todos: todos,
+          networkConnectionPresent: networkConnectionPresent,
+          query: currentState.query,
+          showDone: currentState.showDone,
+        ),
+      );
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
       emit(ToDoListState.error(message: e.toString()));
@@ -65,8 +80,15 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
       final newValue = !todos[indexOfUpdateElement].done;
       logger.d(newValue);
       todos[indexOfUpdateElement] = todos[indexOfUpdateElement].copyWith(done: newValue);
-      emit(ToDoListState(todos: todos, query: currentState.query, showDone: currentState.showDone));
-      await todoProvider.createOrUpdateTodo(todo: todos[indexOfUpdateElement]);
+      final (_, networkConnectionPresent) = await todoProvider.createOrUpdateTodo(todo: todos[indexOfUpdateElement]);
+      emit(
+        ToDoListState(
+          todos: todos,
+          networkConnectionPresent: networkConnectionPresent,
+          query: currentState.query,
+          showDone: currentState.showDone,
+        ),
+      );
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
       emit(ToDoListState.error(message: e.toString()));
@@ -78,18 +100,39 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
   Future<void> _onCreateEvent(CreateEvent event, Emitter<ToDoListState> emit) async {
     const todo = ToDo.justCreated();
     final currentState = state as MainState;
-    emit(MainState(todos: [...currentState.todos, todo], query: currentState.query, showDone: currentState.showDone));
+    emit(
+      MainState(
+        todos: [...currentState.todos, todo],
+        networkConnectionPresent: currentState.networkConnectionPresent,
+        query: currentState.query,
+        showDone: currentState.showDone,
+      ),
+    );
   }
 
   Future<void> _onSaveEvent(SaveJustCreatedEvent event, Emitter<ToDoListState> emit) async {
     final currentState = state as MainState;
     await todoProvider.createOrUpdateTodo(todo: ToDo.justCreated(description: event.description));
-    final todos = await todoProvider.getToDoList();
-    emit(MainState(todos: todos, query: currentState.query, showDone: currentState.showDone));
+    final (todos, networkConnectionPresent) = await todoProvider.getToDoList();
+    emit(
+      MainState(
+        todos: todos,
+        networkConnectionPresent: networkConnectionPresent,
+        query: currentState.query,
+        showDone: currentState.showDone,
+      ),
+    );
   }
 
   void _onToggleVisibility(ToggleVisibilityEvent event, Emitter<ToDoListState> emit) {
     final currentState = state as MainState;
-    emit(MainState(todos: currentState.todos, query: currentState.query, showDone: !currentState.showDone));
+    emit(
+      MainState(
+        todos: currentState.todos,
+        networkConnectionPresent: currentState.networkConnectionPresent,
+        query: currentState.query,
+        showDone: !currentState.showDone,
+      ),
+    );
   }
 }

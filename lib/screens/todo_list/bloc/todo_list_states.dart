@@ -4,6 +4,7 @@ part of 'todo_list_bloc.dart';
 sealed class ToDoListState with _$ToDoListState {
   const factory ToDoListState({
     required List<ToDo> todos,
+    required bool networkConnectionPresent,
     required ToDoListQuery query,
     required bool showDone,
   }) = MainState;

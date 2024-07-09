@@ -39,14 +39,14 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
             underline: const SizedBox(),
             items: [
               DropdownMenuItem(
-                value: const BasicImportance(),
+                value: Importance.basic,
                 child: Text(
                   context.loc.none,
                   style: todoTheme.textTheme.body,
                 ),
               ),
               DropdownMenuItem(
-                value: const LowImportance(),
+                value: Importance.low,
                 child: Row(
                   children: [
                     SizedBox(
@@ -64,7 +64,7 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
                 ),
               ),
               DropdownMenuItem(
-                value: const ImportantImportance(),
+                value: Importance.important,
                 child: Row(
                   children: [
                     SizedBox(

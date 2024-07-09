@@ -11,7 +11,7 @@ sealed class ToDo with _$ToDo {
   const factory ToDo({
     required String id,
     required String description,
-    @Default(BasicImportance()) Importance importance,
+    @Default(Importance.basic) Importance importance,
     DateTime? deadline,
     @Default(false) bool done,
     int? color,
@@ -23,7 +23,7 @@ sealed class ToDo with _$ToDo {
   const factory ToDo.justCreated({
     String? id,
     @Default('') String description,
-    @Default(BasicImportance()) Importance importance,
+    @Default(Importance.basic) Importance importance,
     DateTime? deadline,
     @Default(false) bool done,
     int? color,
