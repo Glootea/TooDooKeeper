@@ -325,11 +325,6 @@ class _$ToDoImpl extends _ToDo {
   @override
   final String lastUpdatedBy;
 
-  @override
-  String toString() {
-    return 'ToDo(id: $id, description: $description, importance: $importance, deadline: $deadline, done: $done, color: $color, createdAt: $createdAt, changedAt: $changedAt, lastUpdatedBy: $lastUpdatedBy)';
-  }
-
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
@@ -616,11 +611,6 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   final DateTime? changedAt;
   @override
   final String? lastUpdatedBy;
-
-  @override
-  String toString() {
-    return 'ToDo.justCreated(id: $id, description: $description, importance: $importance, deadline: $deadline, done: $done, color: $color, createdAt: $createdAt, changedAt: $changedAt, lastUpdatedBy: $lastUpdatedBy)';
-  }
 
   @JsonKey(ignore: true)
   @override

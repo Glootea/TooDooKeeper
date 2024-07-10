@@ -1,13 +1,15 @@
 // ignore_for_file: always_put_required_named_parameters_first, avoid_equals_and_hash_code_on_mutable_classes
 
 import 'dart:convert';
+
+import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:yandex_summer_school/core/entities/importance.dart';
 
 part 'todo.freezed.dart';
 
 @Freezed(fromJson: false, toJson: false, equal: false)
-sealed class ToDo with _$ToDo {
+sealed class ToDo extends Equatable with _$ToDo {
   const factory ToDo({
     required String id,
     required String description,
@@ -90,8 +92,12 @@ sealed class ToDo with _$ToDo {
   bool get justCreated => id == null;
 
   @override
-  bool operator ==(covariant ToDo other) => id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
+  List<Object?> get props => [
+        id,
+        description,
+        importance,
+        deadline,
+        done,
+        color,
+      ];
 }

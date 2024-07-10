@@ -148,13 +148,14 @@ class __$$MainStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
+class _$MainStateImpl extends MainState with DiagnosticableTreeMixin {
   const _$MainStateImpl(
       {required final List<ToDo> todos,
       required this.networkConnectionPresent,
       required this.query,
       required this.showDone})
-      : _todos = todos;
+      : _todos = todos,
+        super._();
 
   final List<ToDo> _todos;
   @override
@@ -291,12 +292,13 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   }
 }
 
-abstract class MainState implements ToDoListState {
+abstract class MainState extends ToDoListState {
   const factory MainState(
       {required final List<ToDo> todos,
       required final bool networkConnectionPresent,
       required final ToDoListQuery query,
       required final bool showDone}) = _$MainStateImpl;
+  const MainState._() : super._();
 
   List<ToDo> get todos;
   bool get networkConnectionPresent;
@@ -325,8 +327,8 @@ class __$$LoadingStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
-  const _$LoadingStateImpl();
+class _$LoadingStateImpl extends LoadingState with DiagnosticableTreeMixin {
+  const _$LoadingStateImpl() : super._();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -423,8 +425,9 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   }
 }
 
-abstract class LoadingState implements ToDoListState {
+abstract class LoadingState extends ToDoListState {
   const factory LoadingState() = _$LoadingStateImpl;
+  const LoadingState._() : super._();
 }
 
 /// @nodoc
@@ -460,8 +463,8 @@ class __$$ErrorStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
-  const _$ErrorStateImpl({required this.message});
+class _$ErrorStateImpl extends ErrorState with DiagnosticableTreeMixin {
+  const _$ErrorStateImpl({required this.message}) : super._();
 
   @override
   final String message;
@@ -571,8 +574,9 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   }
 }
 
-abstract class ErrorState implements ToDoListState {
+abstract class ErrorState extends ToDoListState {
   const factory ErrorState({required final String message}) = _$ErrorStateImpl;
+  const ErrorState._() : super._();
 
   String get message;
   @JsonKey(ignore: true)

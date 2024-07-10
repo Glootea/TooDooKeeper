@@ -18,8 +18,9 @@ void main() async {
   late MockOnlineProvider online;
   late FakeLocalDatabase local;
   late FakeSecureStorage storage;
-
   late DeviceIdProvider deviceIdProvider;
+
+  const createdToDoID = '1';
 
   const des = 'Test description';
   final time = DateTime(2024, 7, 10, 14, 23, 10);
@@ -50,7 +51,7 @@ void main() async {
         description: des,
         createdAt: time,
         changedAt: time,
-        id: '1',
+        id: createdToDoID,
         lastUpdatedBy: deviceIdProvider.deviceId,
       );
 
@@ -137,8 +138,38 @@ void main() async {
 
         expect(state3.todos, hasLength(0)); // not showing to user
 
+        (await bloc.stream.first.timeout(const Duration(seconds: 5), onTimeout: () => bloc.state))
+            as MainState; // after actual deletion
         final todoInDatabase = await local.getToDoById(id: id); // deleted from database as well fromm online
         expect(todoInDatabase, isNull);
+      });
+
+      test('Delete todo while internet becomes unavailable', () async {
+        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => null);
+
+        await bloc.stream.first; // get init state
+
+        bloc
+          ..add(const CreateEvent())
+          ..add(const SaveJustCreatedEvent(des));
+        final state1 = (await bloc.stream.first) as MainState; // created
+        expect(state1.todos, hasLength(1));
+
+        final state2 = (await bloc.stream.first) as MainState; // saved
+        expect(state2.todos, hasLength(1));
+
+        final id = state2.todos.first.id!;
+        bloc.add(DeleteEvent(id)); //  deleted to user's eye
+        final state3 = (await bloc.stream.first) as MainState;
+
+        expect(state3.todos, hasLength(0)); // not showing to user
+
+        final todoInDatabase = await local.getToDoById(id: id); // deleted from database as well fromm online
+        expect(todoInDatabase, isNotNull);
+        expect(state3.networkConnectionPresent, isTrue);
+
+        final state4 = (await bloc.stream.first) as MainState; // actually deleted
+        expect(state4.networkConnectionPresent, isFalse);
       });
     });
 
@@ -223,5 +254,61 @@ void main() async {
         expect(todoInDatabase?.isDeleted, isTrue);
       });
     });
+    group(
+      'Internet agnostic tests',
+      () {
+        setUp(() async {
+          // Provide default implementations for initialization
+          when(online.database.getToDoList).thenAnswer((_) async => null);
+          when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
+        });
+
+        blocTest<ToDoListBloc, ToDoListState>('Toggle done',
+            build: () => bloc,
+            setUp: () {
+              when(() => online.database.updateToDo(any())).thenAnswer((_) async => null);
+            },
+            act: (bloc) => bloc
+              ..add(const CreateEvent())
+              ..add(const SaveJustCreatedEvent(des))
+              ..add(const ToggleDoneEvent(createdToDoID))
+              ..add(const ToggleDoneEvent(createdToDoID)),
+            expect: () async {
+              final stateAfterSaved = MainState(
+                todos: [createdToDo],
+                networkConnectionPresent: false,
+                query: const ToDoListQuery(),
+                showDone: true,
+              );
+              return [
+                const MainState(
+                  todos: [],
+                  networkConnectionPresent: false,
+                  query: ToDoListQuery(),
+                  showDone: true,
+                ),
+                const MainState(
+                  todos: [ToDo.justCreated()],
+                  networkConnectionPresent: false,
+                  query: ToDoListQuery(),
+                  showDone: true,
+                ),
+                stateAfterSaved,
+                MainState(
+                  todos: [createdToDo.copyWith(done: true)],
+                  networkConnectionPresent: false,
+                  query: const ToDoListQuery(),
+                  showDone: true,
+                ),
+                MainState(
+                  todos: [createdToDo.copyWith(done: false)],
+                  networkConnectionPresent: false,
+                  query: const ToDoListQuery(),
+                  showDone: true,
+                ),
+              ];
+            });
+      },
+    );
   });
 }

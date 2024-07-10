@@ -56,17 +56,27 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     try {
       final currentState = state as MainState;
       final todo = currentState.todos.firstWhere((element) => element.id == event.id);
-      final todos = currentState.todos.toList()..remove(todo);
-      final (_, networkConnectionPresent) = await todoProvider.deleteTodo(todo: todo);
+      final todos = currentState.todos.toList()..removeWhere((todo) => todo.id == event.id);
 
       emit(
         ToDoListState(
           todos: todos,
-          networkConnectionPresent: networkConnectionPresent,
+          networkConnectionPresent: currentState.networkConnectionPresent,
           query: currentState.query,
           showDone: currentState.showDone,
         ),
       );
+      final (_, networkConnectionPresent) = await todoProvider.deleteTodo(todo: todo);
+      if (currentState.networkConnectionPresent != networkConnectionPresent) {
+        emit(
+          ToDoListState(
+            todos: todos,
+            networkConnectionPresent: networkConnectionPresent,
+            query: currentState.query,
+            showDone: currentState.showDone,
+          ),
+        );
+      }
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
       emit(ToDoListState.error(message: e.toString()));
@@ -76,20 +86,16 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
   Future<void> _onToggleDone(ToggleDoneEvent event, Emitter<ToDoListState> emit) async {
     try {
       final currentState = state as MainState;
-      final todos = currentState.todos.toList();
+      final todos = List<ToDo>.from(currentState.todos);
       final indexOfUpdateElement = todos.indexWhere((element) => element.id == event.id);
       final newValue = !todos[indexOfUpdateElement].done;
       logger.d(newValue);
       todos[indexOfUpdateElement] = todos[indexOfUpdateElement].copyWith(done: newValue);
+      emit((state as MainState).copyWith(todos: todos.toList()));
       final (_, networkConnectionPresent) = await todoProvider.updateTodo(todo: todos[indexOfUpdateElement]);
-      emit(
-        ToDoListState(
-          todos: todos,
-          networkConnectionPresent: networkConnectionPresent,
-          query: currentState.query,
-          showDone: currentState.showDone,
-        ),
-      );
+      if (networkConnectionPresent != currentState.networkConnectionPresent) {
+        emit((state as MainState).copyWith(networkConnectionPresent: networkConnectionPresent));
+      }
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
       emit(ToDoListState.error(message: e.toString()));
