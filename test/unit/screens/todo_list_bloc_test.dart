@@ -7,10 +7,10 @@ import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart';
 
-import '../mocks/fake_local_database.dart';
-import '../mocks/fake_secure_storage.dart';
-import '../mocks/mock_online_database.dart';
-import '../mocks/mock_online_provider.dart';
+import '../../mocks/fake_local_database.dart';
+import '../../mocks/fake_secure_storage.dart';
+import '../../mocks/mock_online_database.dart';
+import '../../mocks/mock_online_provider.dart';
 
 void main() async {
   late MockOnlineDatabase database;

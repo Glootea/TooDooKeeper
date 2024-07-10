@@ -89,6 +89,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
 
   Future<void> _onUpdateEvent(UpdateEvent event, Emitter<ToDoEditState> emit) async {
     emit(MainState(todo: event.todo));
+    logger.d('TODO updated: ${event.todo}');
   }
 
   Future<void> _onParseDataFromLinkEvent(ParseDataFromLinkEvent event, Emitter<ToDoEditState> emit) async {

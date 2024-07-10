@@ -25,6 +25,7 @@ class ToDoEditAppbar extends PreferredSize {
           onPressed: () => bloc.add(const SaveEvent()),
           child: Text(
             context.loc.save,
+            key: const ValueKey('Save'),
             style: todoTheme.textTheme.button.copyWith(color: todoTheme.definedColors.blue),
           ),
         ),

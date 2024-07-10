@@ -95,6 +95,7 @@ class _MainScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        key: const ValueKey('increment'),
         onPressed: () async {
           await context.push('/new');
           if (context.mounted) {

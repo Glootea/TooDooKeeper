@@ -31,6 +31,7 @@ class ToDoCheckbox extends StatelessWidget {
       height: Checkbox.width,
       width: Checkbox.width,
       child: Checkbox(
+        key: const ValueKey('ImportanceCheckbox'),
         value: value,
         onChanged: onChanged,
         fillColor: WidgetStatePropertyAll(fillColor),
