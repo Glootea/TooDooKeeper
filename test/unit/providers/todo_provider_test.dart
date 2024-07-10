@@ -23,7 +23,7 @@ void main() {
 
     late ToDoProvider toDoProvider;
 
-    final time = DateTime(2024, 7, 11, 8, 0);
+    final time = DateTime(2024, 7, 11, 8);
 
     setUp(() async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -165,6 +165,40 @@ void main() {
       final (actual, _) = await toDoProvider.getToDoById(id: '1');
 
       expect(actual, expected);
+    });
+
+    test('Delete todo while connected to net', () async {
+      final todo = ToDo.justCreated(id: '1', description: 'local', createdAt: time, changedAt: time);
+      final localToDo = todo.parseToDoItemCompanion;
+
+      await local.setFromOnline([localToDo]);
+
+      when(() => online.database!.deleteToDo(any())).thenAnswer(
+        (_) async => todo,
+      );
+
+      final (_, success) = await toDoProvider.deleteTodo(todo: todo);
+      expect(success, isTrue);
+
+      final todoFromLocalDatabase = await local.getToDoById(id: todo.id!);
+      expect(todoFromLocalDatabase, isNull);
+    });
+
+    test('Delete todo while disconnected to net', () async {
+      final todo = ToDo.justCreated(id: '1', description: 'local', createdAt: time, changedAt: time);
+      final localToDo = todo.parseToDoItemCompanion;
+
+      await local.setFromOnline([localToDo]);
+
+      when(() => online.database!.deleteToDo(any())).thenAnswer(
+        (_) async => null,
+      );
+
+      final (_, success) = await toDoProvider.deleteTodo(todo: todo);
+      expect(success, isFalse);
+
+      final todoFromLocalDatabase = await local.getToDoById(id: todo.id!);
+      expect(todoFromLocalDatabase, isNull);
     });
   });
 }

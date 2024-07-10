@@ -9,10 +9,11 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
   final _deviceId = 'deviceId';
   List<ToDoItem> _todos = [];
   @override
-  Future<List<ToDoItem>> getToDoList() async => _todos.toList();
+  Future<List<ToDoItem>> getToDoList() async => _todos.where((e) => e.isDeleted != true).toList();
 
   @override
-  Future<ToDoItem?> getToDoById({required String id}) async => _todos.where((t) => t.id == id).firstOrNull;
+  Future<ToDoItem?> getToDoById({required String id}) async =>
+      _todos.where((t) => t.id == id && t.isDeleted != true).firstOrNull;
 
   @override
   Future<void> createToDo({required ToDoItemsCompanion companion}) async => _todos.add(

@@ -24,10 +24,11 @@ class ToDoItems extends Table {
 class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(connect());
 
-  Future<List<ToDoItem>> getToDoList() async => select(toDoItems).get();
+  Future<List<ToDoItem>> getToDoList() async =>
+      (select(toDoItems)..where((tbl) => tbl.isDeleted.isNotValue(true))).get();
 
   Future<ToDoItem?> getToDoById({required String id}) async {
-    return (select(toDoItems)..where((t) => t.id.equals(id))).getSingleOrNull();
+    return (select(toDoItems)..where((t) => t.id.equals(id) & t.isDeleted.isNotValue(true))).getSingleOrNull();
   }
 
   Future<void> createToDo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
