@@ -9,13 +9,13 @@ import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart'
 
 import '../mocks/fake_local_database.dart';
 import '../mocks/fake_secure_storage.dart';
-import '../mocks/mock_remote_database.dart';
-import '../mocks/mock_remote_provider.dart';
+import '../mocks/mock_online_database.dart';
+import '../mocks/mock_online_provider.dart';
 
 void main() async {
-  late MockRemoteDatabase database;
+  late MockOnlineDatabase database;
   late ToDoListBloc bloc;
-  late MockRemoteProvider remote;
+  late MockOnlineProvider online;
   late FakeLocalDatabase local;
   late FakeSecureStorage storage;
 
@@ -33,14 +33,14 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
 
       // Set up fresh copy of bloc
-      database = MockRemoteDatabase();
-      remote = MockRemoteProvider(database);
+      database = MockOnlineDatabase();
+      online = MockOnlineProvider(database);
       local = FakeLocalDatabase();
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
       final toDoProvider = ToDoProvider(
         localDatabase: local,
-        onlineProvider: remote,
+        onlineProvider: online,
         deviceIdProvider: deviceIdProvider,
       );
 
@@ -54,15 +54,15 @@ void main() async {
         lastUpdatedBy: deviceIdProvider.deviceId,
       );
 
-      when(() => remote.database.createToDo(any())).thenAnswer((_) async => createdToDo);
+      when(() => online.database.createToDo(any())).thenAnswer((_) async => createdToDo);
     });
     group('Internet is connected:', () {
       setUp(() async {
         WidgetsFlutterBinding.ensureInitialized();
 
         // Provide default implementations for initialization
-        when(remote.database.getToDoList).thenAnswer((_) async => <ToDo>[]);
-        when(() => remote.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
+        when(online.database.getToDoList).thenAnswer((_) async => <ToDo>[]);
+        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
       });
       test('Initial state is correct', () {
         expect(bloc.state, const LoadingState());
@@ -118,7 +118,7 @@ void main() async {
       );
 
       test('Delete todo and get list for online', () async {
-        when(() => remote.database.deleteToDo(any())).thenAnswer((_) async => createdToDo);
+        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => createdToDo);
 
         await bloc.stream.first; // get init state
 
@@ -145,8 +145,8 @@ void main() async {
     group('Internet not connected:', () {
       setUp(() async {
         // Provide default implementations for initialization
-        when(remote.database.getToDoList).thenAnswer((_) async => null);
-        when(() => remote.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
+        when(online.database.getToDoList).thenAnswer((_) async => null);
+        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -199,7 +199,7 @@ void main() async {
       );
 
       test('Delete todo and get list for offline', () async {
-        when(() => remote.database.deleteToDo(any())).thenAnswer((_) async => null);
+        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => null);
 
         await bloc.stream.first; // get init state
 

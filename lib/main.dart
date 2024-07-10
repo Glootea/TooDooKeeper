@@ -12,8 +12,8 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
-import 'package:yandex_summer_school/core/data/providers/online/remote_provider_abst.dart';
-import 'package:yandex_summer_school/core/data/providers/online/yandex_remote_provider.dart';
+import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
+import 'package:yandex_summer_school/core/data/providers/online/yandex_online_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme.dart';
@@ -37,7 +37,7 @@ class InitScreen extends StatelessWidget {
     await _appSetup();
     final deviceIdProvider = await DeviceIdProvider.create();
 
-    final RemoteProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider);
+    final OnlineProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider);
     final localDatabase = LocalDatabase();
     final todoProvider =
         ToDoProvider(localDatabase: localDatabase, onlineProvider: onlineProvider, deviceIdProvider: deviceIdProvider);

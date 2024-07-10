@@ -1,6 +1,6 @@
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
-import 'package:yandex_summer_school/core/data/providers/online/remote_provider_abst.dart';
+import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/extensions/local_database_todo_mapper_extension.dart';
 import 'package:yandex_summer_school/core/logger.dart';
@@ -9,14 +9,14 @@ class ToDoProvider {
   // TODO: handle failed online requests
   const ToDoProvider({
     required LocalDatabase localDatabase,
-    required RemoteProvider onlineProvider,
+    required OnlineProvider onlineProvider,
     required DeviceIdProvider deviceIdProvider,
   })  : _onlineProvider = onlineProvider,
         _localDatabase = localDatabase,
         _deviceIdProvider = deviceIdProvider;
 
   final LocalDatabase _localDatabase;
-  final RemoteProvider _onlineProvider;
+  final OnlineProvider _onlineProvider;
   final DeviceIdProvider _deviceIdProvider;
 
   Future<(List<ToDo>, bool)> getToDoList() async {
@@ -24,7 +24,7 @@ class ToDoProvider {
     final localToDoList = await _localDatabase.getToDoList();
 
     if (onlineTodoList != null) {
-      final merged = _merge(local: localToDoList, remote: onlineTodoList);
+      final merged = _merge(local: localToDoList, online: onlineTodoList);
       await _localDatabase.setFromOnline(merged.map((toDo) => toDo.parseToDoItemCompanion).toList());
       await _onlineProvider.database?.updateToDoList(merged);
       logger.i('Got list from online: $onlineTodoList');
@@ -40,7 +40,7 @@ class ToDoProvider {
     final onlineToDo = await _onlineProvider.database?.getToDoById(id);
     final localToDo = await _localDatabase.getToDoById(id: id);
     if (onlineToDo != null) {
-      final merged = _pickActual(local: localToDo, remote: onlineToDo);
+      final merged = _pickActual(local: localToDo, online: onlineToDo);
       if (merged == null) return (null, false);
       await _localDatabase.updateTodo(companion: merged.parseToDoItemCompanion);
       return (onlineToDo, true);
@@ -90,29 +90,29 @@ class ToDoProvider {
     await _localDatabase.close();
   }
 
-  List<ToDo> _merge({required List<ToDoItem> local, required List<ToDo?> remote}) {
+  List<ToDo> _merge({required List<ToDoItem> local, required List<ToDo?> online}) {
     final localCopy = List<ToDoItem>.from(local);
-    final remoteCopy = List<ToDo?>.from(remote);
+    final onlineCopy = List<ToDo?>.from(online);
     localCopy.sort((a, b) => a.id.compareTo(b.id));
-    remoteCopy.sort((a, b) => a!.id!.compareTo(b!.id!));
+    onlineCopy.sort((a, b) => a!.id!.compareTo(b!.id!));
     final result = <ToDo>[];
     for (final localToDoItem in localCopy) {
-      final remoteItem = remoteCopy.firstWhere((element) => element!.id == localToDoItem.id, orElse: () => null);
-      final actual = _pickActual(local: localToDoItem, remote: remoteItem);
-      remoteCopy.remove(remoteItem);
+      final onlineItem = onlineCopy.firstWhere((element) => element!.id == localToDoItem.id, orElse: () => null);
+      final actual = _pickActual(local: localToDoItem, online: onlineItem);
+      onlineCopy.remove(onlineItem);
       if (actual == null) continue;
       result.add(actual);
     }
-    return result + remoteCopy.whereType<ToDo>().toList();
+    return result + onlineCopy.whereType<ToDo>().toList();
   }
 
-  ToDo? _pickActual({ToDoItem? local, ToDo? remote}) {
-    if (local == null && remote == null) return null;
+  ToDo? _pickActual({ToDoItem? local, ToDo? online}) {
+    if (local == null && online == null) return null;
     if ((local?.isDeleted ?? false) == true) {
       return null;
     }
-    if (local == null) return remote!;
-    if (remote == null) return local.parseToDo!;
-    return local.changedAt!.isAfter(remote.changedAt!) ? local.parseToDo! : remote;
+    if (local == null) return online!;
+    if (online == null) return local.parseToDo!;
+    return local.changedAt!.isAfter(online.changedAt!) ? local.parseToDo! : online;
   }
 }

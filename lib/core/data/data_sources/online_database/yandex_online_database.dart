@@ -4,7 +4,7 @@ import 'package:yandex_summer_school/core/data/data_sources/online_database/onli
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
-class YandexOnlineDatabase implements RemoteDatabase {
+class YandexOnlineDatabase implements OnlineDatabase {
   YandexOnlineDatabase._(this._dio, this._secureStorage, this._revision);
 
   static Future<YandexOnlineDatabase> create(
