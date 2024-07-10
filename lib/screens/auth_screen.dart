@@ -10,7 +10,7 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.read<OnlineProvider>();
+    final onlineProvider = context.read<OnlineProvider>();
     final todoTheme = context.watch<ThemeBloc>();
     return Scaffold(
       body: Column(
@@ -29,7 +29,7 @@ class AuthScreen extends StatelessWidget {
           const SizedBox(height: 16),
           OutlinedButton(
             onPressed: () async {
-              final result = await auth.auth.login();
+              final result = await onlineProvider.login();
               if (result == true) {
                 if (context.mounted) {
                   context.pushReplacement('/');

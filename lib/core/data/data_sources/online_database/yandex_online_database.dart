@@ -168,5 +168,5 @@ class YandexOnlineDatabase implements OnlineDatabase {
   }
 
   @override
-  Future<void> onLogout() => _secureStorage.deleteAll();
+  Future<void> logout() => _secureStorage.deleteAll();
 }

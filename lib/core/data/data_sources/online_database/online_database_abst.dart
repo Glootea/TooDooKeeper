@@ -8,5 +8,5 @@ abstract interface class OnlineDatabase {
   Future<ToDo?> updateToDo(ToDo todo);
   Future<ToDo?> deleteToDo(String id);
 
-  Future<void> onLogout();
+  Future<void> logout();
 }

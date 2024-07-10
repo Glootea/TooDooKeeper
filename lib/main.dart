@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
@@ -34,9 +35,9 @@ class InitScreen extends StatelessWidget {
   const InitScreen({super.key});
   Future<void> init() async {
     await _appSetup();
-    final deviceIdProvider = await DeviceIdProvider.create();
-
-    final OnlineProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider);
+    const secureStorage = FlutterSecureStorage(aOptions: AndroidOptions(encryptedSharedPreferences: true));
+    final deviceIdProvider = await DeviceIdProvider.create(storage: secureStorage);
+    final OnlineProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider, secureStorage);
     final localDatabase = LocalDatabase();
     final todoRepository = ToDoRepository(
       localDatabase: localDatabase,

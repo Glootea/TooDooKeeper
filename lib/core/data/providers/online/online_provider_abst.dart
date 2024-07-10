@@ -5,11 +5,7 @@ abstract class OnlineProvider {
   OnlineProvider({required this.auth, required this.database});
 
   final AuthMethod auth;
-  final OnlineDatabase? database;
-
+  OnlineDatabase? database;
+  Future<bool> login();
   Future<void> logout();
-}
-
-class OnlineProviderHolder {
-  OnlineProvider? provider;
 }

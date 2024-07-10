@@ -4,14 +4,10 @@ import 'package:yandex_summer_school/core/data/data_sources/auth/auth_method_abs
 import 'package:yandex_summer_school/core/logger.dart';
 
 class YandexAuth extends AuthMethod {
-  YandexAuth._();
-  YandexAuth._key(this.authToken);
+  YandexAuth._(this._secureStorage);
+  YandexAuth._key(this._secureStorage, this.authToken);
 
-  static const _secureStorage = FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
-  );
+  final FlutterSecureStorage _secureStorage;
   static const String _keyString = 'auth-key';
   static const String _keyExpires = 'auth-expires';
 
@@ -19,13 +15,13 @@ class YandexAuth extends AuthMethod {
   @override
   bool get isLoggedIn => authToken != null;
 
-  static Future<YandexAuth> create() async {
-    final expires = await _secureStorage.read(key: _keyExpires);
+  static Future<YandexAuth> create(FlutterSecureStorage secureStorage) async {
+    final expires = await secureStorage.read(key: _keyExpires);
     if (expires != null && int.parse(expires) > DateTime.now().millisecondsSinceEpoch) {
-      final authToken = await _secureStorage.read(key: _keyString);
-      return YandexAuth._key(authToken);
+      final authToken = await secureStorage.read(key: _keyString);
+      return YandexAuth._key(secureStorage, authToken);
     }
-    return YandexAuth._();
+    return YandexAuth._(secureStorage);
   }
 
   @override
@@ -68,11 +64,10 @@ class YandexAuth extends AuthMethod {
     final expiresIn = data['expiresIn'];
     if (token == null || expiresIn == null) throw Exception('Failed to login user as no data was provided');
     await _secureStorage.write(
-        key: _keyString,
-        value: token as String,
-        aOptions: AndroidOptions(
-          encryptedSharedPreferences: true,
-        ));
+      key: _keyString,
+      value: token as String,
+    );
+
     final expires = DateTime.now().add(Duration(minutes: expiresIn as int));
     await _secureStorage.write(key: _keyExpires, value: expires.millisecondsSinceEpoch.toString());
     return token;

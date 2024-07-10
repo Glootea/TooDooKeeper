@@ -21,7 +21,7 @@ class ToDoRepository {
   final DeviceIdProvider _deviceIdProvider;
 
   Future<(List<ToDo>, bool)> getToDoList() async {
-    final onlineTodoList = await _onlineProvider.database?.getToDoList();
+    final onlineTodoList = await _onlineProvider.database?.getToDoList().catchError((e) => <ToDo>[]);
     final localToDoList = await _localDatabase.getToDoList(withDeleted: true);
 
     if (onlineTodoList != null) {
@@ -93,7 +93,7 @@ class ToDoRepository {
 
   Future<void> logout() async {
     await _onlineProvider.logout();
-    await _localDatabase.close();
+    await _localDatabase.logout();
   }
 
   List<ToDo> _merge({required List<ToDoItem> local, required List<ToDo?> online}) {

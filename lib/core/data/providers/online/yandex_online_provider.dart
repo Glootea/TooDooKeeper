@@ -5,27 +5,43 @@ import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
 
 class YandexOnlineProvider extends OnlineProvider {
-  YandexOnlineProvider._({required super.auth, super.database});
+  YandexOnlineProvider._({required super.auth, required FlutterSecureStorage secureStorage, super.database})
+      : _secureStorage = secureStorage;
 
-  static Future<YandexOnlineProvider> create(DeviceIdProvider deviceIdProvider) async {
-    final auth = await YandexAuth.create();
+  final FlutterSecureStorage _secureStorage;
+
+  static Future<YandexOnlineProvider> create(
+    DeviceIdProvider deviceIdProvider,
+    FlutterSecureStorage secureStorage,
+  ) async {
+    final auth = await YandexAuth.create(secureStorage);
     if (auth.isLoggedIn) {
       final configuredDatabase = await YandexOnlineDatabase.create(
         auth.authToken!,
-        const FlutterSecureStorage(
-          aOptions: AndroidOptions(
-            encryptedSharedPreferences: true,
-          ),
-        ),
+        secureStorage,
       );
-      return YandexOnlineProvider._(auth: auth, database: configuredDatabase);
+      return YandexOnlineProvider._(auth: auth, database: configuredDatabase, secureStorage: secureStorage);
     }
-    return YandexOnlineProvider._(auth: auth);
+    return YandexOnlineProvider._(auth: auth, secureStorage: secureStorage);
+  }
+
+  @override
+  Future<bool> login() async {
+    final result = await auth.login();
+    if (result) {
+      final configuredDatabase = await YandexOnlineDatabase.create(
+        (auth as YandexAuth).authToken!,
+        _secureStorage,
+      );
+      database = configuredDatabase;
+      return true;
+    }
+    return false;
   }
 
   @override
   Future<void> logout() async {
     await auth.logout();
-    await database?.onLogout();
+    await database?.logout();
   }
 }
