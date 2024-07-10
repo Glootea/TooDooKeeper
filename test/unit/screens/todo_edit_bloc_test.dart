@@ -41,7 +41,7 @@ void main() async {
       local = FakeLocalDatabase();
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
-      final toDoProvider = ToDoRepository(
+      final todoRepository = ToDoRepository(
         localDatabase: local,
         onlineProvider: online,
         deviceIdProvider: deviceIdProvider,
@@ -50,7 +50,7 @@ void main() async {
       when(online.database.getToDoList).thenAnswer((_) async => null);
       when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
 
-      bloc = ToDoEditBloc(todoProvider: toDoProvider, deviceIdProvider: deviceIdProvider);
+      bloc = ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider);
 
       final time = DateTime(2024, 7, 10, 14, 23, 10);
       createdToDo = ToDo.justCreated(

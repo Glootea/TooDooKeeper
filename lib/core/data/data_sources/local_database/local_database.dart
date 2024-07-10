@@ -38,10 +38,7 @@ class LocalDatabase extends _$LocalDatabase {
     return (select(toDoItems)..where((t) => t.id.equals(id) & t.isDeleted.isNotValue(true))).getSingleOrNull();
   }
 
-  Future<void> createToDo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
-        companion,
-        mode: InsertMode.insert,
-      );
+  Future<void> createToDo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(companion);
 
   Future<void> updateTodo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
         companion,

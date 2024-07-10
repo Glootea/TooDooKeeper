@@ -14,7 +14,7 @@
 ### Локальная работа
 Если приложению не удается отправить данные в сеть, оно уведомляет пользователя с помощью красного заголовка на главном экране. При каждом изменении данных приложение старается объединить удаленные и локальные данные, предпочтение отдается последнему по времени изменению.
 ### Deeplinks 
-С помощью deeplink можно открыть экран создания заметки или импортировать задачу, как показано далее.  
+С помощью deeplink можно открыть экран создания заметки (ссылка -> https://toodookeeper.web.app/new или команда -> adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d https://toodookeeper.web.app/new com.glootea.toodookeeper) или импортировать задачу, как показано далее.  
 ## Скриншоты
 <p align="middle">
   <img src="https://drive.google.com/uc?export=view&id=1wY71XHbRueFAVCm2K1D9DIFJwfP6v3uE" width="24%" />

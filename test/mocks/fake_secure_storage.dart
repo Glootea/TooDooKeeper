@@ -10,9 +10,12 @@ class FakeSecureStorage extends FlutterSecureStorage {
   @override
   Future<String?> read({
     required String key,
-    IOSOptions? iOptions = IOSOptions.defaultOptions,
     AndroidOptions? aOptions,
+    IOSOptions? iOptions,
     LinuxOptions? lOptions,
+    MacOsOptions? mOptions,
+    WindowsOptions? wOptions,
+    WebOptions? webOptions,
   }) async {
     if (key == _revisionKey) {
       logger.i(revision);
@@ -31,6 +34,9 @@ class FakeSecureStorage extends FlutterSecureStorage {
     AndroidOptions? aOptions,
     IOSOptions? iOptions,
     LinuxOptions? lOptions,
+    MacOsOptions? mOptions,
+    WindowsOptions? wOptions,
+    WebOptions? webOptions,
   }) async {
     if (key == _revisionKey) {
       revision = int.parse(value!);

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' hide Options;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:yandex_summer_school/core/data/data_sources/online_database/online_database_abst.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';

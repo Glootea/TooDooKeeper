@@ -40,13 +40,13 @@ class FakeInitScreen extends InitScreen {
   Future<void> init() async {
     await _appSetup();
     final OnlineProvider onlineProvider = MockOnlineProvider(database);
-    final toDoProvider = ToDoRepository(
+    final todoRepository = ToDoRepository(
       localDatabase: local,
       onlineProvider: onlineProvider,
       deviceIdProvider: deviceIdProvider,
     );
 
-    final router = _createRouter(toDoProvider, deviceIdProvider, true);
+    final router = _createRouter(todoRepository, deviceIdProvider, true);
     final themeBloc = ThemeBloc();
 
     // Attempt to fix: https://github.com/Glootea/TooDooKeeper/pull/2#discussion_r1650971004
@@ -77,7 +77,7 @@ class FakeInitScreen extends InitScreen {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoRepository todoProvider, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
+  GoRouter _createRouter(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
@@ -89,16 +89,16 @@ class FakeInitScreen extends InitScreen {
         GoRoute(
           path: '/',
           builder: (context, state) => BlocProvider(
-            create: (context) => ToDoListBloc(todoProvider),
+            create: (context) => ToDoListBloc(todoRepository),
             child: const TodoListScreen(),
           ),
-          routes: _editRoutes(todoProvider, deviceIdProvider),
+          routes: _editRoutes(todoRepository, deviceIdProvider),
         ),
       ],
     );
   }
 
-  List<RouteBase> _editRoutes(ToDoRepository todoProvider, DeviceIdProvider deviceIdProvider) {
+  List<RouteBase> _editRoutes(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -110,7 +110,7 @@ class FakeInitScreen extends InitScreen {
           }
           return BlocProvider(
             create: (context) =>
-                ToDoEditBloc(todoProvider: todoProvider, deviceIdProvider: deviceIdProvider, passedId: id),
+                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, passedId: id),
             child: const ToDoEditScreen(),
           );
         },
@@ -122,7 +122,7 @@ class FakeInitScreen extends InitScreen {
           final data = state.uri.queryParameters['data']; // from deep link
           return BlocProvider(
             create: (context) =>
-                ToDoEditBloc(todoProvider: todoProvider, deviceIdProvider: deviceIdProvider, data: data),
+                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, data: data),
             child: const ToDoEditScreen(),
           );
         },
@@ -131,7 +131,7 @@ class FakeInitScreen extends InitScreen {
         path: 'new',
         builder: (context, state) => BlocProvider(
           create: (context) => ToDoEditBloc(
-            todoProvider: todoProvider,
+            todoRepository: todoRepository,
             deviceIdProvider: deviceIdProvider,
           ),
           child: const ToDoEditScreen(),

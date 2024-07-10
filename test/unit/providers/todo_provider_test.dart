@@ -21,7 +21,7 @@ void main() {
     late DeviceIdProvider deviceIdProvider;
     late FlutterSecureStorage storage;
 
-    late ToDoRepository toDoProvider;
+    late ToDoRepository todoRepository;
 
     final time = DateTime(2024, 7, 11, 8);
 
@@ -32,7 +32,7 @@ void main() {
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
 
-      toDoProvider = ToDoRepository(
+      todoRepository = ToDoRepository(
         localDatabase: local,
         onlineProvider: online,
         deviceIdProvider: deviceIdProvider,
@@ -92,7 +92,7 @@ void main() {
         ToDo.justCreated(id: '3', description: 'local', createdAt: time, changedAt: time),
         ToDo.justCreated(id: '5', description: 'online', createdAt: time, changedAt: time),
       ];
-      final (actual, _) = await toDoProvider.getToDoList();
+      final (actual, _) = await todoRepository.getToDoList();
 
       // local and online databases receive the same result
       expect(actual, expected);
@@ -120,7 +120,7 @@ void main() {
         changedAt: time.add(const Duration(minutes: 1)),
       );
 
-      final (actual, _) = await toDoProvider.getToDoById(id: '2');
+      final (actual, _) = await todoRepository.getToDoById(id: '2');
 
       expect(actual, expected);
     });
@@ -140,7 +140,7 @@ void main() {
       );
 
       final expected = ToDo.justCreated(id: '3', description: 'local', createdAt: time, changedAt: time);
-      final (actual, _) = await toDoProvider.getToDoById(id: '3');
+      final (actual, _) = await todoRepository.getToDoById(id: '3');
 
       expect(actual, expected);
     });
@@ -162,7 +162,7 @@ void main() {
       );
 
       const expected = null;
-      final (actual, _) = await toDoProvider.getToDoById(id: '1');
+      final (actual, _) = await todoRepository.getToDoById(id: '1');
 
       expect(actual, expected);
     });
@@ -177,7 +177,7 @@ void main() {
         (_) async => todo,
       );
 
-      final (_, success) = await toDoProvider.deleteTodo(todo: todo);
+      final (_, success) = await todoRepository.deleteTodo(todo: todo);
       expect(success, isTrue);
 
       final todoFromLocalDatabase = await local.getToDoById(id: todo.id!);
@@ -194,7 +194,7 @@ void main() {
         (_) async => null,
       );
 
-      final (_, success) = await toDoProvider.deleteTodo(todo: todo);
+      final (_, success) = await todoRepository.deleteTodo(todo: todo);
       expect(success, isFalse);
 
       final todoFromLocalDatabase = await local.getToDoById(id: todo.id!);

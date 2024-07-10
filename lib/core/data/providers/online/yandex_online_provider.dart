@@ -12,7 +12,11 @@ class YandexOnlineProvider extends OnlineProvider {
     if (auth.isLoggedIn) {
       final configuredDatabase = await YandexOnlineDatabase.create(
         auth.authToken!,
-        const FlutterSecureStorage(),
+        const FlutterSecureStorage(
+          aOptions: AndroidOptions(
+            encryptedSharedPreferences: true,
+          ),
+        ),
       );
       return YandexOnlineProvider._(auth: auth, database: configuredDatabase);
     }

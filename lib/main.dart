@@ -8,7 +8,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
@@ -39,10 +38,13 @@ class InitScreen extends StatelessWidget {
 
     final OnlineProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider);
     final localDatabase = LocalDatabase();
-    final todoProvider = ToDoRepository(
-        localDatabase: localDatabase, onlineProvider: onlineProvider, deviceIdProvider: deviceIdProvider);
+    final todoRepository = ToDoRepository(
+      localDatabase: localDatabase,
+      onlineProvider: onlineProvider,
+      deviceIdProvider: deviceIdProvider,
+    );
 
-    final router = _createRouter(todoProvider, deviceIdProvider, onlineProvider.auth.isLoggedIn);
+    final router = _createRouter(todoRepository, deviceIdProvider, onlineProvider.auth.isLoggedIn);
     final themeBloc = ThemeBloc();
 
     // Attempt to fix: https://github.com/Glootea/TooDooKeeper/pull/2#discussion_r1650971004
@@ -69,11 +71,10 @@ class InitScreen extends StatelessWidget {
         systemNavigationBarColor: Colors.transparent,
       ),
     );
-    Logger.level = kDebugMode ? Level.all : Level.off;
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoRepository todoProvider, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
+  GoRouter _createRouter(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
@@ -85,16 +86,16 @@ class InitScreen extends StatelessWidget {
         GoRoute(
           path: '/',
           builder: (context, state) => BlocProvider(
-            create: (context) => ToDoListBloc(todoProvider),
+            create: (context) => ToDoListBloc(todoRepository),
             child: const TodoListScreen(),
           ),
-          routes: _editRoutes(todoProvider, deviceIdProvider),
+          routes: _editRoutes(todoRepository, deviceIdProvider),
         ),
       ],
     );
   }
 
-  List<RouteBase> _editRoutes(ToDoRepository todoProvider, DeviceIdProvider deviceIdProvider) {
+  List<RouteBase> _editRoutes(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -106,7 +107,7 @@ class InitScreen extends StatelessWidget {
           }
           return BlocProvider(
             create: (context) =>
-                ToDoEditBloc(todoProvider: todoProvider, deviceIdProvider: deviceIdProvider, passedId: id),
+                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, passedId: id),
             child: const ToDoEditScreen(),
           );
         },
@@ -118,7 +119,7 @@ class InitScreen extends StatelessWidget {
           final data = state.uri.queryParameters['data']; // from deep link
           return BlocProvider(
             create: (context) =>
-                ToDoEditBloc(todoProvider: todoProvider, deviceIdProvider: deviceIdProvider, data: data),
+                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, data: data),
             child: const ToDoEditScreen(),
           );
         },
@@ -127,7 +128,7 @@ class InitScreen extends StatelessWidget {
         path: 'new',
         builder: (context, state) => BlocProvider(
           create: (context) => ToDoEditBloc(
-            todoProvider: todoProvider,
+            todoRepository: todoRepository,
             deviceIdProvider: deviceIdProvider,
           ),
           child: const ToDoEditScreen(),
@@ -174,11 +175,20 @@ class InitScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: init(),
-      builder: (context, snapshot) => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Text(snapshot.error.toString()),
+            ),
+          );
+        }
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }

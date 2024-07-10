@@ -9,7 +9,13 @@ class DeviceIdProvider {
 
   static const String _key = 'device_id';
 
-  static Future<DeviceIdProvider> create({FlutterSecureStorage storage = const FlutterSecureStorage()}) async {
+  static Future<DeviceIdProvider> create({
+    FlutterSecureStorage storage = const FlutterSecureStorage(
+      aOptions: AndroidOptions(
+        encryptedSharedPreferences: true,
+      ),
+    ),
+  }) async {
     var id = await storage.read(key: _key);
     if (id == null) {
       id = const Uuid().v4();

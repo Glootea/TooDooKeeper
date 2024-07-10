@@ -1,3 +1,4 @@
+import 'package:uuid/uuid.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
@@ -51,7 +52,12 @@ class ToDoRepository {
 
   Future<(void, bool)> createTodo({required ToDo todo}) async {
     final time = DateTime.now();
-    final updatedToDo = todo.copyWith(createdAt: time, changedAt: time, lastUpdatedBy: _deviceIdProvider.deviceId);
+    final updatedToDo = todo.copyWith(
+      id: const Uuid().v4(),
+      createdAt: time,
+      changedAt: time,
+      lastUpdatedBy: _deviceIdProvider.deviceId,
+    );
     final onlineToDo = await _onlineProvider.database?.createToDo(updatedToDo);
     if (onlineToDo != null) {
       await _localDatabase.createToDo(companion: onlineToDo.parseToDoItemCompanion);

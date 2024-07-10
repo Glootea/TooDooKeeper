@@ -41,13 +41,13 @@ void main() async {
       local = FakeLocalDatabase();
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
-      final toDoProvider = ToDoRepository(
+      final todoRepository = ToDoRepository(
         localDatabase: local,
         onlineProvider: online,
         deviceIdProvider: deviceIdProvider,
       );
 
-      bloc = ToDoListBloc(toDoProvider);
+      bloc = ToDoListBloc(todoRepository);
 
       final time = DateTime(2024, 7, 10, 14, 23, 10);
       createdToDo = ToDo.justCreated(
@@ -192,12 +192,6 @@ void main() async {
             ..add(const LoadEvent());
         },
         expect: () {
-          final stateAfterSaved = MainState(
-            todos: [createdToDo],
-            networkConnectionPresent: false,
-            query: const ToDoListQuery(),
-            showDone: true,
-          );
           return [
             startState,
             justCreatedState,

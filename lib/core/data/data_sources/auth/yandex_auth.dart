@@ -6,7 +6,12 @@ import 'package:yandex_summer_school/core/logger.dart';
 class YandexAuth extends AuthMethod {
   YandexAuth._();
   YandexAuth._key(this.authToken);
-  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
+  static const _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+    ),
+  );
   static const String _keyString = 'auth-key';
   static const String _keyExpires = 'auth-expires';
 
@@ -62,7 +67,12 @@ class YandexAuth extends AuthMethod {
     final token = data['token'];
     final expiresIn = data['expiresIn'];
     if (token == null || expiresIn == null) throw Exception('Failed to login user as no data was provided');
-    await _secureStorage.write(key: _keyString, value: token as String);
+    await _secureStorage.write(
+        key: _keyString,
+        value: token as String,
+        aOptions: AndroidOptions(
+          encryptedSharedPreferences: true,
+        ));
     final expires = DateTime.now().add(Duration(minutes: expiresIn as int));
     await _secureStorage.write(key: _keyExpires, value: expires.millisecondsSinceEpoch.toString());
     return token;

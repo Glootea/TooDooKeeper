@@ -18,13 +18,13 @@ part 'todo_edit_states.dart';
 
 class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   ToDoEditBloc({
-    required ToDoRepository todoProvider,
+    required ToDoRepository todoRepository,
     required DeviceIdProvider deviceIdProvider,
     String? passedId,
     String? data,
   })  : _data = data,
         _passedId = passedId,
-        _todoProvider = todoProvider,
+        _todoRepository = todoRepository,
         _deviceIdProvider = deviceIdProvider,
         super(const LoadingState()) {
     on<ToDoEditEvent>(
@@ -46,7 +46,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     _addInitialEvent();
   }
 
-  final ToDoRepository _todoProvider;
+  final ToDoRepository _todoRepository;
   final String? _passedId;
   final String? _data;
 
@@ -63,7 +63,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   }
 
   Future<void> _onLoadByIdEvent(LoadByIdEvent event, Emitter<ToDoEditState> emit) async {
-    final (todo, _) = await _todoProvider.getToDoById(id: event.id);
+    final (todo, _) = await _todoRepository.getToDoById(id: event.id);
     logger.d('Loaded TODO: $todo');
     if (todo == null) {
       emit(const MainState(todo: ToDo.justCreated()));
@@ -77,9 +77,9 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
       final todo = (state as MainState).todo;
       emit(const LoadingState());
       if (todo.justCreated) {
-        await _todoProvider.createTodo(todo: todo);
+        await _todoRepository.createTodo(todo: todo);
       } else {
-        await _todoProvider.updateTodo(todo: todo);
+        await _todoRepository.updateTodo(todo: todo);
       }
       emit(const SavedState());
     } on Exception catch (e, s) {
@@ -152,7 +152,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   Future<void> _onDeleteEvent(DeleteEvent event, Emitter<ToDoEditState> emit) async {
     try {
       final todo = (state as MainState).todo;
-      await _todoProvider.deleteTodo(todo: todo);
+      await _todoRepository.deleteTodo(todo: todo);
       emit(const SavedState());
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
