@@ -32,7 +32,7 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
       );
 
   @override
-  Future<void> deleteTodo({required String id}) async => _todos.removeWhere((t) => t.id == id);
+  Future<void> deleteToDo({required String id}) async => _todos.removeWhere((t) => t.id == id);
 
   @override
   Future<void> setFromOnline(List<ToDoItemsCompanion> list) async => _todos = list.map(_parseItem).toList();

@@ -40,7 +40,7 @@ class LocalDatabase extends _$LocalDatabase {
         mode: InsertMode.insertOrReplace,
       );
 
-  Future<void> deleteTodo({required String id}) async => (delete(toDoItems)..where((t) => t.id.equals(id))).go();
+  Future<void> deleteToDo({required String id}) async => (delete(toDoItems)..where((t) => t.id.equals(id))).go();
 
   Future<void> setFromOnline(List<ToDoItemsCompanion> list) async {
     await delete(toDoItems).go();

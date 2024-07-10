@@ -79,10 +79,9 @@ class ToDoProvider {
     await _localDatabase.markAsDeleted(todo: updatedToDo.parseToDoItemCompanion);
     final onlineToDo = await _onlineProvider.database?.deleteToDo(updatedToDo.id!);
     if (onlineToDo != null) {
-      await _localDatabase.deleteTodo(id: updatedToDo.id!);
+      await _localDatabase.deleteToDo(id: updatedToDo.id!);
       return (null, true);
     }
-    await _localDatabase.deleteTodo(id: updatedToDo.id!);
     return (null, false);
   }
 

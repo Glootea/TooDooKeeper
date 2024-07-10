@@ -19,7 +19,7 @@ void main() async {
   late FakeLocalDatabase local;
   late FakeSecureStorage storage;
 
-  DeviceIdProvider? deviceIdProvider;
+  late DeviceIdProvider deviceIdProvider;
 
   const des = 'Test description';
   final time = DateTime(2024, 7, 10, 14, 23, 10);
@@ -38,8 +38,11 @@ void main() async {
       local = FakeLocalDatabase();
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
-      final toDoProvider =
-          ToDoProvider(localDatabase: local, onlineProvider: remote, deviceIdProvider: deviceIdProvider!);
+      final toDoProvider = ToDoProvider(
+        localDatabase: local,
+        onlineProvider: remote,
+        deviceIdProvider: deviceIdProvider,
+      );
 
       bloc = ToDoListBloc(toDoProvider);
 
@@ -48,7 +51,7 @@ void main() async {
         createdAt: time,
         changedAt: time,
         id: '1',
-        lastUpdatedBy: deviceIdProvider!.deviceId,
+        lastUpdatedBy: deviceIdProvider.deviceId,
       );
 
       when(() => remote.database.createToDo(any())).thenAnswer((_) async => createdToDo);
@@ -87,34 +90,56 @@ void main() async {
             ..add(const SaveJustCreatedEvent(des))
             ..add(const LoadEvent());
         },
-        expect: () => [
-          const MainState(
-            todos: [],
-            networkConnectionPresent: true,
-            query: ToDoListQuery(),
-            showDone: true,
-          ),
-          const MainState(
-            todos: [ToDo.justCreated()],
-            networkConnectionPresent: true,
-            query: ToDoListQuery(),
-            showDone: true,
-          ),
-          MainState(
+        expect: () {
+          final stateAfterSaved = MainState(
             todos: [createdToDo],
             networkConnectionPresent: true,
             query: const ToDoListQuery(),
             showDone: true,
-          ),
-          const LoadingState(),
-          MainState(
-            todos: [createdToDo],
-            networkConnectionPresent: true,
-            query: const ToDoListQuery(),
-            showDone: true,
-          ),
-        ],
+          );
+          return [
+            const MainState(
+              todos: [],
+              networkConnectionPresent: true,
+              query: ToDoListQuery(),
+              showDone: true,
+            ),
+            const MainState(
+              todos: [ToDo.justCreated()],
+              networkConnectionPresent: true,
+              query: ToDoListQuery(),
+              showDone: true,
+            ),
+            stateAfterSaved,
+            const LoadingState(),
+            stateAfterSaved,
+          ];
+        },
       );
+
+      test('Delete todo and get list for online', () async {
+        when(() => remote.database.deleteToDo(any())).thenAnswer((_) async => createdToDo);
+
+        await bloc.stream.first; // get init state
+
+        bloc
+          ..add(const CreateEvent())
+          ..add(const SaveJustCreatedEvent(des));
+        final state1 = (await bloc.stream.first) as MainState; // created
+        expect(state1.todos, hasLength(1));
+
+        final state2 = (await bloc.stream.first) as MainState; // saved
+        expect(state2.todos, hasLength(1));
+
+        final id = state2.todos.first.id!;
+        bloc.add(DeleteEvent(id)); //  deleted
+        final state3 = (await bloc.stream.first) as MainState;
+
+        expect(state3.todos, hasLength(0)); // not showing to user
+
+        final todoInDatabase = await local.getToDoById(id: id); // deleted from database as well fromm online
+        expect(todoInDatabase, isNull);
+      });
     });
 
     group('Internet not connected:', () {
@@ -146,34 +171,57 @@ void main() async {
             ..add(const SaveJustCreatedEvent(des))
             ..add(const LoadEvent());
         },
-        expect: () => [
-          const MainState(
-            todos: [],
-            networkConnectionPresent: false,
-            query: ToDoListQuery(),
-            showDone: true,
-          ),
-          const MainState(
-            todos: [ToDo.justCreated()],
-            networkConnectionPresent: false,
-            query: ToDoListQuery(),
-            showDone: true,
-          ),
-          MainState(
+        expect: () {
+          final stateAfterSaved = MainState(
             todos: [createdToDo],
             networkConnectionPresent: false,
             query: const ToDoListQuery(),
             showDone: true,
-          ),
-          const LoadingState(),
-          MainState(
-            todos: [createdToDo],
-            networkConnectionPresent: false,
-            query: const ToDoListQuery(),
-            showDone: true,
-          ),
-        ],
+          );
+          return [
+            const MainState(
+              todos: [],
+              networkConnectionPresent: false,
+              query: ToDoListQuery(),
+              showDone: true,
+            ),
+            const MainState(
+              todos: [ToDo.justCreated()],
+              networkConnectionPresent: false,
+              query: ToDoListQuery(),
+              showDone: true,
+            ),
+            stateAfterSaved,
+            const LoadingState(),
+            stateAfterSaved,
+          ];
+        },
       );
+
+      test('Delete todo and get list for offline', () async {
+        when(() => remote.database.deleteToDo(any())).thenAnswer((_) async => null);
+
+        await bloc.stream.first; // get init state
+
+        bloc
+          ..add(const CreateEvent())
+          ..add(const SaveJustCreatedEvent(des));
+        final state1 = (await bloc.stream.first) as MainState; // created
+        expect(state1.todos, hasLength(1));
+
+        final state2 = (await bloc.stream.first) as MainState; // saved
+        expect(state2.todos, hasLength(1));
+
+        final id = state2.todos.first.id!;
+        bloc.add(DeleteEvent(id)); //  deleted
+        final state3 = (await bloc.stream.first) as MainState;
+
+        expect(state3.todos, hasLength(0)); // not showing to user
+
+        final todoInDatabase = await local.getToDoById(id: id); // but still in database to delete online
+        expect(todoInDatabase, isNotNull);
+        expect(todoInDatabase?.isDeleted, isTrue);
+      });
     });
   });
 }
