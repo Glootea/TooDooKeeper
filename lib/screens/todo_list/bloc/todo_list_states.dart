@@ -1,6 +1,6 @@
 part of 'todo_list_bloc.dart';
 
-@Freezed(equal: false)
+@freezed
 sealed class ToDoListState with _$ToDoListState {
   const factory ToDoListState({
     required List<ToDo> todos,

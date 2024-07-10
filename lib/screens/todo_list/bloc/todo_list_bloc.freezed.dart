@@ -188,6 +188,28 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
       ..add(DiagnosticsProperty('showDone', showDone));
   }
 
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MainStateImpl &&
+            const DeepCollectionEquality().equals(other._todos, _todos) &&
+            (identical(
+                    other.networkConnectionPresent, networkConnectionPresent) ||
+                other.networkConnectionPresent == networkConnectionPresent) &&
+            (identical(other.query, query) || other.query == query) &&
+            (identical(other.showDone, showDone) ||
+                other.showDone == showDone));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_todos),
+      networkConnectionPresent,
+      query,
+      showDone);
+
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
@@ -316,6 +338,15 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('type', 'ToDoListState.loading'));
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$LoadingStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
@@ -447,6 +478,17 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
       ..add(DiagnosticsProperty('type', 'ToDoListState.error'))
       ..add(DiagnosticsProperty('message', message));
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ErrorStateImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
 
   @JsonKey(ignore: true)
   @override

@@ -330,32 +330,6 @@ class _$ToDoImpl extends _ToDo {
     return 'ToDo(id: $id, description: $description, importance: $importance, deadline: $deadline, done: $done, color: $color, createdAt: $createdAt, changedAt: $changedAt, lastUpdatedBy: $lastUpdatedBy)';
   }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ToDoImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
-            (identical(other.importance, importance) ||
-                other.importance == importance) &&
-            (identical(other.deadline, deadline) ||
-                other.deadline == deadline) &&
-            (identical(other.done, done) || other.done == done) &&
-            (identical(other.color, color) || other.color == color) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.changedAt, changedAt) ||
-                other.changedAt == changedAt) &&
-            (identical(other.lastUpdatedBy, lastUpdatedBy) ||
-                other.lastUpdatedBy == lastUpdatedBy));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, id, description, importance,
-      deadline, done, color, createdAt, changedAt, lastUpdatedBy);
-
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
@@ -647,32 +621,6 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   String toString() {
     return 'ToDo.justCreated(id: $id, description: $description, importance: $importance, deadline: $deadline, done: $done, color: $color, createdAt: $createdAt, changedAt: $changedAt, lastUpdatedBy: $lastUpdatedBy)';
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ToDoEmptyImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
-            (identical(other.importance, importance) ||
-                other.importance == importance) &&
-            (identical(other.deadline, deadline) ||
-                other.deadline == deadline) &&
-            (identical(other.done, done) || other.done == done) &&
-            (identical(other.color, color) || other.color == color) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.changedAt, changedAt) ||
-                other.changedAt == changedAt) &&
-            (identical(other.lastUpdatedBy, lastUpdatedBy) ||
-                other.lastUpdatedBy == lastUpdatedBy));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, id, description, importance,
-      deadline, done, color, createdAt, changedAt, lastUpdatedBy);
 
   @JsonKey(ignore: true)
   @override

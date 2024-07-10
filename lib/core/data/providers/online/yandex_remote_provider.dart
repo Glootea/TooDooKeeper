@@ -12,7 +12,6 @@ class YandexOnlineProvider extends RemoteProvider {
     if (auth.isLoggedIn) {
       final configuredDatabase = await YandexOnlineDatabase.create(
         auth.authToken!,
-        deviceIdProvider,
         const FlutterSecureStorage(),
       );
       return YandexOnlineProvider._(auth: auth, database: configuredDatabase);

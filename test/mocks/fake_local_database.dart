@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
 
+class FakeCompanion extends Mock implements ToDoItemsCompanion {}
+
 class FakeLocalDatabase extends Mock implements LocalDatabase {
   final _deviceId = 'deviceId';
   List<ToDoItem> _todos = [];
@@ -13,7 +15,7 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
   Future<ToDoItem?> getToDoById({required String id}) async => _todos.where((t) => t.id == id).firstOrNull;
 
   @override
-  Future<void> createTodo({required ToDoItemsCompanion companion}) async => _todos.add(
+  Future<void> createToDo({required ToDoItemsCompanion companion}) async => _todos.add(
         _parseItem(companion).copyWith(
           changedAt: Value(DateTime.now()),
           createdAt: DateTime.now(),

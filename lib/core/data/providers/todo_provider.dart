@@ -1,4 +1,5 @@
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
+import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/online/remote_provider_abst.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/extensions/local_database_todo_mapper_extension.dart';
@@ -9,11 +10,15 @@ class ToDoProvider {
   const ToDoProvider({
     required LocalDatabase localDatabase,
     required RemoteProvider onlineProvider,
+    required DeviceIdProvider deviceIdProvider,
   })  : _onlineProvider = onlineProvider,
-        _localDatabase = localDatabase;
+        _localDatabase = localDatabase,
+        _deviceIdProvider = deviceIdProvider;
 
   final LocalDatabase _localDatabase;
   final RemoteProvider _onlineProvider;
+  final DeviceIdProvider _deviceIdProvider;
+
   Future<(List<ToDo>, bool)> getToDoList() async {
     final onlineTodoList = await _onlineProvider.database?.getToDoList();
     final localToDoList = await _localDatabase.getToDoList();
@@ -45,33 +50,39 @@ class ToDoProvider {
   }
 
   Future<(void, bool)> createTodo({required ToDo todo}) async {
-    final onlineToDo = await _onlineProvider.database?.createToDo(todo);
+    final time = DateTime.now();
+    final updatedToDo = todo.copyWith(createdAt: time, changedAt: time, lastUpdatedBy: _deviceIdProvider.deviceId);
+    final onlineToDo = await _onlineProvider.database?.createToDo(updatedToDo);
     if (onlineToDo != null) {
-      await _localDatabase.createTodo(companion: onlineToDo.parseToDoItemCompanion);
+      await _localDatabase.createToDo(companion: onlineToDo.parseToDoItemCompanion);
       return (null, true);
     }
-    await _localDatabase.createTodo(companion: todo.parseToDoItemCompanion);
+    await _localDatabase.createToDo(companion: updatedToDo.parseToDoItemCompanion);
     return (null, false);
   }
 
   Future<(void, bool)> updateTodo({required ToDo todo}) async {
-    final onlineToDo = await _onlineProvider.database?.updateToDo(todo);
+    final time = DateTime.now();
+    final updatedToDo = todo.copyWith(changedAt: time, lastUpdatedBy: _deviceIdProvider.deviceId);
+    final onlineToDo = await _onlineProvider.database?.updateToDo(updatedToDo);
     if (onlineToDo != null) {
       await _localDatabase.updateTodo(companion: onlineToDo.parseToDoItemCompanion);
       return (null, true);
     }
-    await _localDatabase.updateTodo(companion: todo.parseToDoItemCompanion);
+    await _localDatabase.updateTodo(companion: updatedToDo.parseToDoItemCompanion);
     return (null, false);
   }
 
   Future<(void, bool)> deleteTodo({required ToDo todo}) async {
-    await _localDatabase.markAsDeleted(todo: todo.parseToDoItemCompanion);
-    final onlineToDo = await _onlineProvider.database?.deleteToDo(todo.id!);
+    final time = DateTime.now();
+    final updatedToDo = todo.copyWith(changedAt: time, lastUpdatedBy: _deviceIdProvider.deviceId);
+    await _localDatabase.markAsDeleted(todo: updatedToDo.parseToDoItemCompanion);
+    final onlineToDo = await _onlineProvider.database?.deleteToDo(updatedToDo.id!);
     if (onlineToDo != null) {
-      await _localDatabase.deleteTodo(id: todo.id!);
+      await _localDatabase.deleteTodo(id: updatedToDo.id!);
       return (null, true);
     }
-    await _localDatabase.deleteTodo(id: todo.id!);
+    await _localDatabase.deleteTodo(id: updatedToDo.id!);
     return (null, false);
   }
 

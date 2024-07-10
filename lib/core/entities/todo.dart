@@ -1,4 +1,4 @@
-// ignore_for_file: always_put_required_named_parameters_first
+// ignore_for_file: always_put_required_named_parameters_first, avoid_equals_and_hash_code_on_mutable_classes
 
 import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -6,7 +6,7 @@ import 'package:yandex_summer_school/core/entities/importance.dart';
 
 part 'todo.freezed.dart';
 
-@Freezed(fromJson: false, toJson: false)
+@Freezed(fromJson: false, toJson: false, equal: false)
 sealed class ToDo with _$ToDo {
   const factory ToDo({
     required String id,
@@ -65,7 +65,8 @@ sealed class ToDo with _$ToDo {
     );
   }
 
-  Map<String, dynamic> toJson(String deviceID) {
+  Map<String, dynamic> toJson() {
+    assert(lastUpdatedBy != null, 'lastUpdatedBy must not be null');
     return {
       'id': id, // уникальный идентификатор элемента
       'text': description,
@@ -75,7 +76,7 @@ sealed class ToDo with _$ToDo {
       'color': null, // может отсутствовать
       'created_at': createdAt!.millisecondsSinceEpoch,
       'changed_at': changedAt!.millisecondsSinceEpoch,
-      'last_updated_by': deviceID,
+      'last_updated_by': lastUpdatedBy,
     };
   }
 
@@ -83,8 +84,14 @@ sealed class ToDo with _$ToDo {
         copyWith(
           createdAt: DateTime.now(),
           changedAt: DateTime.now(),
-        ).toJson(deviceID),
+        ).toJson(),
       );
 
   bool get justCreated => id == null;
+
+  @override
+  bool operator ==(covariant ToDo other) => id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

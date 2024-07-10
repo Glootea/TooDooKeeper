@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/database_connection_shared.dart';
-import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 
 part 'local_database.g.dart';
 
@@ -23,9 +22,7 @@ class ToDoItems extends Table {
 
 @DriftDatabase(tables: [ToDoItems])
 class LocalDatabase extends _$LocalDatabase {
-  LocalDatabase(this._deviceIdProvider) : super(connect());
-
-  final DeviceIdProvider _deviceIdProvider;
+  LocalDatabase() : super(connect());
 
   Future<List<ToDoItem>> getToDoList() async => select(toDoItems).get();
 
@@ -33,20 +30,13 @@ class LocalDatabase extends _$LocalDatabase {
     return (select(toDoItems)..where((t) => t.id.equals(id))).getSingleOrNull();
   }
 
-  Future<void> createTodo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
-        companion.copyWith(
-          changedAt: Value(DateTime.now()),
-          createdAt: Value(DateTime.now()),
-          lastUpdatedBy: Value(_deviceIdProvider.deviceId),
-        ),
+  Future<void> createToDo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
+        companion,
         mode: InsertMode.insert,
       );
 
   Future<void> updateTodo({required ToDoItemsCompanion companion}) => into(toDoItems).insert(
-        companion.copyWith(
-          changedAt: Value(DateTime.now()),
-          lastUpdatedBy: Value(_deviceIdProvider.deviceId),
-        ),
+        companion,
         mode: InsertMode.insertOrReplace,
       );
 

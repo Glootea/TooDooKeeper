@@ -38,8 +38,9 @@ class InitScreen extends StatelessWidget {
     final deviceIdProvider = await DeviceIdProvider.create();
 
     final RemoteProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider);
-    final localDatabase = LocalDatabase(deviceIdProvider);
-    final todoProvider = ToDoProvider(localDatabase: localDatabase, onlineProvider: onlineProvider);
+    final localDatabase = LocalDatabase();
+    final todoProvider =
+        ToDoProvider(localDatabase: localDatabase, onlineProvider: onlineProvider, deviceIdProvider: deviceIdProvider);
 
     final router = _createRouter(todoProvider, deviceIdProvider, onlineProvider.auth.isLoggedIn);
     final themeBloc = ThemeBloc();

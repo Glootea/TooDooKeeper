@@ -1,16 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' hide Options;
 import 'package:yandex_summer_school/core/data/data_sources/online_database/online_database_abst.dart';
-import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
 class YandexOnlineDatabase implements RemoteDatabase {
-  YandexOnlineDatabase._(this._dio, this._secureStorage, this._revision, this._deviceIdProvider);
+  YandexOnlineDatabase._(this._dio, this._secureStorage, this._revision);
 
   static Future<YandexOnlineDatabase> create(
     String authKey,
-    DeviceIdProvider deviceIdProvider,
     FlutterSecureStorage secureStorage,
   ) async {
     final revision = int.parse(await secureStorage.read(key: _revisionKey) ?? '0');
@@ -23,12 +21,11 @@ class YandexOnlineDatabase implements RemoteDatabase {
         },
       ),
     );
-    return YandexOnlineDatabase._(dio, secureStorage, revision, deviceIdProvider);
+    return YandexOnlineDatabase._(dio, secureStorage, revision);
   }
 
   final FlutterSecureStorage _secureStorage;
   final Dio _dio;
-  final DeviceIdProvider _deviceIdProvider;
   int _revision;
   static const String _revisionKey = 'revision';
 
@@ -73,7 +70,7 @@ class YandexOnlineDatabase implements RemoteDatabase {
     try {
       final response = await _dio.patch<Map<String, dynamic>>(
         '/list',
-        data: {'list': todos.map((e) => e.toJson(_deviceIdProvider.deviceId)).toList()},
+        data: {'list': todos.map((e) => e.toJson()).toList()},
         options: Options(headers: {'X-Last-Known-Revision': _revision}),
       );
       final data = response.data;
@@ -111,7 +108,7 @@ class YandexOnlineDatabase implements RemoteDatabase {
         createdAt: DateTime.now(),
         changedAt: DateTime.now(),
       );
-      final todoJson = updatedToDo.toJson(_deviceIdProvider.deviceId);
+      final todoJson = updatedToDo.toJson();
       final response = await _dio.post<Map<String, dynamic>>(
         '/list',
         data: {'element': todoJson},
@@ -133,7 +130,7 @@ class YandexOnlineDatabase implements RemoteDatabase {
   Future<ToDo?> updateToDo(ToDo todo) async {
     try {
       final updatedToDo = todo.copyWith(changedAt: DateTime.now());
-      final todoJson = updatedToDo.toJson(_deviceIdProvider.deviceId);
+      final todoJson = updatedToDo.toJson();
       final response = await _dio.put<Map<String, dynamic>>(
         '/list/${todo.id}',
         data: {'element': todoJson},
