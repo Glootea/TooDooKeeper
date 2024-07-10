@@ -32,8 +32,9 @@ class ToDoRepository {
       return (merged, true);
     }
 
-    logger.i('Got list from local: $localToDoList');
-    final localParsedList = localToDoList.map((toDoItem) => toDoItem.parseToDo).whereType<ToDo>().toList();
+    final localToDoListToShow = await _localDatabase.getToDoList();
+    logger.i('Got list from local: $localToDoListToShow');
+    final localParsedList = localToDoListToShow.map((toDoItem) => toDoItem.parseToDo).whereType<ToDo>().toList();
     return (localParsedList, false);
   }
 
@@ -46,7 +47,9 @@ class ToDoRepository {
       await _localDatabase.updateTodo(companion: merged.parseToDoItemCompanion);
       return (merged, true);
     }
-    final parsedToDo = localToDo.parseToDo;
+
+    final localToShow = await _localDatabase.getToDoById(id: id);
+    final parsedToDo = localToShow.parseToDo;
     return (parsedToDo, false);
   }
 
