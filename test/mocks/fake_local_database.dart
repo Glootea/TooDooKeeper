@@ -54,5 +54,6 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
         importance: companion.importance.value,
         isDone: companion.isDone.value,
         createdAt: companion.createdAt.value,
+        changedAt: companion.changedAt.value,
       );
 }

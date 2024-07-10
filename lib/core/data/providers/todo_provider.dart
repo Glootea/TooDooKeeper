@@ -43,7 +43,7 @@ class ToDoProvider {
       final merged = _pickActual(local: localToDo, online: onlineToDo);
       if (merged == null) return (null, false);
       await _localDatabase.updateTodo(companion: merged.parseToDoItemCompanion);
-      return (onlineToDo, true);
+      return (merged, true);
     }
     final parsedToDo = localToDo.parseToDo;
     return (parsedToDo, false);
