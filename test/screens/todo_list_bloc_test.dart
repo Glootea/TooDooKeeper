@@ -21,10 +21,12 @@ void main() async {
   late DeviceIdProvider deviceIdProvider;
 
   const createdToDoID = '1';
-
-  const des = 'Test description';
-  final time = DateTime(2024, 7, 10, 14, 23, 10);
+  const descriptionForCreatedToDo = 'Test description';
   late ToDo createdToDo;
+
+  late MainState startState;
+  late MainState justCreatedState;
+  late MainState stateAfterSaved;
   group('TodoListBloc:', () {
     setUpAll(() {
       registerFallbackValue(const ToDo.justCreated());
@@ -47,20 +49,37 @@ void main() async {
 
       bloc = ToDoListBloc(toDoProvider);
 
+      final time = DateTime(2024, 7, 10, 14, 23, 10);
       createdToDo = ToDo.justCreated(
-        description: des,
+        description: descriptionForCreatedToDo,
         createdAt: time,
         changedAt: time,
         id: createdToDoID,
         lastUpdatedBy: deviceIdProvider.deviceId,
+      );
+      startState = const MainState(
+        todos: [],
+        networkConnectionPresent: false,
+        query: ToDoListQuery(),
+        showDone: true,
+      );
+      stateAfterSaved = MainState(
+        todos: [createdToDo],
+        networkConnectionPresent: false,
+        query: const ToDoListQuery(),
+        showDone: true,
+      );
+      justCreatedState = const MainState(
+        todos: [ToDo.justCreated()],
+        networkConnectionPresent: false,
+        query: ToDoListQuery(),
+        showDone: true,
       );
 
       when(() => online.database.createToDo(any())).thenAnswer((_) async => createdToDo);
     });
     group('Internet is connected:', () {
       setUp(() async {
-        WidgetsFlutterBinding.ensureInitialized();
-
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => <ToDo>[]);
         when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
@@ -72,14 +91,7 @@ void main() async {
       blocTest<ToDoListBloc, ToDoListState>(
         'Get main state from online',
         build: () => bloc,
-        expect: () => [
-          const MainState(
-            todos: [],
-            networkConnectionPresent: true,
-            query: ToDoListQuery(),
-            showDone: true,
-          ),
-        ],
+        expect: () => [startState.copyWith(networkConnectionPresent: true)],
       );
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -88,32 +100,16 @@ void main() async {
         act: (bloc) {
           bloc
             ..add(const CreateEvent())
-            ..add(const SaveJustCreatedEvent(des))
+            ..add(const SaveJustCreatedEvent(descriptionForCreatedToDo))
             ..add(const LoadEvent());
         },
         expect: () {
-          final stateAfterSaved = MainState(
-            todos: [createdToDo],
-            networkConnectionPresent: true,
-            query: const ToDoListQuery(),
-            showDone: true,
-          );
           return [
-            const MainState(
-              todos: [],
-              networkConnectionPresent: true,
-              query: ToDoListQuery(),
-              showDone: true,
-            ),
-            const MainState(
-              todos: [ToDo.justCreated()],
-              networkConnectionPresent: true,
-              query: ToDoListQuery(),
-              showDone: true,
-            ),
-            stateAfterSaved,
+            startState.copyWith(networkConnectionPresent: true),
+            justCreatedState.copyWith(networkConnectionPresent: true),
+            stateAfterSaved.copyWith(networkConnectionPresent: true),
             const LoadingState(),
-            stateAfterSaved,
+            stateAfterSaved.copyWith(networkConnectionPresent: true),
           ];
         },
       );
@@ -125,7 +121,7 @@ void main() async {
 
         bloc
           ..add(const CreateEvent())
-          ..add(const SaveJustCreatedEvent(des));
+          ..add(const SaveJustCreatedEvent(descriptionForCreatedToDo));
         final state1 = (await bloc.stream.first) as MainState; // created
         expect(state1.todos, hasLength(1));
 
@@ -140,7 +136,7 @@ void main() async {
 
         (await bloc.stream.first.timeout(const Duration(seconds: 5), onTimeout: () => bloc.state))
             as MainState; // after actual deletion
-        final todoInDatabase = await local.getToDoById(id: id); // deleted from database as well fromm online
+        final todoInDatabase = await local.getToDoById(id: id); // actually deleted from database as well from online
         expect(todoInDatabase, isNull);
       });
 
@@ -151,7 +147,7 @@ void main() async {
 
         bloc
           ..add(const CreateEvent())
-          ..add(const SaveJustCreatedEvent(des));
+          ..add(const SaveJustCreatedEvent(descriptionForCreatedToDo));
         final state1 = (await bloc.stream.first) as MainState; // created
         expect(state1.todos, hasLength(1));
 
@@ -163,10 +159,11 @@ void main() async {
         final state3 = (await bloc.stream.first) as MainState;
 
         expect(state3.todos, hasLength(0)); // not showing to user
-
-        final todoInDatabase = await local.getToDoById(id: id); // deleted from database as well fromm online
-        expect(todoInDatabase, isNotNull);
         expect(state3.networkConnectionPresent, isTrue);
+
+        final todoInDatabase =
+            await local.getToDoById(id: id); // actually deleted from database but not from online -> show no connection
+        expect(todoInDatabase, isNotNull);
 
         final state4 = (await bloc.stream.first) as MainState; // actually deleted
         expect(state4.networkConnectionPresent, isFalse);
@@ -183,14 +180,7 @@ void main() async {
       blocTest<ToDoListBloc, ToDoListState>(
         'Get main state from local',
         build: () => bloc,
-        expect: () => [
-          const MainState(
-            todos: [],
-            networkConnectionPresent: false,
-            query: ToDoListQuery(),
-            showDone: true,
-          ),
-        ],
+        expect: () => [startState],
       );
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -199,7 +189,7 @@ void main() async {
         act: (bloc) {
           bloc
             ..add(const CreateEvent())
-            ..add(const SaveJustCreatedEvent(des))
+            ..add(const SaveJustCreatedEvent(descriptionForCreatedToDo))
             ..add(const LoadEvent());
         },
         expect: () {
@@ -210,18 +200,8 @@ void main() async {
             showDone: true,
           );
           return [
-            const MainState(
-              todos: [],
-              networkConnectionPresent: false,
-              query: ToDoListQuery(),
-              showDone: true,
-            ),
-            const MainState(
-              todos: [ToDo.justCreated()],
-              networkConnectionPresent: false,
-              query: ToDoListQuery(),
-              showDone: true,
-            ),
+            startState,
+            justCreatedState,
             stateAfterSaved,
             const LoadingState(),
             stateAfterSaved,
@@ -236,7 +216,7 @@ void main() async {
 
         bloc
           ..add(const CreateEvent())
-          ..add(const SaveJustCreatedEvent(des));
+          ..add(const SaveJustCreatedEvent(descriptionForCreatedToDo));
         final state1 = (await bloc.stream.first) as MainState; // created
         expect(state1.todos, hasLength(1));
 
@@ -254,61 +234,54 @@ void main() async {
         expect(todoInDatabase?.isDeleted, isTrue);
       });
     });
-    group(
-      'Internet agnostic tests',
-      () {
-        setUp(() async {
-          // Provide default implementations for initialization
-          when(online.database.getToDoList).thenAnswer((_) async => null);
-          when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
-        });
 
-        blocTest<ToDoListBloc, ToDoListState>('Toggle done',
-            build: () => bloc,
-            setUp: () {
-              when(() => online.database.updateToDo(any())).thenAnswer((_) async => null);
-            },
-            act: (bloc) => bloc
-              ..add(const CreateEvent())
-              ..add(const SaveJustCreatedEvent(des))
-              ..add(const ToggleDoneEvent(createdToDoID))
-              ..add(const ToggleDoneEvent(createdToDoID)),
-            expect: () async {
-              final stateAfterSaved = MainState(
-                todos: [createdToDo],
-                networkConnectionPresent: false,
-                query: const ToDoListQuery(),
-                showDone: true,
-              );
-              return [
-                const MainState(
-                  todos: [],
-                  networkConnectionPresent: false,
-                  query: ToDoListQuery(),
-                  showDone: true,
-                ),
-                const MainState(
-                  todos: [ToDo.justCreated()],
-                  networkConnectionPresent: false,
-                  query: ToDoListQuery(),
-                  showDone: true,
-                ),
-                stateAfterSaved,
-                MainState(
-                  todos: [createdToDo.copyWith(done: true)],
-                  networkConnectionPresent: false,
-                  query: const ToDoListQuery(),
-                  showDone: true,
-                ),
-                MainState(
-                  todos: [createdToDo.copyWith(done: false)],
-                  networkConnectionPresent: false,
-                  query: const ToDoListQuery(),
-                  showDone: true,
-                ),
-              ];
-            });
-      },
-    );
+    group('Internet agnostic tests', () {
+      setUp(() async {
+        // Provide default implementations for initialization
+        when(online.database.getToDoList).thenAnswer((_) async => null);
+        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
+      });
+
+      blocTest<ToDoListBloc, ToDoListState>(
+        'Toggle done',
+        build: () => bloc,
+        setUp: () {
+          when(() => online.database.updateToDo(any())).thenAnswer((_) async => null);
+        },
+        act: (bloc) => bloc
+          ..add(const CreateEvent())
+          ..add(const SaveJustCreatedEvent(descriptionForCreatedToDo))
+          ..add(const ToggleDoneEvent(createdToDoID))
+          ..add(const ToggleDoneEvent(createdToDoID)),
+        expect: () async {
+          return [
+            startState,
+            justCreatedState,
+            stateAfterSaved,
+            stateAfterSaved.copyWith(todos: [createdToDo.copyWith(done: true)]),
+            stateAfterSaved.copyWith(todos: [createdToDo.copyWith(done: false)]),
+          ];
+        },
+      );
+
+      blocTest<ToDoListBloc, ToDoListState>(
+        'Toggle visibility',
+        build: () => bloc,
+        act: (bloc) => bloc
+          ..add(const CreateEvent())
+          ..add(const SaveJustCreatedEvent(descriptionForCreatedToDo))
+          ..add(const ToggleVisibilityEvent())
+          ..add(const ToggleVisibilityEvent()),
+        expect: () {
+          return [
+            startState,
+            justCreatedState,
+            stateAfterSaved,
+            stateAfterSaved.copyWith(showDone: false),
+            stateAfterSaved,
+          ];
+        },
+      );
+    });
   });
 }
