@@ -28,7 +28,7 @@ class ToDoEditScreen extends StatelessWidget {
         switch (state) {
           case MainState():
             return const _MainScreen();
-          case LoadingState() || SaveState() || SavedState():
+          case LoadingState() || SavedState():
             return const LoadingScreen();
           case ErrorState():
             return const ErrorScreen();

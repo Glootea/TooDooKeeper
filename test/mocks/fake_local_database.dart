@@ -49,9 +49,10 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
   }
 
   ToDoItem _parseItem(ToDoItemsCompanion companion) => ToDoItem(
-      id: companion.id.value,
-      description: companion.description.value,
-      importance: companion.importance.value,
-      isDone: companion.isDone.value,
-      createdAt: companion.createdAt.value);
+        id: companion.id.value,
+        description: companion.description.value,
+        importance: companion.importance.value,
+        isDone: companion.isDone.value,
+        createdAt: companion.createdAt.value,
+      );
 }

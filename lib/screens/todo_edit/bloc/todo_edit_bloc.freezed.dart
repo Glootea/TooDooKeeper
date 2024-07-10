@@ -1392,7 +1392,6 @@ mixin _$ToDoEditState {
     TResult Function(ToDo todo, ToDoEditMessage? message) $default, {
     required TResult Function() loading,
     required TResult Function() error,
-    required TResult Function() save,
     required TResult Function() saved,
   }) =>
       throw _privateConstructorUsedError;
@@ -1401,7 +1400,6 @@ mixin _$ToDoEditState {
     TResult? Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult? Function()? loading,
     TResult? Function()? error,
-    TResult? Function()? save,
     TResult? Function()? saved,
   }) =>
       throw _privateConstructorUsedError;
@@ -1410,7 +1408,6 @@ mixin _$ToDoEditState {
     TResult Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult Function()? loading,
     TResult Function()? error,
-    TResult Function()? save,
     TResult Function()? saved,
     required TResult orElse(),
   }) =>
@@ -1420,7 +1417,6 @@ mixin _$ToDoEditState {
     TResult Function(MainState value) $default, {
     required TResult Function(LoadingState value) loading,
     required TResult Function(ErrorState value) error,
-    required TResult Function(SaveState value) save,
     required TResult Function(SavedState value) saved,
   }) =>
       throw _privateConstructorUsedError;
@@ -1429,7 +1425,6 @@ mixin _$ToDoEditState {
     TResult? Function(MainState value)? $default, {
     TResult? Function(LoadingState value)? loading,
     TResult? Function(ErrorState value)? error,
-    TResult? Function(SaveState value)? save,
     TResult? Function(SavedState value)? saved,
   }) =>
       throw _privateConstructorUsedError;
@@ -1438,7 +1433,6 @@ mixin _$ToDoEditState {
     TResult Function(MainState value)? $default, {
     TResult Function(LoadingState value)? loading,
     TResult Function(ErrorState value)? error,
-    TResult Function(SaveState value)? save,
     TResult Function(SavedState value)? saved,
     required TResult orElse(),
   }) =>
@@ -1511,8 +1505,8 @@ class __$$MainStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
-  const _$MainStateImpl({required this.todo, this.message});
+class _$MainStateImpl extends MainState with DiagnosticableTreeMixin {
+  const _$MainStateImpl({required this.todo, this.message}) : super._();
 
   @override
   final ToDo todo;
@@ -1533,6 +1527,18 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
       ..add(DiagnosticsProperty('message', message));
   }
 
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MainStateImpl &&
+            (identical(other.todo, todo) || other.todo == todo) &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, todo, message);
+
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
@@ -1545,7 +1551,6 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
     TResult Function(ToDo todo, ToDoEditMessage? message) $default, {
     required TResult Function() loading,
     required TResult Function() error,
-    required TResult Function() save,
     required TResult Function() saved,
   }) {
     return $default(todo, message);
@@ -1557,7 +1562,6 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
     TResult? Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult? Function()? loading,
     TResult? Function()? error,
-    TResult? Function()? save,
     TResult? Function()? saved,
   }) {
     return $default?.call(todo, message);
@@ -1569,7 +1573,6 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
     TResult Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult Function()? loading,
     TResult Function()? error,
-    TResult Function()? save,
     TResult Function()? saved,
     required TResult orElse(),
   }) {
@@ -1585,7 +1588,6 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
     TResult Function(MainState value) $default, {
     required TResult Function(LoadingState value) loading,
     required TResult Function(ErrorState value) error,
-    required TResult Function(SaveState value) save,
     required TResult Function(SavedState value) saved,
   }) {
     return $default(this);
@@ -1597,7 +1599,6 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
     TResult? Function(MainState value)? $default, {
     TResult? Function(LoadingState value)? loading,
     TResult? Function(ErrorState value)? error,
-    TResult? Function(SaveState value)? save,
     TResult? Function(SavedState value)? saved,
   }) {
     return $default?.call(this);
@@ -1609,7 +1610,6 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
     TResult Function(MainState value)? $default, {
     TResult Function(LoadingState value)? loading,
     TResult Function(ErrorState value)? error,
-    TResult Function(SaveState value)? save,
     TResult Function(SavedState value)? saved,
     required TResult orElse(),
   }) {
@@ -1620,10 +1620,11 @@ class _$MainStateImpl with DiagnosticableTreeMixin implements MainState {
   }
 }
 
-abstract class MainState implements ToDoEditState {
+abstract class MainState extends ToDoEditState {
   const factory MainState(
       {required final ToDo todo,
       final ToDoEditMessage? message}) = _$MainStateImpl;
+  const MainState._() : super._();
 
   ToDo get todo;
   ToDoEditMessage? get message;
@@ -1650,8 +1651,8 @@ class __$$LoadingStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
-  const _$LoadingStateImpl();
+class _$LoadingStateImpl extends LoadingState with DiagnosticableTreeMixin {
+  const _$LoadingStateImpl() : super._();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -1665,12 +1666,20 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   }
 
   @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$LoadingStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo, ToDoEditMessage? message) $default, {
     required TResult Function() loading,
     required TResult Function() error,
-    required TResult Function() save,
     required TResult Function() saved,
   }) {
     return loading();
@@ -1682,7 +1691,6 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
     TResult? Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult? Function()? loading,
     TResult? Function()? error,
-    TResult? Function()? save,
     TResult? Function()? saved,
   }) {
     return loading?.call();
@@ -1694,7 +1702,6 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
     TResult Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult Function()? loading,
     TResult Function()? error,
-    TResult Function()? save,
     TResult Function()? saved,
     required TResult orElse(),
   }) {
@@ -1710,7 +1717,6 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
     TResult Function(MainState value) $default, {
     required TResult Function(LoadingState value) loading,
     required TResult Function(ErrorState value) error,
-    required TResult Function(SaveState value) save,
     required TResult Function(SavedState value) saved,
   }) {
     return loading(this);
@@ -1722,7 +1728,6 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
     TResult? Function(MainState value)? $default, {
     TResult? Function(LoadingState value)? loading,
     TResult? Function(ErrorState value)? error,
-    TResult? Function(SaveState value)? save,
     TResult? Function(SavedState value)? saved,
   }) {
     return loading?.call(this);
@@ -1734,7 +1739,6 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
     TResult Function(MainState value)? $default, {
     TResult Function(LoadingState value)? loading,
     TResult Function(ErrorState value)? error,
-    TResult Function(SaveState value)? save,
     TResult Function(SavedState value)? saved,
     required TResult orElse(),
   }) {
@@ -1745,8 +1749,9 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   }
 }
 
-abstract class LoadingState implements ToDoEditState {
+abstract class LoadingState extends ToDoEditState {
   const factory LoadingState() = _$LoadingStateImpl;
+  const LoadingState._() : super._();
 }
 
 /// @nodoc
@@ -1767,8 +1772,8 @@ class __$$ErrorStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
-  const _$ErrorStateImpl();
+class _$ErrorStateImpl extends ErrorState with DiagnosticableTreeMixin {
+  const _$ErrorStateImpl() : super._();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -1782,12 +1787,20 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   }
 
   @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$ErrorStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo, ToDoEditMessage? message) $default, {
     required TResult Function() loading,
     required TResult Function() error,
-    required TResult Function() save,
     required TResult Function() saved,
   }) {
     return error();
@@ -1799,7 +1812,6 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
     TResult? Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult? Function()? loading,
     TResult? Function()? error,
-    TResult? Function()? save,
     TResult? Function()? saved,
   }) {
     return error?.call();
@@ -1811,7 +1823,6 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
     TResult Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult Function()? loading,
     TResult Function()? error,
-    TResult Function()? save,
     TResult Function()? saved,
     required TResult orElse(),
   }) {
@@ -1827,7 +1838,6 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
     TResult Function(MainState value) $default, {
     required TResult Function(LoadingState value) loading,
     required TResult Function(ErrorState value) error,
-    required TResult Function(SaveState value) save,
     required TResult Function(SavedState value) saved,
   }) {
     return error(this);
@@ -1839,7 +1849,6 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
     TResult? Function(MainState value)? $default, {
     TResult? Function(LoadingState value)? loading,
     TResult? Function(ErrorState value)? error,
-    TResult? Function(SaveState value)? save,
     TResult? Function(SavedState value)? saved,
   }) {
     return error?.call(this);
@@ -1851,7 +1860,6 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
     TResult Function(MainState value)? $default, {
     TResult Function(LoadingState value)? loading,
     TResult Function(ErrorState value)? error,
-    TResult Function(SaveState value)? save,
     TResult Function(SavedState value)? saved,
     required TResult orElse(),
   }) {
@@ -1862,125 +1870,9 @@ class _$ErrorStateImpl with DiagnosticableTreeMixin implements ErrorState {
   }
 }
 
-abstract class ErrorState implements ToDoEditState {
+abstract class ErrorState extends ToDoEditState {
   const factory ErrorState() = _$ErrorStateImpl;
-}
-
-/// @nodoc
-abstract class _$$SaveStateImplCopyWith<$Res> {
-  factory _$$SaveStateImplCopyWith(
-          _$SaveStateImpl value, $Res Function(_$SaveStateImpl) then) =
-      __$$SaveStateImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$SaveStateImplCopyWithImpl<$Res>
-    extends _$ToDoEditStateCopyWithImpl<$Res, _$SaveStateImpl>
-    implements _$$SaveStateImplCopyWith<$Res> {
-  __$$SaveStateImplCopyWithImpl(
-      _$SaveStateImpl _value, $Res Function(_$SaveStateImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$SaveStateImpl with DiagnosticableTreeMixin implements SaveState {
-  const _$SaveStateImpl();
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoEditState.save()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('type', 'ToDoEditState.save'));
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(ToDo todo, ToDoEditMessage? message) $default, {
-    required TResult Function() loading,
-    required TResult Function() error,
-    required TResult Function() save,
-    required TResult Function() saved,
-  }) {
-    return save();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(ToDo todo, ToDoEditMessage? message)? $default, {
-    TResult? Function()? loading,
-    TResult? Function()? error,
-    TResult? Function()? save,
-    TResult? Function()? saved,
-  }) {
-    return save?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(ToDo todo, ToDoEditMessage? message)? $default, {
-    TResult Function()? loading,
-    TResult Function()? error,
-    TResult Function()? save,
-    TResult Function()? saved,
-    required TResult orElse(),
-  }) {
-    if (save != null) {
-      return save();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(MainState value) $default, {
-    required TResult Function(LoadingState value) loading,
-    required TResult Function(ErrorState value) error,
-    required TResult Function(SaveState value) save,
-    required TResult Function(SavedState value) saved,
-  }) {
-    return save(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(MainState value)? $default, {
-    TResult? Function(LoadingState value)? loading,
-    TResult? Function(ErrorState value)? error,
-    TResult? Function(SaveState value)? save,
-    TResult? Function(SavedState value)? saved,
-  }) {
-    return save?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(MainState value)? $default, {
-    TResult Function(LoadingState value)? loading,
-    TResult Function(ErrorState value)? error,
-    TResult Function(SaveState value)? save,
-    TResult Function(SavedState value)? saved,
-    required TResult orElse(),
-  }) {
-    if (save != null) {
-      return save(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class SaveState implements ToDoEditState {
-  const factory SaveState() = _$SaveStateImpl;
+  const ErrorState._() : super._();
 }
 
 /// @nodoc
@@ -2001,8 +1893,8 @@ class __$$SavedStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
-  const _$SavedStateImpl();
+class _$SavedStateImpl extends SavedState with DiagnosticableTreeMixin {
+  const _$SavedStateImpl() : super._();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -2016,12 +1908,20 @@ class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
   }
 
   @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$SavedStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(ToDo todo, ToDoEditMessage? message) $default, {
     required TResult Function() loading,
     required TResult Function() error,
-    required TResult Function() save,
     required TResult Function() saved,
   }) {
     return saved();
@@ -2033,7 +1933,6 @@ class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
     TResult? Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult? Function()? loading,
     TResult? Function()? error,
-    TResult? Function()? save,
     TResult? Function()? saved,
   }) {
     return saved?.call();
@@ -2045,7 +1944,6 @@ class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
     TResult Function(ToDo todo, ToDoEditMessage? message)? $default, {
     TResult Function()? loading,
     TResult Function()? error,
-    TResult Function()? save,
     TResult Function()? saved,
     required TResult orElse(),
   }) {
@@ -2061,7 +1959,6 @@ class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
     TResult Function(MainState value) $default, {
     required TResult Function(LoadingState value) loading,
     required TResult Function(ErrorState value) error,
-    required TResult Function(SaveState value) save,
     required TResult Function(SavedState value) saved,
   }) {
     return saved(this);
@@ -2073,7 +1970,6 @@ class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
     TResult? Function(MainState value)? $default, {
     TResult? Function(LoadingState value)? loading,
     TResult? Function(ErrorState value)? error,
-    TResult? Function(SaveState value)? save,
     TResult? Function(SavedState value)? saved,
   }) {
     return saved?.call(this);
@@ -2085,7 +1981,6 @@ class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
     TResult Function(MainState value)? $default, {
     TResult Function(LoadingState value)? loading,
     TResult Function(ErrorState value)? error,
-    TResult Function(SaveState value)? save,
     TResult Function(SavedState value)? saved,
     required TResult orElse(),
   }) {
@@ -2096,6 +1991,7 @@ class _$SavedStateImpl with DiagnosticableTreeMixin implements SavedState {
   }
 }
 
-abstract class SavedState implements ToDoEditState {
+abstract class SavedState extends ToDoEditState {
   const factory SavedState() = _$SavedStateImpl;
+  const SavedState._() : super._();
 }

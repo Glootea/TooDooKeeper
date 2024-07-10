@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -11,9 +12,9 @@ import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
+part 'todo_edit_bloc.freezed.dart';
 part 'todo_edit_events.dart';
 part 'todo_edit_states.dart';
-part 'todo_edit_bloc.freezed.dart';
 
 class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   ToDoEditBloc({
@@ -25,7 +26,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
         _passedId = passedId,
         _todoProvider = todoProvider,
         _deviceIdProvider = deviceIdProvider,
-        super(const ToDoEditState.loading()) {
+        super(const LoadingState()) {
     on<ToDoEditEvent>(
       (event, emit) {
         return event.map<Future<void>>(
@@ -65,9 +66,9 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     final (todo, _) = await _todoProvider.getToDoById(id: event.id);
     logger.d('Loaded TODO: $todo');
     if (todo == null) {
-      emit(const ToDoEditState.error());
+      emit(const MainState(todo: ToDo.justCreated()));
     } else {
-      emit(ToDoEditState(todo: todo));
+      emit(MainState(todo: todo));
     }
   }
 
