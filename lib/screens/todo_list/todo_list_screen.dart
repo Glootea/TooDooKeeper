@@ -18,7 +18,6 @@ class TodoListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ToDoListBloc, ToDoListState>(
       builder: (context, state) {
-        print('Got new state');
         return switch (state) {
           MainState() => _MainScreen(state: state),
           LoadingState() => const LoadingScreen(),

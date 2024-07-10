@@ -8,7 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:yandex_summer_school/core/data/data_sources/obfuscation/gzip_obfuscation.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/share_provider.dart';
-import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
+import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
@@ -18,7 +18,7 @@ part 'todo_edit_states.dart';
 
 class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
   ToDoEditBloc({
-    required ToDoProvider todoProvider,
+    required ToDoRepository todoProvider,
     required DeviceIdProvider deviceIdProvider,
     String? passedId,
     String? data,
@@ -46,7 +46,7 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     _addInitialEvent();
   }
 
-  final ToDoProvider _todoProvider;
+  final ToDoRepository _todoProvider;
   final String? _passedId;
   final String? _data;
 

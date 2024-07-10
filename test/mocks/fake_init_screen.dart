@@ -15,7 +15,7 @@ import 'package:yandex_summer_school/core/data/data_sources/local_database/local
 import 'package:yandex_summer_school/core/data/data_sources/online_database/online_database_abst.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
-import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
+import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
@@ -40,7 +40,7 @@ class FakeInitScreen extends InitScreen {
   Future<void> init() async {
     await _appSetup();
     final OnlineProvider onlineProvider = MockOnlineProvider(database);
-    final toDoProvider = ToDoProvider(
+    final toDoProvider = ToDoRepository(
       localDatabase: local,
       onlineProvider: onlineProvider,
       deviceIdProvider: deviceIdProvider,
@@ -77,7 +77,7 @@ class FakeInitScreen extends InitScreen {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoProvider todoProvider, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
+  GoRouter _createRouter(ToDoRepository todoProvider, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
@@ -98,7 +98,7 @@ class FakeInitScreen extends InitScreen {
     );
   }
 
-  List<RouteBase> _editRoutes(ToDoProvider todoProvider, DeviceIdProvider deviceIdProvider) {
+  List<RouteBase> _editRoutes(ToDoRepository todoProvider, DeviceIdProvider deviceIdProvider) {
     return [
       GoRoute(
         path: 'edit/:id',

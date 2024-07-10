@@ -24,10 +24,17 @@ class ToDoItems extends Table {
 class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(connect());
 
-  Future<List<ToDoItem>> getToDoList() async =>
-      (select(toDoItems)..where((tbl) => tbl.isDeleted.isNotValue(true))).get();
+  Future<List<ToDoItem>> getToDoList({bool withDeleted = false}) async {
+    if (withDeleted) {
+      return select(toDoItems).get();
+    }
+    return (select(toDoItems)..where((tbl) => tbl.isDeleted.isNotValue(true))).get();
+  }
 
-  Future<ToDoItem?> getToDoById({required String id}) async {
+  Future<ToDoItem?> getToDoById({required String id, bool withDeleted = false}) async {
+    if (withDeleted) {
+      return (select(toDoItems)..where((t) => t.id.equals(id))).getSingleOrNull();
+    }
     return (select(toDoItems)..where((t) => t.id.equals(id) & t.isDeleted.isNotValue(true))).getSingleOrNull();
   }
 

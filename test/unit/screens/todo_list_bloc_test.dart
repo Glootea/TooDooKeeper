@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
-import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
+import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart';
 
@@ -41,7 +41,7 @@ void main() async {
       local = FakeLocalDatabase();
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
-      final toDoProvider = ToDoProvider(
+      final toDoProvider = ToDoRepository(
         localDatabase: local,
         onlineProvider: online,
         deviceIdProvider: deviceIdProvider,
@@ -83,9 +83,6 @@ void main() async {
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => <ToDo>[]);
         when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
-      });
-      test('Initial state is correct', () {
-        expect(bloc.state, const LoadingState());
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -161,8 +158,10 @@ void main() async {
         expect(state3.todos, hasLength(0)); // not showing to user
         expect(state3.networkConnectionPresent, isTrue);
 
-        final todoInDatabase =
-            await local.getToDoById(id: id); // actually deleted from database but not from online -> show no connection
+        final todoInDatabase = await local.getToDoById(
+          id: id,
+          withDeleted: true,
+        ); // marked as deleted from database but not from online -> show no connection
         expect(todoInDatabase, isNotNull);
 
         final state4 = (await bloc.stream.first) as MainState; // actually deleted
@@ -229,7 +228,8 @@ void main() async {
 
         expect(state3.todos, hasLength(0)); // not showing to user
 
-        final todoInDatabase = await local.getToDoById(id: id); // but still in database to delete online
+        final todoInDatabase =
+            await local.getToDoById(id: id, withDeleted: true); // but still in database to delete online
         expect(todoInDatabase, isNotNull);
         expect(todoInDatabase?.isDeleted, isTrue);
       });

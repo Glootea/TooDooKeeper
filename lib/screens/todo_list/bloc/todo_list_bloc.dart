@@ -2,7 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
+import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
@@ -32,7 +32,7 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     add(const LoadEvent());
   }
 
-  final ToDoProvider todoProvider;
+  final ToDoRepository todoProvider;
 
   Future<void> _onLoadEvent(LoadEvent event, Emitter<ToDoListState> emit) async {
     try {

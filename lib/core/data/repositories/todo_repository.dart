@@ -5,9 +5,9 @@ import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/extensions/local_database_todo_mapper_extension.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
-class ToDoProvider {
+class ToDoRepository {
   // TODO: handle failed online requests
-  const ToDoProvider({
+  const ToDoRepository({
     required LocalDatabase localDatabase,
     required OnlineProvider onlineProvider,
     required DeviceIdProvider deviceIdProvider,
@@ -21,7 +21,7 @@ class ToDoProvider {
 
   Future<(List<ToDo>, bool)> getToDoList() async {
     final onlineTodoList = await _onlineProvider.database?.getToDoList();
-    final localToDoList = await _localDatabase.getToDoList();
+    final localToDoList = await _localDatabase.getToDoList(withDeleted: true);
 
     if (onlineTodoList != null) {
       final merged = _merge(local: localToDoList, online: onlineTodoList);
@@ -38,7 +38,7 @@ class ToDoProvider {
 
   Future<(ToDo?, bool)> getToDoById({required String id}) async {
     final onlineToDo = await _onlineProvider.database?.getToDoById(id);
-    final localToDo = await _localDatabase.getToDoById(id: id);
+    final localToDo = await _localDatabase.getToDoById(id: id, withDeleted: true);
     if (onlineToDo != null) {
       final merged = _pickActual(local: localToDo, online: onlineToDo);
       if (merged == null) return (null, false);

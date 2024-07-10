@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
-import 'package:yandex_summer_school/core/data/providers/todo_provider.dart';
+import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/extensions/local_database_todo_mapper_extension.dart';
 
@@ -15,13 +15,13 @@ import '../../mocks/mock_online_database.dart';
 import '../../mocks/mock_online_provider.dart';
 
 void main() {
-  group('Todo provider', () {
+  group('Todo Repository:', () {
     late LocalDatabase local;
     late OnlineProvider online;
     late DeviceIdProvider deviceIdProvider;
     late FlutterSecureStorage storage;
 
-    late ToDoProvider toDoProvider;
+    late ToDoRepository toDoProvider;
 
     final time = DateTime(2024, 7, 11, 8);
 
@@ -32,7 +32,7 @@ void main() {
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
 
-      toDoProvider = ToDoProvider(
+      toDoProvider = ToDoRepository(
         localDatabase: local,
         onlineProvider: online,
         deviceIdProvider: deviceIdProvider,
