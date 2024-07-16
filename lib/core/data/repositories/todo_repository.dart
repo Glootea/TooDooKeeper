@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
@@ -54,6 +55,8 @@ class ToDoRepository {
   }
 
   Future<(void, bool)> createTodo({required ToDo todo}) async {
+    await FirebaseAnalytics.instance.logEvent(name: 'create_todo');
+
     final time = DateTime.now();
     final updatedToDo = todo.copyWith(
       id: const Uuid().v4(),
@@ -83,6 +86,8 @@ class ToDoRepository {
   }
 
   Future<(void, bool)> deleteTodo({required ToDo todo}) async {
+    await FirebaseAnalytics.instance.logEvent(name: 'Delete ToDo');
+
     final time = DateTime.now();
     final updatedToDo = todo.copyWith(changedAt: time, lastUpdatedBy: _deviceIdProvider.deviceId);
     await _localDatabase.markAsDeleted(todo: updatedToDo.parseToDoItemCompanion);

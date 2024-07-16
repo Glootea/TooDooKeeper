@@ -1,10 +1,1 @@
-{
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  }
-}
+{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"]},"flutter":{"platforms":{"android":{"default":{"projectId":"toodookeeper","appId":"1:828795292805:android:dacea00ff17f47876cedec","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"toodookeeper","configurations":{"android":"1:828795292805:android:dacea00ff17f47876cedec","macos":"1:828795292805:ios:3a5e9750cb68bb446cedec","web":"1:828795292805:web:97b3571003a3b5e06cedec","windows":"1:828795292805:web:670daefe1ec0f2e96cedec"}}}}}}

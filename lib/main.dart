@@ -1,4 +1,8 @@
 import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +30,14 @@ import 'package:yandex_summer_school/screens/todo_list/todo_list_screen.dart';
 
 void main() {
   runZonedGuarded(
-    () => runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: InitScreen())),
+    () {
+      runApp(
+        const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: InitScreen(),
+        ),
+      );
+    },
     (o, s) => logger.f(o, stackTrace: s),
   );
 }
@@ -34,8 +45,12 @@ void main() {
 class InitScreen extends StatelessWidget {
   const InitScreen({super.key});
   Future<void> init() async {
-    await _appSetup();
-    const secureStorage = FlutterSecureStorage(aOptions: AndroidOptions(encryptedSharedPreferences: true));
+    await Future.wait([_appSetup(), _setupFirebase()]);
+    _setupCrashlytics();
+
+    const secureStorage = FlutterSecureStorage(
+      aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    );
     final deviceIdProvider = await DeviceIdProvider.create(storage: secureStorage);
     final OnlineProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider, secureStorage);
     final localDatabase = LocalDatabase();
@@ -45,7 +60,11 @@ class InitScreen extends StatelessWidget {
       deviceIdProvider: deviceIdProvider,
     );
 
-    final router = _createRouter(todoRepository, deviceIdProvider, onlineProvider.auth.isLoggedIn);
+    final router = _createRouter(
+      todoRepository,
+      deviceIdProvider,
+      onlineProvider.auth.isLoggedIn,
+    );
     final themeBloc = ThemeBloc();
 
     // Attempt to fix: https://github.com/Glootea/TooDooKeeper/pull/2#discussion_r1650971004
@@ -75,7 +94,35 @@ class InitScreen extends StatelessWidget {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
+  Future<List<void>> _setupFirebase() async {
+    await Firebase.initializeApp();
+    final remoteConfig = FirebaseRemoteConfig.instance;
+    final remoteConfigConfiguration = remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+    );
+
+    return Future.wait([remoteConfigConfiguration]);
+  }
+
+  void _setupCrashlytics() {
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  }
+
+  GoRouter _createRouter(
+    ToDoRepository todoRepository,
+    DeviceIdProvider deviceIdProvider,
+    bool userLoggedIn,
+  ) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
@@ -96,7 +143,10 @@ class InitScreen extends StatelessWidget {
     );
   }
 
-  List<RouteBase> _editRoutes(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
+  List<RouteBase> _editRoutes(
+    ToDoRepository todoRepository,
+    DeviceIdProvider deviceIdProvider,
+  ) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -107,8 +157,11 @@ class InitScreen extends StatelessWidget {
             return const TodoListScreen();
           }
           return BlocProvider(
-            create: (context) =>
-                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, passedId: id),
+            create: (context) => ToDoEditBloc(
+              todoRepository: todoRepository,
+              deviceIdProvider: deviceIdProvider,
+              passedId: id,
+            ),
             child: const ToDoEditScreen(),
           );
         },
@@ -119,8 +172,11 @@ class InitScreen extends StatelessWidget {
           logger.d(state.pathParameters);
           final data = state.uri.queryParameters['data']; // from deep link
           return BlocProvider(
-            create: (context) =>
-                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, data: data),
+            create: (context) => ToDoEditBloc(
+              todoRepository: todoRepository,
+              deviceIdProvider: deviceIdProvider,
+              data: data,
+            ),
             child: const ToDoEditScreen(),
           );
         },
@@ -167,8 +223,11 @@ class InitScreen extends StatelessWidget {
         backgroundColor: theme.backColors.secondary,
       ),
       dividerColor: theme.supportColors.separator,
-      pageTransitionsTheme:
-          const PageTransitionsTheme(builders: {TargetPlatform.android: PredictiveBackPageTransitionsBuilder()}),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        },
+      ),
     );
   }
 
