@@ -14,7 +14,21 @@
 ### Локальная работа
 Если приложению не удается отправить данные в сеть, оно уведомляет пользователя с помощью красного заголовка на главном экране. При каждом изменении данных приложение старается объединить удаленные и локальные данные, предпочтение отдается последнему по времени изменению.
 ### Deeplinks 
-С помощью deeplink можно открыть экран создания заметки (ссылка -> https://toodookeeper.web.app/new или команда -> adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d https://toodookeeper.web.app/new com.glootea.toodookeeper) или импортировать задачу, как показано далее. ВАЖНО: настройки -> открывать по умолчанию -> выберите доступные ссылки 
+С помощью deeplink можно открыть экран создания заметки (ссылка -> https://toodookeeper.web.app/new или команда -> adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d https://toodookeeper.web.app/new com.glootea.toodookeeper) или импортировать задачу, как показано далее. ВАЖНО: настройки -> открывать по умолчанию -> выберите доступные ссылки
+### Firebase
+- Реализована работа с Remote Configs, работает рантайм-переключение цвета важности. [Видео](https://drive.google.com/file/d/1WwmcgQQRtEVDAUeAqHUmquFTeMto3lKz/view)
+- К проекту подключён и настроен Firebase Crashlytics 
+- Добавление/удаление todo отслеживается через Firebase Analytics
+### CI/CD
+- Настроен CI на GitHub, а именно форматирование, линтер, тесты, сборка, деплой и распространение через Firebase App Distribution
+<p align="middle">
+  <img src="https://drive.google.com/uc?export=view&id=1WwmcgQQRtEVDAUeAqHUmquFTeMto3lKz" width="33%" /> 
+  <img src="https://drive.google.com/uc?export=view&id=1rfco1degCbIpWV8apBYIPl1kpuzN8OJI" width="33%" />
+  <img src="https://drive.google.com/uc?export=view&id=1iFmENc5_RQJ8yZ_PubBT7BlPKcI_p0AL" width="33%" />
+</p>
+
+### Flavors
+Debug и release сборки разделены, что облегчает пользование и тестирование. Различаются названия пакетов и приложений
 ## Скриншоты
 <p align="middle">
   <img src="https://drive.google.com/uc?export=view&id=1wY71XHbRueFAVCm2K1D9DIFJwfP6v3uE" width="24%" />
@@ -40,7 +54,7 @@
 </p>
 
 ## Прочее
-Само приложение поддерживает edge-to-edge, корректно обрабатывая различные способы навигации. Иконка приложения адаптируется под material you. Debug и release сборки разделены, что облегчает пользование и тестирование.
+Само приложение поддерживает edge-to-edge, корректно обрабатывая различные способы навигации. Иконка приложения адаптируется под material you. 
 <p align="middle">
   <img src="https://drive.google.com/uc?export=view&id=1kwvhxBl-MzXAgj7o8qdqR5mmthfZUvU4" width="32%" />
   <img src="https://drive.google.com/uc?export=view&id=1kr6m2PLQYP7NbQ5chIzYzSih4Llb4Hyn" width="32%" />
