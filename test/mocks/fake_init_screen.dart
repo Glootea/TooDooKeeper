@@ -87,13 +87,11 @@ class FakeInitScreen extends InitScreen {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoRepository todoRepository,
-      DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
+  GoRouter _createRouter(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
-        if (state.path == '/edit' &&
-            !state.uri.queryParameters.containsKey('data')) return '/new';
+        if (state.path == '/edit' && !state.uri.queryParameters.containsKey('data')) return '/new';
         return null;
       },
       routes: [
@@ -110,8 +108,7 @@ class FakeInitScreen extends InitScreen {
     );
   }
 
-  List<RouteBase> _editRoutes(
-      ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
+  List<RouteBase> _editRoutes(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -122,10 +119,8 @@ class FakeInitScreen extends InitScreen {
             return const TodoListScreen();
           }
           return BlocProvider(
-            create: (context) => ToDoEditBloc(
-                todoRepository: todoRepository,
-                deviceIdProvider: deviceIdProvider,
-                passedId: id),
+            create: (context) =>
+                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, passedId: id),
             child: const ToDoEditScreen(),
           );
         },
@@ -136,10 +131,8 @@ class FakeInitScreen extends InitScreen {
           logger.d(state.pathParameters);
           final data = state.uri.queryParameters['data']; // from deep link
           return BlocProvider(
-            create: (context) => ToDoEditBloc(
-                todoRepository: todoRepository,
-                deviceIdProvider: deviceIdProvider,
-                data: data),
+            create: (context) =>
+                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, data: data),
             child: const ToDoEditScreen(),
           );
         },
@@ -186,9 +179,8 @@ class FakeInitScreen extends InitScreen {
         backgroundColor: theme.backColors.secondary,
       ),
       dividerColor: theme.supportColors.separator,
-      pageTransitionsTheme: const PageTransitionsTheme(builders: {
-        TargetPlatform.android: PredictiveBackPageTransitionsBuilder()
-      }),
+      pageTransitionsTheme:
+          const PageTransitionsTheme(builders: {TargetPlatform.android: PredictiveBackPageTransitionsBuilder()}),
     );
   }
 

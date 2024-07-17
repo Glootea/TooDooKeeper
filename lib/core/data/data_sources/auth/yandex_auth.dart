@@ -39,7 +39,9 @@ class YandexAuth extends AuthMethod {
     }
     const platform = MethodChannel('com.glootea.toodookeeper/todo');
     final data = await platform.invokeMethod<Map<Object?, Object?>>('yandexLogin');
-    if (data == null) throw Exception('Failed to login user as no data was provided');
+    if (data == null) {
+      throw Exception('Failed to login user as no data was provided');
+    }
     logger.i(data);
     if (data['success'] as bool? ?? false) {
       authToken = await _storeToken(data);
@@ -62,7 +64,9 @@ class YandexAuth extends AuthMethod {
   Future<String> _storeToken(Map<Object?, Object?> data) async {
     final token = data['token'];
     final expiresIn = data['expiresIn'];
-    if (token == null || expiresIn == null) throw Exception('Failed to login user as no data was provided');
+    if (token == null || expiresIn == null) {
+      throw Exception('Failed to login user as no data was provided');
+    }
     await _secureStorage.write(
       key: _keyString,
       value: token as String,

@@ -7,7 +7,8 @@ import 'package:yandex_summer_school/core/ui/leaf/todo_switch.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class DeadlineSelector extends StatefulWidget {
-  const DeadlineSelector({required this.value, required this.onChanged, super.key});
+  const DeadlineSelector(
+      {required this.value, required this.onChanged, super.key,});
   final DateTime? value;
   final void Function(DateTime?) onChanged;
 
@@ -28,7 +29,9 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
             builder: (context, child) {
               return Theme(
                 data: Theme.of(context).copyWith(
-                  colorScheme: Theme.of(context).colorScheme.copyWith(primary: todoTheme.definedColors.blue),
+                  colorScheme: Theme.of(context)
+                      .colorScheme
+                      .copyWith(primary: todoTheme.definedColors.blue),
                   // ignore: deprecated_member_use
                   useMaterial3: false,
                 ),
@@ -56,7 +59,10 @@ class _DeadlineSelectorState extends State<DeadlineSelector> {
               ToDoSwitch(value: widget.value != null, onChanged: _onChanged),
             ],
           ),
-          if (widget.value != null) ...[ToDoDateText(value: widget.value!), const SizedBox(height: 8)],
+          if (widget.value != null) ...[
+            ToDoDateText(value: widget.value!),
+            const SizedBox(height: 8),
+          ],
         ],
       ),
     );

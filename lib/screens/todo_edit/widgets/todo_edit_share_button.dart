@@ -34,7 +34,8 @@ class ShareButton extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(onPressed: onCopy, icon: Icon(Icons.content_copy, color: color)),
+          IconButton(
+              onPressed: onCopy, icon: Icon(Icons.content_copy, color: color),),
         ],
       ),
     );

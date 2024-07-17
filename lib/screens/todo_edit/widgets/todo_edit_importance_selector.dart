@@ -73,7 +73,8 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
                     ),
                     Text(
                       context.loc.high,
-                      style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.red),
+                      style: todoTheme.textTheme.body
+                          .copyWith(color: todoTheme.definedColors.red),
                     ),
                   ],
                 ),

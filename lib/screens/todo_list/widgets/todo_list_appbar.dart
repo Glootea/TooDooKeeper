@@ -7,14 +7,18 @@ import 'package:yandex_summer_school/screens/todo_list/widgets/todo_list_network
 import 'package:yandex_summer_school/screens/todo_list/widgets/todo_list_overlay_container.dart';
 
 class ToDoListAppBar extends SliverPersistentHeaderDelegate {
-  const ToDoListAppBar({required this.expandedHeight, required this.topPadding, required this.state});
+  const ToDoListAppBar(
+      {required this.expandedHeight,
+      required this.topPadding,
+      required this.state,});
 
   final double expandedHeight;
   final double topPadding;
   final MainState state;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent,) {
     final todoTheme = context.watch<ThemeBloc>().state;
     final shadowColor = todoTheme.backColors.primary;
 
@@ -23,22 +27,27 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
 
     final subtitleOffset = Offset(60, 124 + topPadding);
 
-    const expanedIconOffset = Offset(20, 124); // x - from right side as it aligns from there
-    const collapsedIconOffset = Offset(20, 24); // x - from right side as it aligns from there
+    const expanedIconOffset =
+        Offset(20, 124); // x - from right side as it aligns from there
+    const collapsedIconOffset =
+        Offset(20, 24); // x - from right side as it aligns from there
 
     const expandedFontSize = 32.0;
     const collapsedFontSize = 24.0;
 
-    final extendFactor = (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0);
+    final extendFactor =
+        (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0);
 
-    final titleFontSize = extendFactor.lerpDouble(expandedFontSize, collapsedFontSize);
+    final titleFontSize =
+        extendFactor.lerpDouble(expandedFontSize, collapsedFontSize);
     final titlePosition = extendFactor
         .lerpOffset(expandedTitleOffset, collapsedTitleOffset)
         .translate(0, -titleFontSize / 2 + topPadding);
 
     final iconSize = Theme.of(context).iconTheme.size ?? 24;
-    final iconPosition =
-        extendFactor.lerpOffset(expanedIconOffset, collapsedIconOffset).translate(0, -iconSize / 2 + topPadding);
+    final iconPosition = extendFactor
+        .lerpOffset(expanedIconOffset, collapsedIconOffset)
+        .translate(0, -iconSize / 2 + topPadding);
 
     var overlayOpened = false;
 
@@ -55,9 +64,18 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                 decoration: BoxDecoration(
                   color: todoTheme.backColors.primary,
                   boxShadow: [
-                    BoxShadow(offset: const Offset(0, 2), blurRadius: 4, color: shadowColor.withOpacity(0.14)),
-                    BoxShadow(offset: const Offset(0, 4), blurRadius: 5, color: shadowColor.withOpacity(0.12)),
-                    BoxShadow(offset: const Offset(0, 1), blurRadius: 10, color: shadowColor.withOpacity(0.2)),
+                    BoxShadow(
+                        offset: const Offset(0, 2),
+                        blurRadius: 4,
+                        color: shadowColor.withOpacity(0.14),),
+                    BoxShadow(
+                        offset: const Offset(0, 4),
+                        blurRadius: 5,
+                        color: shadowColor.withOpacity(0.12),),
+                    BoxShadow(
+                        offset: const Offset(0, 1),
+                        blurRadius: 10,
+                        color: shadowColor.withOpacity(0.2),),
                   ],
                 ),
               ),
@@ -70,7 +88,8 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                     ? null
                     : showDialog<AlertDialog>(
                         context: context,
-                        builder: (BuildContext context) => const TodoListNetworkErrorDialog(),
+                        builder: (BuildContext context) =>
+                            const TodoListNetworkErrorDialog(),
                       ),
                 child: Row(
                   children: [
@@ -78,12 +97,15 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                       context.loc.myTasks,
                       style: todoTheme.textTheme.largeTitle.copyWith(
                         fontSize: titleFontSize,
-                        color: state.networkConnectionPresent ? null : todoTheme.definedColors.red,
+                        color: state.networkConnectionPresent
+                            ? null
+                            : todoTheme.definedColors.red,
                       ),
                     ),
                     if (!state.networkConnectionPresent) ...[
                       const SizedBox(width: 8),
-                      Icon(Icons.warning_amber_outlined, color: todoTheme.definedColors.red),
+                      Icon(Icons.warning_amber_outlined,
+                          color: todoTheme.definedColors.red,),
                     ],
                   ],
                 ),
@@ -97,7 +119,8 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
                   if (state is MainState) {
                     return Text(
                       '${context.loc.completed} - ${state.todos.where((t) => t.done).length}',
-                      style: todoTheme.textTheme.body.copyWith(color: todoTheme.labelTheme.tertiary),
+                      style: todoTheme.textTheme.body
+                          .copyWith(color: todoTheme.labelTheme.tertiary),
                     );
                   }
                   throw Exception('Unexpected state');
@@ -110,10 +133,16 @@ class ToDoListAppBar extends SliverPersistentHeaderDelegate {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: () => context.read<ToDoListBloc>().add(const ToggleVisibilityEvent()),
+                    onPressed: () => context
+                        .read<ToDoListBloc>()
+                        .add(const ToggleVisibilityEvent()),
                     icon: Icon(
-                      state.showDone ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      color: state.showDone ? todoTheme.definedColors.blue : todoTheme.supportColors.overlay,
+                      state.showDone
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: state.showDone
+                          ? todoTheme.definedColors.blue
+                          : todoTheme.supportColors.overlay,
                     ),
                   ),
                   IconButton(

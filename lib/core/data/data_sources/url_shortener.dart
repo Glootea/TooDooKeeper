@@ -8,7 +8,10 @@ class UrlShortener {
       final response = await dio.post<Map<String, dynamic>>(
         'https://spoo.me',
         queryParameters: {'url': url},
-        options: Options(headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}),
+        options: Options(headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },),
       );
       // ignore: avoid_dynamic_calls
       final short = response.data?['short_url'] as String;

@@ -72,7 +72,8 @@ sealed class ToDo extends Equatable with _$ToDo {
     return {
       'id': id, // уникальный идентификатор элемента
       'text': description,
-      'importance': importance.toString(), // importance = low | basic | important
+      'importance':
+          importance.toString(), // importance = low | basic | important
       'deadline': deadline?.millisecondsSinceEpoch,
       'done': done,
       'color': null, // может отсутствовать

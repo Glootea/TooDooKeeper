@@ -54,14 +54,14 @@ void main() async {
           localDatabase: local,
           onlineProvider: online,
           deviceIdProvider: deviceIdProvider,
-          firebaseAnalytics: firebaseAnalytics);
+          firebaseAnalytics: firebaseAnalytics,);
 
       when(online.database.getToDoList).thenAnswer((_) async => null);
       when(() => online.database.updateToDoList(any<List<ToDo>>()))
           .thenAnswer((_) async => null);
 
       bloc = ToDoEditBloc(
-          todoRepository: todoRepository, deviceIdProvider: deviceIdProvider);
+          todoRepository: todoRepository, deviceIdProvider: deviceIdProvider,);
 
       final time = DateTime(2024, 7, 10, 14, 23, 10);
       createdToDo = ToDo.justCreated(
@@ -137,7 +137,7 @@ void main() async {
       expect: () => [
         MainState(todo: createdToDo),
         const LoadingState(),
-        const SavedState()
+        const SavedState(),
       ],
     );
 

@@ -27,7 +27,8 @@ class ToDoListItem extends StatefulWidget {
   State<ToDoListItem> createState() => _ToDoListItemState();
 }
 
-class _ToDoListItemState extends State<ToDoListItem> with SingleTickerProviderStateMixin {
+class _ToDoListItemState extends State<ToDoListItem>
+    with SingleTickerProviderStateMixin {
   double lastProgress = 0;
   static const _threshold = 0.5;
 
@@ -36,15 +37,23 @@ class _ToDoListItemState extends State<ToDoListItem> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      dismissThresholds: const {DismissDirection.startToEnd: _threshold, DismissDirection.endToStart: _threshold},
+      dismissThresholds: const {
+        DismissDirection.startToEnd: _threshold,
+        DismissDirection.endToStart: _threshold,
+      },
       key: ObjectKey(widget.toDo),
-      confirmDismiss: (direction) => Future.value(direction == DismissDirection.endToStart),
+      confirmDismiss: (direction) =>
+          Future.value(direction == DismissDirection.endToStart),
       background: const _CheckContainer(),
       secondaryBackground: const _DeleteContainer(),
       movementDuration: const Duration(milliseconds: 600),
       onUpdate: _onPanUpdate,
       onDismissed: _onDismissed,
-      child: _DataPresentor(toDo: widget.toDo, done: done, onToggleDone: _onToggleDone),
+      child: _DataPresentor(
+        toDo: widget.toDo,
+        done: done,
+        onToggleDone: _onToggleDone,
+      ),
     );
   }
 
@@ -58,7 +67,8 @@ class _ToDoListItemState extends State<ToDoListItem> with SingleTickerProviderSt
     if (_enteredActionArea(details.progress, lastProgress, _threshold)) {
       // indicate start of area where action is activated
       Feedback.forLongPress(context);
-      HapticFeedback.heavyImpact().whenComplete(() => logger.i('Indicate user of possible action'));
+      HapticFeedback.heavyImpact()
+          .whenComplete(() => logger.i('Indicate user of possible action'));
       if (details.direction == DismissDirection.startToEnd) {
         _onToggleDone();
       }
@@ -68,7 +78,11 @@ class _ToDoListItemState extends State<ToDoListItem> with SingleTickerProviderSt
     lastProgress = details.progress;
   }
 
-  bool _enteredActionArea(double currentProgress, double lastProgress, double threshold) =>
+  bool _enteredActionArea(
+    double currentProgress,
+    double lastProgress,
+    double threshold,
+  ) =>
       currentProgress > threshold && lastProgress < threshold;
 
   void _onDismissed(DismissDirection direction) {
@@ -80,7 +94,11 @@ class _ToDoListItemState extends State<ToDoListItem> with SingleTickerProviderSt
 }
 
 class _DataPresentor extends StatelessWidget {
-  const _DataPresentor({required this.toDo, required this.done, required this.onToggleDone});
+  const _DataPresentor({
+    required this.toDo,
+    required this.done,
+    required this.onToggleDone,
+  });
 
   final ToDo toDo;
   final bool done;
@@ -119,21 +137,27 @@ class _DataPresentor extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
                             style: todoTheme.textTheme.body.copyWith(
-                              decoration: done ? TextDecoration.lineThrough : null,
+                              decoration:
+                                  done ? TextDecoration.lineThrough : null,
                               color: done ? todoTheme.definedColors.gray : null,
                             ),
                           )
                         : _ToDoInlinedTextfield(toDo),
                   ),
-                  ToDoIcon(icon: Icons.info_outline, color: todoTheme.labelTheme.tertiary),
+                  ToDoIcon(
+                    icon: Icons.info_outline,
+                    color: todoTheme.labelTheme.tertiary,
+                  ),
                 ],
               ),
               if (toDo.deadline != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: 8, left: Checkbox.width + 8),
+                  padding:
+                      const EdgeInsets.only(top: 8, left: Checkbox.width + 8),
                   child: ToDoDateText(
                     value: toDo.deadline!,
-                    style: todoTheme.textTheme.subhead.copyWith(color: todoTheme.labelTheme.tertiary),
+                    style: todoTheme.textTheme.subhead
+                        .copyWith(color: todoTheme.labelTheme.tertiary),
                   ),
                 ),
             ],
@@ -175,7 +199,8 @@ class _ToDoInlinedTextfieldState extends State<_ToDoInlinedTextfield> {
       bloc.add(SaveJustCreatedEvent(_controller.text));
     }
 
-    void onUpdate(String value) => _controller.value = TextEditingValue(text: value);
+    void onUpdate(String value) =>
+        _controller.value = TextEditingValue(text: value);
 
     return TextField(
       focusNode: _focusNode,
@@ -230,7 +255,8 @@ class _CheckContainer extends StatelessWidget {
         padding: const EdgeInsets.only(left: 16),
         child: Align(
           alignment: Alignment.centerLeft,
-          child: Icon(Icons.check_outlined, color: todoTheme.definedColors.white),
+          child:
+              Icon(Icons.check_outlined, color: todoTheme.definedColors.white),
         ),
       ),
     );

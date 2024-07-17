@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class SimpleTappableBox extends StatelessWidget {
   /// Creates box that can be tapped anywhere inside of it to call onTap callback
-  const SimpleTappableBox({required this.builder, required this.onTap, super.key});
+  const SimpleTappableBox(
+      {required this.builder, required this.onTap, super.key,});
 
   final Widget Function(BuildContext context) builder;
   final VoidCallback? onTap;

@@ -15,7 +15,7 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
 
   @override
   Future<ToDoItem?> getToDoById(
-          {required String id, bool withDeleted = false}) async =>
+          {required String id, bool withDeleted = false,}) async =>
       _todos
           .where((t) => t.id == id && (withDeleted || t.isDeleted != true))
           .firstOrNull;

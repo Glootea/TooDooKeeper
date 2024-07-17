@@ -31,7 +31,10 @@ class LocalDatabase extends _$LocalDatabase {
     return (select(toDoItems)..where((tbl) => tbl.isDeleted.isNotValue(true))).get();
   }
 
-  Future<ToDoItem?> getToDoById({required String id, bool withDeleted = false}) async {
+  Future<ToDoItem?> getToDoById({
+    required String id,
+    bool withDeleted = false,
+  }) async {
     if (withDeleted) {
       return (select(toDoItems)..where((t) => t.id.equals(id))).getSingleOrNull();
     }

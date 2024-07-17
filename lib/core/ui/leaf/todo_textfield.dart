@@ -4,7 +4,8 @@ import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class ToDoEditTextField extends StatefulWidget {
-  const ToDoEditTextField({required this.value, this.onSubmitted, this.onChanged, super.key});
+  const ToDoEditTextField(
+      {required this.value, this.onSubmitted, this.onChanged, super.key,});
   final String? value;
   final void Function(String value)? onChanged;
   final void Function(String value)? onSubmitted;
@@ -30,9 +31,18 @@ class _ToDoEditTextFieldState extends State<ToDoEditTextField> {
     return DecoratedBox(
       decoration: BoxDecoration(
         boxShadow: [
-          BoxShadow(offset: const Offset(0, 2), blurRadius: 4, color: shadowColor.withOpacity(0.14)),
-          BoxShadow(offset: const Offset(0, 4), blurRadius: 5, color: shadowColor.withOpacity(0.12)),
-          BoxShadow(offset: const Offset(0, 1), blurRadius: 10, color: shadowColor.withOpacity(0.2)),
+          BoxShadow(
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+              color: shadowColor.withOpacity(0.14),),
+          BoxShadow(
+              offset: const Offset(0, 4),
+              blurRadius: 5,
+              color: shadowColor.withOpacity(0.12),),
+          BoxShadow(
+              offset: const Offset(0, 1),
+              blurRadius: 10,
+              color: shadowColor.withOpacity(0.2),),
         ],
       ),
       child: ClipRRect(
@@ -44,7 +54,8 @@ class _ToDoEditTextFieldState extends State<ToDoEditTextField> {
             onSubmitted: widget.onSubmitted,
             maxLines: null,
             controller: controller,
-            onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+            onTapOutside: (event) =>
+                FocusManager.instance.primaryFocus?.unfocus(),
             decoration: InputDecoration(
               constraints: const BoxConstraints(minHeight: 104),
               border: InputBorder.none,

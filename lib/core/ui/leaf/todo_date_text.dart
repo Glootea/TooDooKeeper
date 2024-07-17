@@ -22,7 +22,9 @@ class ToDoDateText extends StatelessWidget {
     return Text(
       DateFormat.yMMMd(locale).format(value),
       textAlign: textAlign,
-      style: style ?? todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.blue),
+      style: style ??
+          todoTheme.textTheme.body
+              .copyWith(color: todoTheme.definedColors.blue),
     );
   }
 }

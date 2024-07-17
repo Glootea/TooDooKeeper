@@ -5,7 +5,10 @@ import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
 
 class YandexOnlineProvider extends OnlineProvider {
-  YandexOnlineProvider._({required super.auth, required FlutterSecureStorage secureStorage, super.database})
+  YandexOnlineProvider._(
+      {required super.auth,
+      required FlutterSecureStorage secureStorage,
+      super.database,})
       : _secureStorage = secureStorage;
 
   final FlutterSecureStorage _secureStorage;
@@ -20,7 +23,10 @@ class YandexOnlineProvider extends OnlineProvider {
         auth.authToken!,
         secureStorage,
       );
-      return YandexOnlineProvider._(auth: auth, database: configuredDatabase, secureStorage: secureStorage);
+      return YandexOnlineProvider._(
+          auth: auth,
+          database: configuredDatabase,
+          secureStorage: secureStorage,);
     }
     return YandexOnlineProvider._(auth: auth, secureStorage: secureStorage);
   }

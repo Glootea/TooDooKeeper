@@ -38,8 +38,7 @@ void main() async {
       setupFirebaseCoreMocks();
       await Firebase.initializeApp();
       firebaseAnalytics = MockFirebaseAnalytics();
-      when(() => firebaseAnalytics.logEvent(name: any(named: 'name')))
-          .thenAnswer((_) async {});
+      when(() => firebaseAnalytics.logEvent(name: any(named: 'name'))).thenAnswer((_) async {});
       registerFallbackValue(const ToDo.justCreated());
       registerFallbackValue(FakeCompanion());
     });
@@ -87,15 +86,13 @@ void main() async {
         showDone: true,
       );
 
-      when(() => online.database.createToDo(any()))
-          .thenAnswer((_) async => createdToDo);
+      when(() => online.database.createToDo(any())).thenAnswer((_) async => createdToDo);
     });
     group('Internet is connected:', () {
       setUp(() async {
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => <ToDo>[]);
-        when(() => online.database.updateToDoList(any<List<ToDo>>()))
-            .thenAnswer((_) async => <ToDo>[]);
+        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -125,8 +122,7 @@ void main() async {
       );
 
       test('Delete todo and get list for online', () async {
-        when(() => online.database.deleteToDo(any()))
-            .thenAnswer((_) async => createdToDo);
+        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => createdToDo);
 
         await bloc.stream.first; // get init state
 
@@ -145,16 +141,14 @@ void main() async {
 
         expect(state3.todos, hasLength(0)); // not showing to user
 
-        (await bloc.stream.first.timeout(const Duration(seconds: 5),
-            onTimeout: () => bloc.state)) as MainState; // after actual deletion
-        final todoInDatabase = await local.getToDoById(
-            id: id); // actually deleted from database as well from online
+        (await bloc.stream.first.timeout(const Duration(seconds: 5), onTimeout: () => bloc.state))
+            as MainState; // after actual deletion
+        final todoInDatabase = await local.getToDoById(id: id); // actually deleted from database as well from online
         expect(todoInDatabase, isNull);
       });
 
       test('Delete todo while internet becomes unavailable', () async {
-        when(() => online.database.deleteToDo(any()))
-            .thenAnswer((_) async => null);
+        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => null);
 
         await bloc.stream.first; // get init state
 
@@ -180,8 +174,7 @@ void main() async {
         ); // marked as deleted from database but not from online -> show no connection
         expect(todoInDatabase, isNotNull);
 
-        final state4 =
-            (await bloc.stream.first) as MainState; // actually deleted
+        final state4 = (await bloc.stream.first) as MainState; // actually deleted
         expect(state4.networkConnectionPresent, isFalse);
       });
     });
@@ -190,8 +183,7 @@ void main() async {
       setUp(() async {
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => null);
-        when(() => online.database.updateToDoList(any<List<ToDo>>()))
-            .thenAnswer((_) async => null);
+        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -221,8 +213,7 @@ void main() async {
       );
 
       test('Delete todo and get list for offline', () async {
-        when(() => online.database.deleteToDo(any()))
-            .thenAnswer((_) async => null);
+        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => null);
 
         await bloc.stream.first; // get init state
 
@@ -243,10 +234,8 @@ void main() async {
 
         await pumpEventQueue();
 
-        final todoInDatabase = await local.getToDoById(
-          id: id,
-          withDeleted: true,
-        ); // but still in database to delete online
+        final todoInDatabase =
+            await local.getToDoById(id: id, withDeleted: true); // but still in database to delete online
         expect(todoInDatabase, isNotNull);
         logger.d(todoInDatabase);
         expect(todoInDatabase?.isDeleted, isTrue);
@@ -257,16 +246,14 @@ void main() async {
       setUp(() async {
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => null);
-        when(() => online.database.updateToDoList(any<List<ToDo>>()))
-            .thenAnswer((_) async => null);
+        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
         'Toggle done',
         build: () => bloc,
         setUp: () {
-          when(() => online.database.updateToDo(any()))
-              .thenAnswer((_) async => null);
+          when(() => online.database.updateToDo(any())).thenAnswer((_) async => null);
         },
         act: (bloc) => bloc
           ..add(const CreateEvent())
@@ -279,8 +266,7 @@ void main() async {
             justCreatedState,
             stateAfterSaved,
             stateAfterSaved.copyWith(todos: [createdToDo.copyWith(done: true)]),
-            stateAfterSaved
-                .copyWith(todos: [createdToDo.copyWith(done: false)]),
+            stateAfterSaved.copyWith(todos: [createdToDo.copyWith(done: false)]),
           ];
         },
       );

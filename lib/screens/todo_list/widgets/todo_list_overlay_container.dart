@@ -4,7 +4,8 @@ import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class ToDoOverlayContainer extends OverlayEntry {
-  ToDoOverlayContainer({required this.children, required this.position, required this.onClose})
+  ToDoOverlayContainer(
+      {required this.children, required this.position, required this.onClose,})
       : super(builder: (context) => Column(children: children));
 
   final List<Widget> children;
@@ -35,7 +36,8 @@ class ToDoOverlayContainer extends OverlayEntry {
                         remove();
                         onClose();
                       },
-                      child: Text(context.loc.close, style: todoTheme.textTheme.button),
+                      child: Text(context.loc.close,
+                          style: todoTheme.textTheme.button,),
                     ),
                   ],
                 ),

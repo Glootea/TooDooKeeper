@@ -62,7 +62,8 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     }
   }
 
-  Future<void> _onLoadByIdEvent(LoadByIdEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onLoadByIdEvent(
+      LoadByIdEvent event, Emitter<ToDoEditState> emit,) async {
     final (todo, _) = await _todoRepository.getToDoById(id: event.id);
     logger.d('Loaded TODO: $todo');
     if (todo == null) {
@@ -72,7 +73,8 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     }
   }
 
-  Future<void> _onSaveEvent(SaveEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onSaveEvent(
+      SaveEvent event, Emitter<ToDoEditState> emit,) async {
     try {
       final todo = (state as MainState).todo;
       emit(const LoadingState());
@@ -88,12 +90,14 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     }
   }
 
-  Future<void> _onUpdateEvent(UpdateEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onUpdateEvent(
+      UpdateEvent event, Emitter<ToDoEditState> emit,) async {
     emit(MainState(todo: event.todo));
     logger.d('TODO updated: ${event.todo}');
   }
 
-  Future<void> _onParseDataFromLinkEvent(ParseDataFromLinkEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onParseDataFromLinkEvent(
+      ParseDataFromLinkEvent event, Emitter<ToDoEditState> emit,) async {
     try {
       final shareProvider = ShareProvider(obfuscation: GZipObfuscation());
       final data = shareProvider.getSharedData(event.data);
@@ -105,15 +109,18 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     }
   }
 
-  Future<void> _onCreateEvent(CreateEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onCreateEvent(
+      CreateEvent event, Emitter<ToDoEditState> emit,) async {
     const todo = ToDo.justCreated();
     emit(const MainState(todo: todo));
   }
 
-  Future<void> _onShareExportEvent(ShareExportEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onShareExportEvent(
+      ShareExportEvent event, Emitter<ToDoEditState> emit,) async {
     try {
       if (kIsWeb || !Platform.isAndroid) {
-        emit((state as MainState).copyWith(message: ToDoEditMessage.unsupportedOnPlatform));
+        emit((state as MainState)
+            .copyWith(message: ToDoEditMessage.unsupportedOnPlatform),);
         return;
       }
       final currentState = state as MainState;
@@ -129,7 +136,8 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     }
   }
 
-  Future<void> _onShareCopyEvent(ShareCopyEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onShareCopyEvent(
+      ShareCopyEvent event, Emitter<ToDoEditState> emit,) async {
     final currentState = state as MainState;
     emit(currentState.copyWith(message: ToDoEditMessage.prepareShareLink));
 
@@ -149,7 +157,8 @@ class ToDoEditBloc extends Bloc<ToDoEditEvent, ToDoEditState> {
     return exportText; // TODO: show guide for activating deep links in settings with 'don't show again' option
   }
 
-  Future<void> _onDeleteEvent(DeleteEvent event, Emitter<ToDoEditState> emit) async {
+  Future<void> _onDeleteEvent(
+      DeleteEvent event, Emitter<ToDoEditState> emit,) async {
     try {
       final todo = (state as MainState).todo;
       await _todoRepository.deleteTodo(todo: todo);

@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/material.dart';
@@ -41,18 +40,15 @@ void main() {
       importance: Importance.important,
     );
 
-    when(() => onlineDatabase.createToDo(any()))
-        .thenAnswer((_) async => createdToDo);
+    when(() => onlineDatabase.createToDo(any())).thenAnswer((_) async => createdToDo);
     when(onlineDatabase.getToDoList).thenAnswer((_) async => null);
-    when(() => onlineDatabase.updateToDoList(any<List<ToDo>>()))
-        .thenAnswer((_) async => <ToDo>[]);
+    when(() => onlineDatabase.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
     when(() => onlineDatabase.updateToDo(any())).thenAnswer((_) async => null);
 
     setupFirebaseCoreMocks();
     await Firebase.initializeApp();
     final firebaseAnalytics = MockFirebaseAnalytics();
-    when(() => firebaseAnalytics.logEvent(name: any(named: 'name')))
-        .thenAnswer((_) async {});
+    when(() => firebaseAnalytics.logEvent(name: any(named: 'name'))).thenAnswer((_) async {});
 
     await tester.pumpWidget(
       MaterialApp(
@@ -65,6 +61,7 @@ void main() {
         ),
       ),
     );
+
     await tester.pumpAndSettle();
 
     final doneCount = find.textContaining('1');
@@ -86,9 +83,7 @@ void main() {
 
     await tester.tap(
       find.byWidgetPredicate(
-        (widget) =>
-            widget is DropdownMenuItem<Importance> &&
-            widget.value == Importance.important,
+        (widget) => widget is DropdownMenuItem<Importance> && widget.value == Importance.important,
       ),
     );
     await tester.pumpAndSettle();
@@ -103,13 +98,12 @@ void main() {
     final uncheckedCheckbox = find.byWidgetPredicate(
       (widget) => widget is Checkbox && (widget.value ?? false) == false,
     );
+
     expect(uncheckedCheckbox, findsOne);
     await tester.tap(uncheckedCheckbox);
     await tester.pumpAndSettle();
 
-    final checkedCheckbox = find.byWidgetPredicate(
-      (widget) => widget is Checkbox && (widget.value ?? false) == true,
-    );
+    final checkedCheckbox = find.byWidgetPredicate((widget) => widget is Checkbox && (widget.value ?? false) == true);
     expect(checkedCheckbox, findsOne);
     await tester.pumpAndSettle();
 

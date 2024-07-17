@@ -11,7 +11,8 @@ class YandexOnlineDatabase implements OnlineDatabase {
     String authKey,
     FlutterSecureStorage secureStorage,
   ) async {
-    final revision = int.parse(await secureStorage.read(key: _revisionKey) ?? '0');
+    final revision =
+        int.parse(await secureStorage.read(key: _revisionKey) ?? '0');
 
     final dio = Dio(
       BaseOptions(
@@ -38,7 +39,9 @@ class YandexOnlineDatabase implements OnlineDatabase {
   }
 
   Future<List<ToDo>> _parseList(Map<String, dynamic> data) async {
-    final todos = (data['list'] as List<dynamic>).map((e) => e as Map<String, dynamic>).toList();
+    final todos = (data['list'] as List<dynamic>)
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
     final revision = data['revision'] as int;
     await _updateRevision(revision);
     return todos.map<ToDo>(ToDo.fromJson).toList();

@@ -16,12 +16,14 @@ class CreateTodoItem extends StatelessWidget {
       child: ColoredBox(
         color: Colors.transparent,
         child: Padding(
-          padding: const EdgeInsets.only(left: 24 + Checkbox.width, bottom: 16, top: 16),
+          padding: const EdgeInsets.only(
+              left: 24 + Checkbox.width, bottom: 16, top: 16,),
           child: Align(
             alignment: Alignment.topLeft,
             child: Text(
               context.loc.create,
-              style: todoTheme.textTheme.body.copyWith(color: todoTheme.labelTheme.tertiary),
+              style: todoTheme.textTheme.body
+                  .copyWith(color: todoTheme.labelTheme.tertiary),
             ),
           ),
         ),

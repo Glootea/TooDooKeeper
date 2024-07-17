@@ -16,7 +16,9 @@ class DeleteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoTheme = context.watch<ThemeBloc>().state;
-    final color = canDelete ? todoTheme.definedColors.red : todoTheme.supportColors.overlay;
+    final color = canDelete
+        ? todoTheme.definedColors.red
+        : todoTheme.supportColors.overlay;
     return InkWell(
       onTap: canDelete ? onPressed : null,
       child: SizedBox(

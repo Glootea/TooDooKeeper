@@ -12,7 +12,8 @@ class ToDoIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resultSize = size ?? 24;
-    final resultColor = color ?? context.watch<ThemeBloc>().state.labelTheme.primary;
+    final resultColor =
+        color ?? context.watch<ThemeBloc>().state.labelTheme.primary;
 
     return Icon(
       icon,

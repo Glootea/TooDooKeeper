@@ -9,9 +9,7 @@
 # packages, and plugins designed to encourage good coding practices.
 analyzer:
   exclude:
-    - "**.freezed.dart"
-    - "**.g.dart"
-    - "**/generated_plugin_registrant.dart"
+    ["**.freezed.dart", "**.g.dart", "**/generated_plugin_registrant.dart"]
   errors:
     avoid_positional_boolean_parameters: ignore
     flutter_style_todos: ignore

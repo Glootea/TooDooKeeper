@@ -23,7 +23,8 @@ class ToDoEditScreen extends StatelessWidget {
           context.pushReplacement('/');
         }
       },
-      buildWhen: (previous, current) => previous.runtimeType != current.runtimeType,
+      buildWhen: (previous, current) =>
+          previous.runtimeType != current.runtimeType,
       builder: (context, state) {
         switch (state) {
           case MainState():
@@ -53,7 +54,8 @@ class _MainScreen extends StatelessWidget {
           final message = switch (state.message) {
             ToDoEditMessage.copiedToDo => context.loc.copiedToDo,
             ToDoEditMessage.shareError => context.loc.shareError,
-            ToDoEditMessage.unsupportedOnPlatform => context.loc.unsupportedOnPlatform,
+            ToDoEditMessage.unsupportedOnPlatform =>
+              context.loc.unsupportedOnPlatform,
             ToDoEditMessage.prepareShareLink => context.loc.prepareShareLink,
             null => null,
           };
@@ -72,18 +74,22 @@ class _MainScreen extends StatelessWidget {
             children: [
               ToDoEditTextField(
                 value: state.todo.description,
-                onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(description: value))),
+                onChanged: (value) => bloc.add(
+                    UpdateEvent(todo: state.todo.copyWith(description: value)),),
               ),
               const SizedBox(height: 16),
               ImportanceSelector(
                 value: state.todo.importance,
-                onChanged: (value) =>
-                    value != null ? bloc.add(UpdateEvent(todo: state.todo.copyWith(importance: value))) : null,
+                onChanged: (value) => value != null
+                    ? bloc.add(UpdateEvent(
+                        todo: state.todo.copyWith(importance: value),),)
+                    : null,
               ),
               const Divider(),
               DeadlineSelector(
                 value: state.todo.deadline,
-                onChanged: (value) => bloc.add(UpdateEvent(todo: state.todo.copyWith(deadline: value))),
+                onChanged: (value) => bloc.add(
+                    UpdateEvent(todo: state.todo.copyWith(deadline: value)),),
               ),
               const Divider(),
               ShareButton(

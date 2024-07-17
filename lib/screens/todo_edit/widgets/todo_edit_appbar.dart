@@ -19,14 +19,17 @@ class ToDoEditAppbar extends PreferredSize {
     final bloc = context.read<ToDoEditBloc>();
     return AppBar(
       backgroundColor: Colors.transparent,
-      leading: IconButton(onPressed: () => context.go('/'), icon: const Icon(Icons.close_outlined)),
+      leading: IconButton(
+          onPressed: () => context.go('/'),
+          icon: const Icon(Icons.close_outlined),),
       actions: [
         TextButton(
           onPressed: () => bloc.add(const SaveEvent()),
           child: Text(
             context.loc.save,
             key: const ValueKey('Save'),
-            style: todoTheme.textTheme.button.copyWith(color: todoTheme.definedColors.blue),
+            style: todoTheme.textTheme.button
+                .copyWith(color: todoTheme.definedColors.blue),
           ),
         ),
       ],

@@ -2,7 +2,8 @@ import 'package:yandex_summer_school/core/data/data_sources/obfuscation/obfuscat
 import 'package:yandex_summer_school/core/data/data_sources/url_shortener.dart';
 
 class ShareProvider {
-  ShareProvider({required Obfuscation obfuscation}) : _obfuscation = obfuscation;
+  ShareProvider({required Obfuscation obfuscation})
+      : _obfuscation = obfuscation;
 
   final Obfuscation _obfuscation;
   static const String _baseUrl = 'https://toodookeeper.web.app/';

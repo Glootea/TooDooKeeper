@@ -3,102 +3,67 @@
 part of 'local_database.dart';
 
 // ignore_for_file: type=lint
-class $ToDoItemsTable extends ToDoItems
-    with TableInfo<$ToDoItemsTable, ToDoItem> {
+class $ToDoItemsTable extends ToDoItems with TableInfo<$ToDoItemsTable, ToDoItem> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ToDoItemsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
+  late final GeneratedColumn<String> id =
+      GeneratedColumn<String>('id', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta = const VerificationMeta('description');
   @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _importanceMeta =
-      const VerificationMeta('importance');
+  late final GeneratedColumn<String> description =
+      GeneratedColumn<String>('description', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _importanceMeta = const VerificationMeta('importance');
   @override
-  late final GeneratedColumn<String> importance = GeneratedColumn<String>(
-      'importance', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('basic'));
-  static const VerificationMeta _deadlineMeta =
-      const VerificationMeta('deadline');
+  late final GeneratedColumn<String> importance = GeneratedColumn<String>('importance', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: false, defaultValue: const Constant('basic'));
+  static const VerificationMeta _deadlineMeta = const VerificationMeta('deadline');
   @override
-  late final GeneratedColumn<DateTime> deadline = GeneratedColumn<DateTime>(
-      'deadline', aliasedName, true,
+  late final GeneratedColumn<DateTime> deadline = GeneratedColumn<DateTime>('deadline', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _isDoneMeta = const VerificationMeta('isDone');
   @override
-  late final GeneratedColumn<bool> isDone = GeneratedColumn<bool>(
-      'is_done', aliasedName, false,
+  late final GeneratedColumn<bool> isDone = GeneratedColumn<bool>('is_done', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_done" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_done" IN (0, 1))'),
       defaultValue: const Constant(false));
   static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
-  late final GeneratedColumn<int> color = GeneratedColumn<int>(
-      'color', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  late final GeneratedColumn<int> color =
+      GeneratedColumn<int>('color', aliasedName, true, type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: currentDateAndTime);
-  static const VerificationMeta _changedAtMeta =
-      const VerificationMeta('changedAt');
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>('created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false, defaultValue: currentDateAndTime);
+  static const VerificationMeta _changedAtMeta = const VerificationMeta('changedAt');
   @override
-  late final GeneratedColumn<DateTime> changedAt = GeneratedColumn<DateTime>(
-      'changed_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> changedAt = GeneratedColumn<DateTime>('changed_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _lastUpdatedByMeta =
-      const VerificationMeta('lastUpdatedBy');
+  static const VerificationMeta _lastUpdatedByMeta = const VerificationMeta('lastUpdatedBy');
   @override
-  late final GeneratedColumn<String> lastUpdatedBy = GeneratedColumn<String>(
-      'last_updated_by', aliasedName, true,
+  late final GeneratedColumn<String> lastUpdatedBy = GeneratedColumn<String>('last_updated_by', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _isDeletedMeta =
-      const VerificationMeta('isDeleted');
+  static const VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
   @override
-  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
-      'is_deleted', aliasedName, true,
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>('is_deleted', aliasedName, true,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
       defaultValue: const Constant(false));
   @override
-  List<GeneratedColumn> get $columns => [
-        id,
-        description,
-        importance,
-        deadline,
-        isDone,
-        color,
-        createdAt,
-        changedAt,
-        lastUpdatedBy,
-        isDeleted
-      ];
+  List<GeneratedColumn> get $columns =>
+      [id, description, importance, deadline, isDone, color, createdAt, changedAt, lastUpdatedBy, isDeleted];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'to_do_items';
   @override
-  VerificationContext validateIntegrity(Insertable<ToDoItem> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(Insertable<ToDoItem> instance, {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -107,48 +72,34 @@ class $ToDoItemsTable extends ToDoItems
       context.missing(_idMeta);
     }
     if (data.containsKey('description')) {
-      context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
+      context.handle(_descriptionMeta, description.isAcceptableOrUnknown(data['description']!, _descriptionMeta));
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
     if (data.containsKey('importance')) {
-      context.handle(
-          _importanceMeta,
-          importance.isAcceptableOrUnknown(
-              data['importance']!, _importanceMeta));
+      context.handle(_importanceMeta, importance.isAcceptableOrUnknown(data['importance']!, _importanceMeta));
     }
     if (data.containsKey('deadline')) {
-      context.handle(_deadlineMeta,
-          deadline.isAcceptableOrUnknown(data['deadline']!, _deadlineMeta));
+      context.handle(_deadlineMeta, deadline.isAcceptableOrUnknown(data['deadline']!, _deadlineMeta));
     }
     if (data.containsKey('is_done')) {
-      context.handle(_isDoneMeta,
-          isDone.isAcceptableOrUnknown(data['is_done']!, _isDoneMeta));
+      context.handle(_isDoneMeta, isDone.isAcceptableOrUnknown(data['is_done']!, _isDoneMeta));
     }
     if (data.containsKey('color')) {
-      context.handle(
-          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
+      context.handle(_colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     }
     if (data.containsKey('changed_at')) {
-      context.handle(_changedAtMeta,
-          changedAt.isAcceptableOrUnknown(data['changed_at']!, _changedAtMeta));
+      context.handle(_changedAtMeta, changedAt.isAcceptableOrUnknown(data['changed_at']!, _changedAtMeta));
     }
     if (data.containsKey('last_updated_by')) {
       context.handle(
-          _lastUpdatedByMeta,
-          lastUpdatedBy.isAcceptableOrUnknown(
-              data['last_updated_by']!, _lastUpdatedByMeta));
+          _lastUpdatedByMeta, lastUpdatedBy.isAcceptableOrUnknown(data['last_updated_by']!, _lastUpdatedByMeta));
     }
     if (data.containsKey('is_deleted')) {
-      context.handle(_isDeletedMeta,
-          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+      context.handle(_isDeletedMeta, isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
     }
     return context;
   }
@@ -159,26 +110,16 @@ class $ToDoItemsTable extends ToDoItems
   ToDoItem map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ToDoItem(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
-      importance: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}importance'])!,
-      deadline: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}deadline']),
-      isDone: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_done'])!,
-      color: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}color']),
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      changedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}changed_at']),
-      lastUpdatedBy: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}last_updated_by']),
-      isDeleted: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      description: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      importance: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}importance'])!,
+      deadline: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}deadline']),
+      isDone: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_done'])!,
+      color: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}color']),
+      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      changedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}changed_at']),
+      lastUpdatedBy: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}last_updated_by']),
+      isDeleted: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
     );
   }
 
@@ -241,27 +182,17 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
       id: Value(id),
       description: Value(description),
       importance: Value(importance),
-      deadline: deadline == null && nullToAbsent
-          ? const Value.absent()
-          : Value(deadline),
+      deadline: deadline == null && nullToAbsent ? const Value.absent() : Value(deadline),
       isDone: Value(isDone),
-      color:
-          color == null && nullToAbsent ? const Value.absent() : Value(color),
+      color: color == null && nullToAbsent ? const Value.absent() : Value(color),
       createdAt: Value(createdAt),
-      changedAt: changedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(changedAt),
-      lastUpdatedBy: lastUpdatedBy == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedBy),
-      isDeleted: isDeleted == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isDeleted),
+      changedAt: changedAt == null && nullToAbsent ? const Value.absent() : Value(changedAt),
+      lastUpdatedBy: lastUpdatedBy == null && nullToAbsent ? const Value.absent() : Value(lastUpdatedBy),
+      isDeleted: isDeleted == null && nullToAbsent ? const Value.absent() : Value(isDeleted),
     );
   }
 
-  factory ToDoItem.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory ToDoItem.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ToDoItem(
       id: serializer.fromJson<String>(json['id']),
@@ -313,8 +244,7 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
         color: color.present ? color.value : this.color,
         createdAt: createdAt ?? this.createdAt,
         changedAt: changedAt.present ? changedAt.value : this.changedAt,
-        lastUpdatedBy:
-            lastUpdatedBy.present ? lastUpdatedBy.value : this.lastUpdatedBy,
+        lastUpdatedBy: lastUpdatedBy.present ? lastUpdatedBy.value : this.lastUpdatedBy,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
       );
   @override
@@ -335,8 +265,8 @@ class ToDoItem extends DataClass implements Insertable<ToDoItem> {
   }
 
   @override
-  int get hashCode => Object.hash(id, description, importance, deadline, isDone,
-      color, createdAt, changedAt, lastUpdatedBy, isDeleted);
+  int get hashCode =>
+      Object.hash(id, description, importance, deadline, isDone, color, createdAt, changedAt, lastUpdatedBy, isDeleted);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -510,8 +440,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabaseManager get managers => _$LocalDatabaseManager(this);
   late final $ToDoItemsTable toDoItems = $ToDoItemsTable(this);
   @override
-  Iterable<TableInfo<Table, Object?>> get allTables =>
-      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [toDoItems];
 }
@@ -556,12 +485,9 @@ class $$ToDoItemsTableTableManager extends RootTableManager<
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$ToDoItemsTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$ToDoItemsTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$ToDoItemsTableProcessedTableManager(p),
+          filteringComposer: $$ToDoItemsTableFilterComposer(ComposerState(db, table)),
+          orderingComposer: $$ToDoItemsTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$ToDoItemsTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<String> id = const Value.absent(),
             Value<String> description = const Value.absent(),
@@ -629,117 +555,91 @@ class $$ToDoItemsTableProcessedTableManager extends ProcessedTableManager<
   $$ToDoItemsTableProcessedTableManager(super.$state);
 }
 
-class $$ToDoItemsTableFilterComposer
-    extends FilterComposer<_$LocalDatabase, $ToDoItemsTable> {
+class $$ToDoItemsTableFilterComposer extends FilterComposer<_$LocalDatabase, $ToDoItemsTable> {
   $$ToDoItemsTableFilterComposer(super.$state);
   ColumnFilters<String> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      column: $state.table.id, builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<String> get description => $state.composableBuilder(
       column: $state.table.description,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<String> get importance => $state.composableBuilder(
       column: $state.table.importance,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<DateTime> get deadline => $state.composableBuilder(
       column: $state.table.deadline,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<bool> get isDone => $state.composableBuilder(
       column: $state.table.isDone,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<int> get color => $state.composableBuilder(
-      column: $state.table.color,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      column: $state.table.color, builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<DateTime> get createdAt => $state.composableBuilder(
       column: $state.table.createdAt,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<DateTime> get changedAt => $state.composableBuilder(
       column: $state.table.changedAt,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<String> get lastUpdatedBy => $state.composableBuilder(
       column: $state.table.lastUpdatedBy,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<bool> get isDeleted => $state.composableBuilder(
       column: $state.table.isDeleted,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
-class $$ToDoItemsTableOrderingComposer
-    extends OrderingComposer<_$LocalDatabase, $ToDoItemsTable> {
+class $$ToDoItemsTableOrderingComposer extends OrderingComposer<_$LocalDatabase, $ToDoItemsTable> {
   $$ToDoItemsTableOrderingComposer(super.$state);
   ColumnOrderings<String> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      column: $state.table.id, builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get description => $state.composableBuilder(
       column: $state.table.description,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get importance => $state.composableBuilder(
       column: $state.table.importance,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<DateTime> get deadline => $state.composableBuilder(
       column: $state.table.deadline,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<bool> get isDone => $state.composableBuilder(
       column: $state.table.isDone,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<int> get color => $state.composableBuilder(
       column: $state.table.color,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<DateTime> get createdAt => $state.composableBuilder(
       column: $state.table.createdAt,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<DateTime> get changedAt => $state.composableBuilder(
       column: $state.table.changedAt,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get lastUpdatedBy => $state.composableBuilder(
       column: $state.table.lastUpdatedBy,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
       column: $state.table.isDeleted,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+      builder: (column, joinBuilders) => ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
 class _$LocalDatabaseManager {
   final _$LocalDatabase _db;
   _$LocalDatabaseManager(this._db);
-  $$ToDoItemsTableTableManager get toDoItems =>
-      $$ToDoItemsTableTableManager(_db, _db.toDoItems);
+  $$ToDoItemsTableTableManager get toDoItems => $$ToDoItemsTableTableManager(_db, _db.toDoItems);
 }

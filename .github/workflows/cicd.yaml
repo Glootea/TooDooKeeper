@@ -1,0 +1,54 @@
+name: CICD
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  the_only_job:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Install Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: "18"
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+          architecture: x64
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+
+      - run: flutter --version
+      - run: flutter pub get
+      - run: dart run build_runner build -d
+      - run: dart format  .
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+
+      - name: Create Google Services JSON File
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $GOOGLE_SERVICES_JSON | base64 -di > ./android/app/src/google-services.json
+
+      - run: flutter build apk
+
+      - name: Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
+        with:
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          file: build/app/outputs/flutter-apk/app-release.apk

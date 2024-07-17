@@ -34,10 +34,12 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
 
   final ToDoRepository _todoRepository;
 
-  Future<void> _onLoadEvent(LoadEvent event, Emitter<ToDoListState> emit) async {
+  Future<void> _onLoadEvent(
+      LoadEvent event, Emitter<ToDoListState> emit,) async {
     try {
       emit(const LoadingState());
-      final (todos, networkConnectionPresent) = await _todoRepository.getToDoList();
+      final (todos, networkConnectionPresent) =
+          await _todoRepository.getToDoList();
       emit(
         ToDoListState(
           todos: todos,
@@ -52,11 +54,14 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     }
   }
 
-  Future<void> _onDeleteEvent(DeleteEvent event, Emitter<ToDoListState> emit) async {
+  Future<void> _onDeleteEvent(
+      DeleteEvent event, Emitter<ToDoListState> emit,) async {
     try {
       final currentState = state as MainState;
-      final todo = currentState.todos.firstWhere((element) => element.id == event.id);
-      final todos = currentState.todos.toList()..removeWhere((todo) => todo.id == event.id);
+      final todo =
+          currentState.todos.firstWhere((element) => element.id == event.id);
+      final todos = currentState.todos.toList()
+        ..removeWhere((todo) => todo.id == event.id);
 
       emit(
         ToDoListState(
@@ -66,7 +71,8 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
           showDone: currentState.showDone,
         ),
       );
-      final (_, networkConnectionPresent) = await _todoRepository.deleteTodo(todo: todo);
+      final (_, networkConnectionPresent) =
+          await _todoRepository.deleteTodo(todo: todo);
       if (currentState.networkConnectionPresent != networkConnectionPresent) {
         emit(
           ToDoListState(
@@ -83,18 +89,23 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     }
   }
 
-  Future<void> _onToggleDone(ToggleDoneEvent event, Emitter<ToDoListState> emit) async {
+  Future<void> _onToggleDone(
+      ToggleDoneEvent event, Emitter<ToDoListState> emit,) async {
     try {
       final currentState = state as MainState;
       final todos = List<ToDo>.from(currentState.todos);
-      final indexOfUpdateElement = todos.indexWhere((element) => element.id == event.id);
+      final indexOfUpdateElement =
+          todos.indexWhere((element) => element.id == event.id);
       final newValue = !todos[indexOfUpdateElement].done;
       logger.d(newValue);
-      todos[indexOfUpdateElement] = todos[indexOfUpdateElement].copyWith(done: newValue);
+      todos[indexOfUpdateElement] =
+          todos[indexOfUpdateElement].copyWith(done: newValue);
       emit((state as MainState).copyWith(todos: todos.toList()));
-      final (_, networkConnectionPresent) = await _todoRepository.updateTodo(todo: todos[indexOfUpdateElement]);
+      final (_, networkConnectionPresent) =
+          await _todoRepository.updateTodo(todo: todos[indexOfUpdateElement]);
       if (networkConnectionPresent != currentState.networkConnectionPresent) {
-        emit((state as MainState).copyWith(networkConnectionPresent: networkConnectionPresent));
+        emit((state as MainState)
+            .copyWith(networkConnectionPresent: networkConnectionPresent),);
       }
     } on Exception catch (e, s) {
       logger.e(e, stackTrace: s);
@@ -102,9 +113,12 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     }
   }
 
-  Future<void> _onLogoutEvent(LogoutEvent event, Emitter<ToDoListState> emit) async => _todoRepository.logout();
+  Future<void> _onLogoutEvent(
+          LogoutEvent event, Emitter<ToDoListState> emit,) async =>
+      _todoRepository.logout();
 
-  Future<void> _onCreateEvent(CreateEvent event, Emitter<ToDoListState> emit) async {
+  Future<void> _onCreateEvent(
+      CreateEvent event, Emitter<ToDoListState> emit,) async {
     const todo = ToDo.justCreated();
     final currentState = state as MainState;
     emit(
@@ -117,10 +131,13 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     );
   }
 
-  Future<void> _onSaveEvent(SaveJustCreatedEvent event, Emitter<ToDoListState> emit) async {
+  Future<void> _onSaveEvent(
+      SaveJustCreatedEvent event, Emitter<ToDoListState> emit,) async {
     final currentState = state as MainState;
-    await _todoRepository.createTodo(todo: ToDo.justCreated(description: event.description));
-    final (todos, networkConnectionPresent) = await _todoRepository.getToDoList();
+    await _todoRepository.createTodo(
+        todo: ToDo.justCreated(description: event.description),);
+    final (todos, networkConnectionPresent) =
+        await _todoRepository.getToDoList();
     emit(
       MainState(
         todos: todos,
@@ -131,7 +148,8 @@ class ToDoListBloc extends Bloc<ToDoListEvent, ToDoListState> {
     );
   }
 
-  void _onToggleVisibility(ToggleVisibilityEvent event, Emitter<ToDoListState> emit) {
+  void _onToggleVisibility(
+      ToggleVisibilityEvent event, Emitter<ToDoListState> emit,) {
     final currentState = state as MainState;
     emit(
       MainState(

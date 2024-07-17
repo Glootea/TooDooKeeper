@@ -39,7 +39,8 @@ class _MainScreen extends StatelessWidget {
     final todoTheme = context.watch<ThemeBloc>().state;
     final bloc = context.read<ToDoListBloc>();
 
-    final toDoListToShow = prepareToDoList(state.todos, state.showDone, state.query);
+    final toDoListToShow =
+        prepareToDoList(state.todos, state.showDone, state.query);
 
     return Scaffold(
       body: RefreshIndicator(
@@ -47,14 +48,18 @@ class _MainScreen extends StatelessWidget {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverPersistentHeader(
-              delegate: ToDoListAppBar(expandedHeight: 148, topPadding: topPadding, state: state),
+              delegate: ToDoListAppBar(
+                  expandedHeight: 148, topPadding: topPadding, state: state,),
               pinned: true,
             ),
             SliverPadding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 16, bottom: 16,),
               sliver: DecoratedSliver(
                 decoration: ShapeDecoration(
-                  shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+                  shape: const ContinuousRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(8)),),
                   color: todoTheme.backColors.secondary,
                 ),
                 sliver: SliverList.builder(
@@ -62,16 +67,21 @@ class _MainScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ClipRRect(
                       clipBehavior: Clip.hardEdge,
-                      borderRadius:
-                          index == 0 ? const BorderRadius.vertical(top: Radius.circular(8)) : BorderRadius.zero,
+                      borderRadius: index == 0
+                          ? const BorderRadius.vertical(top: Radius.circular(8))
+                          : BorderRadius.zero,
                       child: (index == toDoListToShow.length)
                           ? CreateTodoItem(
-                              onTap: () => context.read<ToDoListBloc>().add(const CreateEvent()),
+                              onTap: () => context
+                                  .read<ToDoListBloc>()
+                                  .add(const CreateEvent()),
                             )
                           : ToDoListItem(
                               toDo: toDoListToShow[index],
-                              onToggleDone: (toDo) => bloc.add(ToDoListEvent.toggleDone(toDo.id!)),
-                              onDelete: (toDo) => bloc.add(ToDoListEvent.delete(toDo.id!)),
+                              onToggleDone: (toDo) =>
+                                  bloc.add(ToDoListEvent.toggleDone(toDo.id!)),
+                              onDelete: (toDo) =>
+                                  bloc.add(ToDoListEvent.delete(toDo.id!)),
                               key: ValueKey(toDoListToShow[index].id),
                             ),
                     );
@@ -108,7 +118,8 @@ class _MainScreen extends StatelessWidget {
     );
   }
 
-  List<ToDo> prepareToDoList(List<ToDo> list, bool showDone, ToDoListQuery query) {
+  List<ToDo> prepareToDoList(
+      List<ToDo> list, bool showDone, ToDoListQuery query,) {
     if (!showDone) {
       return list.where((t) => !t.done).toList();
     } else {
@@ -117,7 +128,9 @@ class _MainScreen extends StatelessWidget {
         ..sort(
           // TODO: implement sort by query
           (a, b) => switch ((a.done, b.done)) {
-            (false, false) || (true, true) => a.importance.compareTo(b.importance),
+            (false, false) ||
+            (true, true) =>
+              a.importance.compareTo(b.importance),
             (false, true) => -1,
             (true, false) => 1,
           },

@@ -20,7 +20,8 @@ class LogoutButton extends StatelessWidget {
           const SizedBox(width: 16),
           Text(
             context.loc.logout,
-            style: todoTheme.textTheme.body.copyWith(color: todoTheme.definedColors.red),
+            style: todoTheme.textTheme.body
+                .copyWith(color: todoTheme.definedColors.red),
           ),
         ],
       ),

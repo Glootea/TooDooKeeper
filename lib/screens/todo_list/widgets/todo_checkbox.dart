@@ -23,8 +23,9 @@ class ToDoCheckbox extends StatelessWidget {
         : importance == Importance.important
             ? todoTheme.definedColors.red.withOpacity(0.5)
             : todoTheme.backColors.secondary;
-    final borderColor =
-        importance == Importance.important ? todoTheme.definedColors.red : todoTheme.labelTheme.tertiary;
+    final borderColor = importance == Importance.important
+        ? todoTheme.definedColors.red
+        : todoTheme.labelTheme.tertiary;
 
     return SizedBox(
       // [SizedBox] to prevent margin

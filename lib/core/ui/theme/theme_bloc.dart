@@ -7,7 +7,8 @@ import 'package:yandex_summer_school/core/ui/theme/theme.dart';
 part 'theme_bloc.freezed.dart';
 
 class ThemeBloc extends Bloc<ToDoThemeEvent, ToDoTheme> {
-  ThemeBloc() : super(_getTheme(PlatformDispatcher.instance.platformBrightness)) {
+  ThemeBloc()
+      : super(_getTheme(PlatformDispatcher.instance.platformBrightness)) {
     final dispatcher = SchedulerBinding.instance.platformDispatcher;
     dispatcher.onPlatformBrightnessChanged = () {
       final brightness = dispatcher.platformBrightness;
@@ -19,7 +20,8 @@ class ThemeBloc extends Bloc<ToDoThemeEvent, ToDoTheme> {
     });
   }
 
-  static ToDoTheme _getTheme(Brightness brightness) => switch (PlatformDispatcher.instance.platformBrightness) {
+  static ToDoTheme _getTheme(Brightness brightness) =>
+      switch (PlatformDispatcher.instance.platformBrightness) {
         Brightness.dark => DarkToDoTheme(),
         Brightness.light => LightToDoTheme(),
       };
@@ -27,5 +29,6 @@ class ThemeBloc extends Bloc<ToDoThemeEvent, ToDoTheme> {
 
 @freezed
 sealed class ToDoThemeEvent with _$ToDoThemeEvent {
-  const factory ToDoThemeEvent.changeTheme(Brightness brightness) = _ThemeChanged;
+  const factory ToDoThemeEvent.changeTheme(Brightness brightness) =
+      _ThemeChanged;
 }

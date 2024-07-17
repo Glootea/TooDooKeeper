@@ -34,8 +34,7 @@ void main() {
       setupFirebaseCoreMocks();
       await Firebase.initializeApp();
       firebaseAnalytics = MockFirebaseAnalytics();
-      when(() => firebaseAnalytics.logEvent(name: any(named: 'name')))
-          .thenAnswer((_) async {});
+      when(() => firebaseAnalytics.logEvent(name: any(named: 'name'))).thenAnswer((_) async {});
     });
 
     setUp(() async {
@@ -49,34 +48,21 @@ void main() {
           localDatabase: local,
           onlineProvider: online,
           deviceIdProvider: deviceIdProvider,
-          firebaseAnalytics: firebaseAnalytics);
+          firebaseAnalytics: firebaseAnalytics,);
     });
 
     test('Merge lists', () async {
       await local.setFromOnline(
         [
-          ToDo.justCreated(
-              id: '1',
-              description: 'local',
-              createdAt: time,
-              changedAt: time), // only local
-          ToDo.justCreated(
-              id: '2',
-              description: 'local',
-              createdAt: time,
-              changedAt: time), // earlier
-          ToDo.justCreated(
-              id: '3',
-              description: 'local',
-              createdAt: time,
-              changedAt: time), // later
+          ToDo.justCreated(id: '1', description: 'local', createdAt: time, changedAt: time), // only local
+          ToDo.justCreated(id: '2', description: 'local', createdAt: time, changedAt: time), // earlier
+          ToDo.justCreated(id: '3', description: 'local', createdAt: time, changedAt: time), // later
         ].map((toDo) => toDo.parseToDoItemCompanion).toList(),
       );
 
       await local.createToDo(
-        companion: ToDo.justCreated(
-                id: '4', description: 'local', createdAt: time, changedAt: time)
-            .parseToDoItemCompanion,
+        companion:
+            ToDo.justCreated(id: '4', description: 'local', createdAt: time, changedAt: time).parseToDoItemCompanion,
       ); // marked deleted
       await local.deleteToDo(id: '4');
 
@@ -104,22 +90,19 @@ void main() {
       );
 
       var onlineResult = <ToDo>[];
-      when(() => online.database!.updateToDoList(any())).thenAnswer((i) async =>
-          onlineResult = i.positionalArguments.first as List<ToDo>);
+      when(() => online.database!.updateToDoList(any()))
+          .thenAnswer((i) async => onlineResult = i.positionalArguments.first as List<ToDo>);
 
       final expected = [
-        ToDo.justCreated(
-            id: '1', description: 'local', createdAt: time, changedAt: time),
+        ToDo.justCreated(id: '1', description: 'local', createdAt: time, changedAt: time),
         ToDo.justCreated(
           id: '2',
           description: 'online',
           createdAt: time.add(const Duration(minutes: 1)),
           changedAt: time.add(const Duration(minutes: 1)),
         ),
-        ToDo.justCreated(
-            id: '3', description: 'local', createdAt: time, changedAt: time),
-        ToDo.justCreated(
-            id: '5', description: 'online', createdAt: time, changedAt: time),
+        ToDo.justCreated(id: '3', description: 'local', createdAt: time, changedAt: time),
+        ToDo.justCreated(id: '5', description: 'online', createdAt: time, changedAt: time),
       ];
       final (actual, _) = await todoRepository.getToDoList();
 
@@ -129,9 +112,8 @@ void main() {
     });
 
     test('Get todo (earlier local)', () async {
-      final localToDo = ToDo.justCreated(
-              id: '2', description: 'local', createdAt: time, changedAt: time)
-          .parseToDoItemCompanion;
+      final localToDo =
+          ToDo.justCreated(id: '2', description: 'local', createdAt: time, changedAt: time).parseToDoItemCompanion;
       await local.setFromOnline([localToDo]);
 
       when(() => online.database!.getToDoById(any())).thenAnswer(
@@ -156,9 +138,8 @@ void main() {
     });
 
     test('Get todo (later local)', () async {
-      final localToDo = ToDo.justCreated(
-              id: '3', description: 'local', createdAt: time, changedAt: time)
-          .parseToDoItemCompanion;
+      final localToDo =
+          ToDo.justCreated(id: '3', description: 'local', createdAt: time, changedAt: time).parseToDoItemCompanion;
       await local.setFromOnline([localToDo]);
 
       when(() => online.database!.getToDoById(any())).thenAnswer(
@@ -170,17 +151,15 @@ void main() {
         ),
       );
 
-      final expected = ToDo.justCreated(
-          id: '3', description: 'local', createdAt: time, changedAt: time);
+      final expected = ToDo.justCreated(id: '3', description: 'local', createdAt: time, changedAt: time);
       final (actual, _) = await todoRepository.getToDoById(id: '3');
 
       expect(actual, expected);
     });
 
     test('Get todo (exist online, but marked deleted locally later)', () async {
-      final localToDo = ToDo.justCreated(
-              id: '1', description: 'local', createdAt: time, changedAt: time)
-          .parseToDoItemCompanion;
+      final localToDo =
+          ToDo.justCreated(id: '1', description: 'local', createdAt: time, changedAt: time).parseToDoItemCompanion;
 
       await local.setFromOnline([localToDo]);
       await local.markAsDeleted(todo: localToDo);
@@ -201,8 +180,7 @@ void main() {
     });
 
     test('Delete todo while connected to net', () async {
-      final todo = ToDo.justCreated(
-          id: '1', description: 'local', createdAt: time, changedAt: time);
+      final todo = ToDo.justCreated(id: '1', description: 'local', createdAt: time, changedAt: time);
       final localToDo = todo.parseToDoItemCompanion;
 
       await local.setFromOnline([localToDo]);
@@ -219,8 +197,7 @@ void main() {
     });
 
     test('Delete todo while disconnected to net', () async {
-      final todo = ToDo.justCreated(
-          id: '1', description: 'local', createdAt: time, changedAt: time);
+      final todo = ToDo.justCreated(id: '1', description: 'local', createdAt: time, changedAt: time);
       final localToDo = todo.parseToDoItemCompanion;
 
       await local.setFromOnline([localToDo]);

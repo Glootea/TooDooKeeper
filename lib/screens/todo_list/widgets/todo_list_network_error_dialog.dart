@@ -23,7 +23,8 @@ class TodoListNetworkErrorDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: context.pop,
-            child: Text(context.loc.ok, style: buttonTheme.copyWith(color: theme.definedColors.blue)),
+            child: Text(context.loc.ok,
+                style: buttonTheme.copyWith(color: theme.definedColors.blue),),
           ),
         ],
       ),
