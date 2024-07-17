@@ -45,10 +45,11 @@ void main() {
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
 
       todoRepository = ToDoRepository(
-          localDatabase: local,
-          onlineProvider: online,
-          deviceIdProvider: deviceIdProvider,
-          firebaseAnalytics: firebaseAnalytics,);
+        localDatabase: local,
+        onlineProvider: online,
+        deviceIdProvider: deviceIdProvider,
+        firebaseAnalytics: firebaseAnalytics,
+      );
     });
 
     test('Merge lists', () async {

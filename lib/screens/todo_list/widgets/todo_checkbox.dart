@@ -21,10 +21,10 @@ class ToDoCheckbox extends StatelessWidget {
     final fillColor = value
         ? todoTheme.definedColors.green
         : importance == Importance.important
-            ? todoTheme.definedColors.red.withOpacity(0.5)
+            ? todoTheme.importantColor.withOpacity(0.5)
             : todoTheme.backColors.secondary;
     final borderColor = importance == Importance.important
-        ? todoTheme.definedColors.red
+        ? todoTheme.importantColor
         : todoTheme.labelTheme.tertiary;
 
     return SizedBox(

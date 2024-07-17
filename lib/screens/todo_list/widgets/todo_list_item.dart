@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:yandex_summer_school/core/entities/importance.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
+import 'package:yandex_summer_school/core/ui/leaf/important_icon.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_date_text.dart';
 import 'package:yandex_summer_school/core/ui/leaf/todo_icon.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
@@ -281,10 +282,7 @@ class _ToDoItemImportanceIcon extends StatelessWidget {
           ),
         ),
       Importance.basic => const SizedBox(height: height),
-      Importance.important => SizedBox(
-          height: height,
-          child: Image.asset('assets/double-exclamation-mark.png'),
-        ),
+      Importance.important => const ImportantIcon(),
     };
   }
 }

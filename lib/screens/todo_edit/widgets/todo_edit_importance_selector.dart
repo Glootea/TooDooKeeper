@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_summer_school/core/entities/importance.dart';
 import 'package:yandex_summer_school/core/extensions/l10n_extension.dart';
 import 'package:yandex_summer_school/core/ui/complex/tappable_box.dart';
+import 'package:yandex_summer_school/core/ui/leaf/important_icon.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme_bloc.dart';
 
 class ImportanceSelector extends StatefulWidget {
@@ -67,14 +68,11 @@ class _ImportanceSelectorState extends State<ImportanceSelector> {
                 value: Importance.important,
                 child: Row(
                   children: [
-                    SizedBox(
-                      height: Checkbox.width,
-                      child: Image.asset('assets/double-exclamation-mark.png'),
-                    ),
+                    const ImportantIcon(),
                     Text(
                       context.loc.high,
                       style: todoTheme.textTheme.body
-                          .copyWith(color: todoTheme.definedColors.red),
+                          .copyWith(color: todoTheme.importantColor),
                     ),
                   ],
                 ),

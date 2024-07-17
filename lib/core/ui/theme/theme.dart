@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
+
 import 'package:flutter/material.dart';
 
 abstract class ToDoTheme {
@@ -7,6 +9,7 @@ abstract class ToDoTheme {
     required this.labelTheme,
     required this.definedColors,
     required this.backColors,
+    required this.importantColor,
   });
 
   final DefinedTextTheme textTheme;
@@ -14,6 +17,19 @@ abstract class ToDoTheme {
   final LabelColors labelTheme;
   final DefinedColors definedColors;
   final BackColors backColors;
+  final Color importantColor;
+
+  @override
+  bool operator ==(covariant ToDoTheme other) => false;
+
+  @override
+  int get hashCode =>
+      textTheme.hashCode ^
+      supportColors.hashCode ^
+      labelTheme.hashCode ^
+      definedColors.hashCode ^
+      backColors.hashCode ^
+      importantColor.hashCode;
 }
 
 class DefinedTextTheme {
@@ -66,23 +82,23 @@ class DefinedTextTheme {
 }
 
 class LightToDoTheme extends ToDoTheme {
-  LightToDoTheme()
+  LightToDoTheme({required super.importantColor})
       : super(
           textTheme: const DefinedTextTheme(labelTheme: LightLabelColors()),
           supportColors: const LightSupportColors(),
           labelTheme: const LightLabelColors(),
-          definedColors: const LightDefinedColors(),
+          definedColors: LightDefinedColors(importantColor: importantColor),
           backColors: const LightBackColors(),
         );
 }
 
 class DarkToDoTheme extends ToDoTheme {
-  DarkToDoTheme()
+  DarkToDoTheme({required super.importantColor})
       : super(
           textTheme: const DefinedTextTheme(labelTheme: DarkLabelColors()),
           supportColors: const DarkSupportColors(),
           labelTheme: const DarkLabelColors(),
-          definedColors: const DarkDefinedColors(),
+          definedColors: DarkDefinedColors(importantColor: importantColor),
           backColors: const DarkBackColors(),
         );
 }
@@ -151,6 +167,7 @@ abstract class DefinedColors {
     required this.gray,
     required this.grayLight,
     required this.white,
+    required this.importantColor,
   });
   final Color red;
   final Color green;
@@ -158,10 +175,11 @@ abstract class DefinedColors {
   final Color gray;
   final Color grayLight;
   final Color white;
+  final Color importantColor;
 }
 
 class LightDefinedColors extends DefinedColors {
-  const LightDefinedColors()
+  const LightDefinedColors({required super.importantColor})
       : super(
           red: const Color(0xffff3b30),
           green: const Color(0xff34c759),
@@ -173,7 +191,7 @@ class LightDefinedColors extends DefinedColors {
 }
 
 class DarkDefinedColors extends DefinedColors {
-  const DarkDefinedColors()
+  const DarkDefinedColors({required super.importantColor})
       : super(
           red: const Color(0xffff453a),
           green: const Color(0xff32d74b),

@@ -9,12 +9,12 @@ import 'package:yandex_summer_school/core/logger.dart';
 
 class ToDoRepository {
   // TODO: handle failed online requests
-  const ToDoRepository(
-      {required LocalDatabase localDatabase,
-      required OnlineProvider onlineProvider,
-      required DeviceIdProvider deviceIdProvider,
-      required FirebaseAnalytics firebaseAnalytics,})
-      : _onlineProvider = onlineProvider,
+  const ToDoRepository({
+    required LocalDatabase localDatabase,
+    required OnlineProvider onlineProvider,
+    required DeviceIdProvider deviceIdProvider,
+    required FirebaseAnalytics firebaseAnalytics,
+  })  : _onlineProvider = onlineProvider,
         _localDatabase = localDatabase,
         _deviceIdProvider = deviceIdProvider,
         _firebaseAnalytics = firebaseAnalytics;

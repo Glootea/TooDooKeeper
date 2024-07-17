@@ -17,19 +17,24 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ToDoThemeEvent {
   Brightness get brightness => throw _privateConstructorUsedError;
+  bool get specialImportanceColor => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Brightness brightness) changeTheme,
+    required TResult Function(
+            Brightness brightness, bool specialImportanceColor)
+        changeTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Brightness brightness)? changeTheme,
+    TResult? Function(Brightness brightness, bool specialImportanceColor)?
+        changeTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Brightness brightness)? changeTheme,
+    TResult Function(Brightness brightness, bool specialImportanceColor)?
+        changeTheme,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -61,7 +66,7 @@ abstract class $ToDoThemeEventCopyWith<$Res> {
           ToDoThemeEvent value, $Res Function(ToDoThemeEvent) then) =
       _$ToDoThemeEventCopyWithImpl<$Res, ToDoThemeEvent>;
   @useResult
-  $Res call({Brightness brightness});
+  $Res call({Brightness brightness, bool specialImportanceColor});
 }
 
 /// @nodoc
@@ -78,12 +83,17 @@ class _$ToDoThemeEventCopyWithImpl<$Res, $Val extends ToDoThemeEvent>
   @override
   $Res call({
     Object? brightness = null,
+    Object? specialImportanceColor = null,
   }) {
     return _then(_value.copyWith(
       brightness: null == brightness
           ? _value.brightness
           : brightness // ignore: cast_nullable_to_non_nullable
               as Brightness,
+      specialImportanceColor: null == specialImportanceColor
+          ? _value.specialImportanceColor
+          : specialImportanceColor // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -96,7 +106,7 @@ abstract class _$$ThemeChangedImplCopyWith<$Res>
       __$$ThemeChangedImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Brightness brightness});
+  $Res call({Brightness brightness, bool specialImportanceColor});
 }
 
 /// @nodoc
@@ -111,12 +121,17 @@ class __$$ThemeChangedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? brightness = null,
+    Object? specialImportanceColor = null,
   }) {
     return _then(_$ThemeChangedImpl(
       null == brightness
           ? _value.brightness
           : brightness // ignore: cast_nullable_to_non_nullable
               as Brightness,
+      null == specialImportanceColor
+          ? _value.specialImportanceColor
+          : specialImportanceColor // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -124,14 +139,16 @@ class __$$ThemeChangedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ThemeChangedImpl with DiagnosticableTreeMixin implements _ThemeChanged {
-  const _$ThemeChangedImpl(this.brightness);
+  const _$ThemeChangedImpl(this.brightness, this.specialImportanceColor);
 
   @override
   final Brightness brightness;
+  @override
+  final bool specialImportanceColor;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ToDoThemeEvent.changeTheme(brightness: $brightness)';
+    return 'ToDoThemeEvent.changeTheme(brightness: $brightness, specialImportanceColor: $specialImportanceColor)';
   }
 
   @override
@@ -139,7 +156,9 @@ class _$ThemeChangedImpl with DiagnosticableTreeMixin implements _ThemeChanged {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'ToDoThemeEvent.changeTheme'))
-      ..add(DiagnosticsProperty('brightness', brightness));
+      ..add(DiagnosticsProperty('brightness', brightness))
+      ..add(DiagnosticsProperty(
+          'specialImportanceColor', specialImportanceColor));
   }
 
   @override
@@ -148,11 +167,14 @@ class _$ThemeChangedImpl with DiagnosticableTreeMixin implements _ThemeChanged {
         (other.runtimeType == runtimeType &&
             other is _$ThemeChangedImpl &&
             (identical(other.brightness, brightness) ||
-                other.brightness == brightness));
+                other.brightness == brightness) &&
+            (identical(other.specialImportanceColor, specialImportanceColor) ||
+                other.specialImportanceColor == specialImportanceColor));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, brightness);
+  int get hashCode =>
+      Object.hash(runtimeType, brightness, specialImportanceColor);
 
   @JsonKey(ignore: true)
   @override
@@ -163,27 +185,31 @@ class _$ThemeChangedImpl with DiagnosticableTreeMixin implements _ThemeChanged {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Brightness brightness) changeTheme,
+    required TResult Function(
+            Brightness brightness, bool specialImportanceColor)
+        changeTheme,
   }) {
-    return changeTheme(brightness);
+    return changeTheme(brightness, specialImportanceColor);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Brightness brightness)? changeTheme,
+    TResult? Function(Brightness brightness, bool specialImportanceColor)?
+        changeTheme,
   }) {
-    return changeTheme?.call(brightness);
+    return changeTheme?.call(brightness, specialImportanceColor);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Brightness brightness)? changeTheme,
+    TResult Function(Brightness brightness, bool specialImportanceColor)?
+        changeTheme,
     required TResult orElse(),
   }) {
     if (changeTheme != null) {
-      return changeTheme(brightness);
+      return changeTheme(brightness, specialImportanceColor);
     }
     return orElse();
   }
@@ -218,10 +244,14 @@ class _$ThemeChangedImpl with DiagnosticableTreeMixin implements _ThemeChanged {
 }
 
 abstract class _ThemeChanged implements ToDoThemeEvent {
-  const factory _ThemeChanged(final Brightness brightness) = _$ThemeChangedImpl;
+  const factory _ThemeChanged(
+          final Brightness brightness, final bool specialImportanceColor) =
+      _$ThemeChangedImpl;
 
   @override
   Brightness get brightness;
+  @override
+  bool get specialImportanceColor;
   @override
   @JsonKey(ignore: true)
   _$$ThemeChangedImplCopyWith<_$ThemeChangedImpl> get copyWith =>

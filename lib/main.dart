@@ -71,7 +71,9 @@ class InitScreen extends StatelessWidget {
       deviceIdProvider,
       onlineProvider.auth.isLoggedIn,
     );
-    final themeBloc = ThemeBloc();
+
+    final firebaseRemoteConfig = await _setupFirebaseRemoteConfig();
+    final themeBloc = ThemeBloc(remoteConfig: firebaseRemoteConfig);
 
     // Attempt to fix: https://github.com/Glootea/TooDooKeeper/pull/2#discussion_r1650971004
     //
@@ -103,6 +105,9 @@ class InitScreen extends StatelessWidget {
   Future<List<void>> _setupFirebase() async {
     await Firebase.initializeApp();
     final remoteConfig = FirebaseRemoteConfig.instance;
+    await remoteConfig.setDefaults(const {
+      'specialImportanceColor': false,
+    });
     final remoteConfigConfiguration = remoteConfig.setConfigSettings(
       RemoteConfigSettings(
         fetchTimeout: const Duration(minutes: 1),
@@ -111,6 +116,17 @@ class InitScreen extends StatelessWidget {
     );
 
     return Future.wait([remoteConfigConfiguration]);
+  }
+
+  Future<FirebaseRemoteConfig> _setupFirebaseRemoteConfig() async {
+    final remoteConfig = FirebaseRemoteConfig.instance;
+    await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: const Duration(minutes: 1),
+      ),
+    );
+    return remoteConfig;
   }
 
   void _setupCrashlytics() {
