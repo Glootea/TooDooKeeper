@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 
 class FakeCompanion extends Mock implements ToDoItemsCompanion {}
 
@@ -13,11 +14,15 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
       _todos.where((e) => e.isDeleted != true || withDeleted).toList();
 
   @override
-  Future<ToDoItem?> getToDoById({required String id, bool withDeleted = false}) async =>
-      _todos.where((t) => t.id == id && (withDeleted || t.isDeleted != true)).firstOrNull;
+  Future<ToDoItem?> getToDoById(
+          {required String id, bool withDeleted = false}) async =>
+      _todos
+          .where((t) => t.id == id && (withDeleted || t.isDeleted != true))
+          .firstOrNull;
 
   @override
-  Future<void> createToDo({required ToDoItemsCompanion companion}) async => _todos.add(
+  Future<void> createToDo({required ToDoItemsCompanion companion}) async =>
+      _todos.add(
         _parseItem(companion).copyWith(
           changedAt: Value(DateTime.now()),
           createdAt: DateTime.now(),
@@ -26,7 +31,8 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
       );
 
   @override
-  Future<void> updateTodo({required ToDoItemsCompanion companion}) async => _todos.add(
+  Future<void> updateTodo({required ToDoItemsCompanion companion}) async =>
+      _todos.add(
         _parseItem(companion).copyWith(
           changedAt: Value(DateTime.now()),
           lastUpdatedBy: Value(_deviceId),
@@ -34,19 +40,23 @@ class FakeLocalDatabase extends Mock implements LocalDatabase {
       );
 
   @override
-  Future<void> deleteToDo({required String id}) async => _todos.removeWhere((t) => t.id == id);
+  Future<void> deleteToDo({required String id}) async =>
+      _todos.removeWhere((t) => t.id == id);
 
   @override
-  Future<void> setFromOnline(List<ToDoItemsCompanion> list) async => _todos = list.map(_parseItem).toList();
+  Future<void> setFromOnline(List<ToDoItemsCompanion> list) async =>
+      _todos = list.map(_parseItem).toList();
 
   @override
   Future<void> markAsDeleted({required ToDoItemsCompanion todo}) {
     for (var i = 0; i < _todos.length; i++) {
       if (_todos[i].id == todo.id.value) {
         _todos[i] = _todos[i].copyWith(isDeleted: const Value(true));
+        logger.d('ToDos after update: $_todos');
         return Future.value();
       }
     }
+    logger.e('Failed to find todo with id: ${todo.id} to markAsDeleted');
     return Future.value();
   }
 

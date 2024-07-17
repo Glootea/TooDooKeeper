@@ -1,14 +1,18 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/widgets.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
+import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/screens/todo_list/bloc/todo_list_bloc.dart';
 
 import '../../mocks/fake_local_database.dart';
 import '../../mocks/fake_secure_storage.dart';
+import '../../mocks/firebase_analytics.dart';
 import '../../mocks/mock_online_database.dart';
 import '../../mocks/mock_online_provider.dart';
 
@@ -19,6 +23,7 @@ void main() async {
   late FakeLocalDatabase local;
   late FakeSecureStorage storage;
   late DeviceIdProvider deviceIdProvider;
+  late FirebaseAnalytics firebaseAnalytics;
 
   const createdToDoID = '1';
   const descriptionForCreatedToDo = 'Test description';
@@ -28,23 +33,29 @@ void main() async {
   late MainState justCreatedState;
   late MainState stateAfterSaved;
   group('TodoListBloc:', () {
-    setUpAll(() {
+    setUpAll(() async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      setupFirebaseCoreMocks();
+      await Firebase.initializeApp();
+      firebaseAnalytics = MockFirebaseAnalytics();
+      when(() => firebaseAnalytics.logEvent(name: any(named: 'name')))
+          .thenAnswer((_) async {});
       registerFallbackValue(const ToDo.justCreated());
       registerFallbackValue(FakeCompanion());
     });
     setUp(() async {
-      WidgetsFlutterBinding.ensureInitialized();
-
       // Set up fresh copy of bloc
       database = MockOnlineDatabase();
       online = MockOnlineProvider(database);
       local = FakeLocalDatabase();
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
+
       final todoRepository = ToDoRepository(
         localDatabase: local,
         onlineProvider: online,
         deviceIdProvider: deviceIdProvider,
+        firebaseAnalytics: firebaseAnalytics,
       );
 
       bloc = ToDoListBloc(todoRepository);
@@ -76,13 +87,15 @@ void main() async {
         showDone: true,
       );
 
-      when(() => online.database.createToDo(any())).thenAnswer((_) async => createdToDo);
+      when(() => online.database.createToDo(any()))
+          .thenAnswer((_) async => createdToDo);
     });
     group('Internet is connected:', () {
       setUp(() async {
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => <ToDo>[]);
-        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
+        when(() => online.database.updateToDoList(any<List<ToDo>>()))
+            .thenAnswer((_) async => <ToDo>[]);
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -112,7 +125,8 @@ void main() async {
       );
 
       test('Delete todo and get list for online', () async {
-        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => createdToDo);
+        when(() => online.database.deleteToDo(any()))
+            .thenAnswer((_) async => createdToDo);
 
         await bloc.stream.first; // get init state
 
@@ -131,14 +145,16 @@ void main() async {
 
         expect(state3.todos, hasLength(0)); // not showing to user
 
-        (await bloc.stream.first.timeout(const Duration(seconds: 5), onTimeout: () => bloc.state))
-            as MainState; // after actual deletion
-        final todoInDatabase = await local.getToDoById(id: id); // actually deleted from database as well from online
+        (await bloc.stream.first.timeout(const Duration(seconds: 5),
+            onTimeout: () => bloc.state)) as MainState; // after actual deletion
+        final todoInDatabase = await local.getToDoById(
+            id: id); // actually deleted from database as well from online
         expect(todoInDatabase, isNull);
       });
 
       test('Delete todo while internet becomes unavailable', () async {
-        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => null);
+        when(() => online.database.deleteToDo(any()))
+            .thenAnswer((_) async => null);
 
         await bloc.stream.first; // get init state
 
@@ -164,7 +180,8 @@ void main() async {
         ); // marked as deleted from database but not from online -> show no connection
         expect(todoInDatabase, isNotNull);
 
-        final state4 = (await bloc.stream.first) as MainState; // actually deleted
+        final state4 =
+            (await bloc.stream.first) as MainState; // actually deleted
         expect(state4.networkConnectionPresent, isFalse);
       });
     });
@@ -173,7 +190,8 @@ void main() async {
       setUp(() async {
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => null);
-        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
+        when(() => online.database.updateToDoList(any<List<ToDo>>()))
+            .thenAnswer((_) async => null);
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
@@ -203,7 +221,8 @@ void main() async {
       );
 
       test('Delete todo and get list for offline', () async {
-        when(() => online.database.deleteToDo(any())).thenAnswer((_) async => null);
+        when(() => online.database.deleteToDo(any()))
+            .thenAnswer((_) async => null);
 
         await bloc.stream.first; // get init state
 
@@ -222,9 +241,14 @@ void main() async {
 
         expect(state3.todos, hasLength(0)); // not showing to user
 
-        final todoInDatabase =
-            await local.getToDoById(id: id, withDeleted: true); // but still in database to delete online
+        await pumpEventQueue();
+
+        final todoInDatabase = await local.getToDoById(
+          id: id,
+          withDeleted: true,
+        ); // but still in database to delete online
         expect(todoInDatabase, isNotNull);
+        logger.d(todoInDatabase);
         expect(todoInDatabase?.isDeleted, isTrue);
       });
     });
@@ -233,14 +257,16 @@ void main() async {
       setUp(() async {
         // Provide default implementations for initialization
         when(online.database.getToDoList).thenAnswer((_) async => null);
-        when(() => online.database.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => null);
+        when(() => online.database.updateToDoList(any<List<ToDo>>()))
+            .thenAnswer((_) async => null);
       });
 
       blocTest<ToDoListBloc, ToDoListState>(
         'Toggle done',
         build: () => bloc,
         setUp: () {
-          when(() => online.database.updateToDo(any())).thenAnswer((_) async => null);
+          when(() => online.database.updateToDo(any()))
+              .thenAnswer((_) async => null);
         },
         act: (bloc) => bloc
           ..add(const CreateEvent())
@@ -253,7 +279,8 @@ void main() async {
             justCreatedState,
             stateAfterSaved,
             stateAfterSaved.copyWith(todos: [createdToDo.copyWith(done: true)]),
-            stateAfterSaved.copyWith(todos: [createdToDo.copyWith(done: false)]),
+            stateAfterSaved
+                .copyWith(todos: [createdToDo.copyWith(done: false)]),
           ];
         },
       );

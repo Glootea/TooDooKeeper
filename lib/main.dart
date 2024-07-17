@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -51,13 +52,18 @@ class InitScreen extends StatelessWidget {
     const secureStorage = FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
     );
-    final deviceIdProvider = await DeviceIdProvider.create(storage: secureStorage);
-    final OnlineProvider onlineProvider = await YandexOnlineProvider.create(deviceIdProvider, secureStorage);
+    final deviceIdProvider =
+        await DeviceIdProvider.create(storage: secureStorage);
+    final OnlineProvider onlineProvider =
+        await YandexOnlineProvider.create(deviceIdProvider, secureStorage);
     final localDatabase = LocalDatabase();
+    final firebaseAnalytics = FirebaseAnalytics.instance;
+
     final todoRepository = ToDoRepository(
       localDatabase: localDatabase,
       onlineProvider: onlineProvider,
       deviceIdProvider: deviceIdProvider,
+      firebaseAnalytics: firebaseAnalytics,
     );
 
     final router = _createRouter(
@@ -126,7 +132,8 @@ class InitScreen extends StatelessWidget {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
-        if (state.path == '/edit' && !state.uri.queryParameters.containsKey('data')) return '/new';
+        if (state.path == '/edit' &&
+            !state.uri.queryParameters.containsKey('data')) return '/new';
         return null;
       },
       routes: [
@@ -236,7 +243,8 @@ class InitScreen extends StatelessWidget {
     return FutureBuilder(
       future: init(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasError) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasError) {
           return Scaffold(
             body: Center(
               child: Text(snapshot.error.toString()),

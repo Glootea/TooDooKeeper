@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,12 +31,20 @@ import 'mock_online_provider.dart';
 
 class FakeInitScreen extends InitScreen {
   /// Fake implementation of [InitScreen], that creates fake dependencies and continues to normal flow as user is logged in
-  const FakeInitScreen(this.database, this.local, this.storage, this.deviceIdProvider, {super.key});
+  const FakeInitScreen(
+    this.database,
+    this.local,
+    this.storage,
+    this.deviceIdProvider,
+    this.firebaseAnalytics, {
+    super.key,
+  });
 
   final OnlineDatabase database;
   final LocalDatabase local;
   final FlutterSecureStorage storage;
   final DeviceIdProvider deviceIdProvider;
+  final FirebaseAnalytics firebaseAnalytics;
   @override
   Future<void> init() async {
     await _appSetup();
@@ -44,6 +53,7 @@ class FakeInitScreen extends InitScreen {
       localDatabase: local,
       onlineProvider: onlineProvider,
       deviceIdProvider: deviceIdProvider,
+      firebaseAnalytics: firebaseAnalytics,
     );
 
     final router = _createRouter(todoRepository, deviceIdProvider, true);
@@ -77,11 +87,13 @@ class FakeInitScreen extends InitScreen {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
+  GoRouter _createRouter(ToDoRepository todoRepository,
+      DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
-        if (state.path == '/edit' && !state.uri.queryParameters.containsKey('data')) return '/new';
+        if (state.path == '/edit' &&
+            !state.uri.queryParameters.containsKey('data')) return '/new';
         return null;
       },
       routes: [
@@ -98,7 +110,8 @@ class FakeInitScreen extends InitScreen {
     );
   }
 
-  List<RouteBase> _editRoutes(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
+  List<RouteBase> _editRoutes(
+      ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -109,8 +122,10 @@ class FakeInitScreen extends InitScreen {
             return const TodoListScreen();
           }
           return BlocProvider(
-            create: (context) =>
-                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, passedId: id),
+            create: (context) => ToDoEditBloc(
+                todoRepository: todoRepository,
+                deviceIdProvider: deviceIdProvider,
+                passedId: id),
             child: const ToDoEditScreen(),
           );
         },
@@ -121,8 +136,10 @@ class FakeInitScreen extends InitScreen {
           logger.d(state.pathParameters);
           final data = state.uri.queryParameters['data']; // from deep link
           return BlocProvider(
-            create: (context) =>
-                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, data: data),
+            create: (context) => ToDoEditBloc(
+                todoRepository: todoRepository,
+                deviceIdProvider: deviceIdProvider,
+                data: data),
             child: const ToDoEditScreen(),
           );
         },
@@ -169,8 +186,9 @@ class FakeInitScreen extends InitScreen {
         backgroundColor: theme.backColors.secondary,
       ),
       dividerColor: theme.supportColors.separator,
-      pageTransitionsTheme:
-          const PageTransitionsTheme(builders: {TargetPlatform.android: PredictiveBackPageTransitionsBuilder()}),
+      pageTransitionsTheme: const PageTransitionsTheme(builders: {
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder()
+      }),
     );
   }
 

@@ -1,3 +1,6 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -9,6 +12,7 @@ import 'package:yandex_summer_school/core/entities/todo.dart';
 import '../test/mocks/fake_init_screen.dart';
 import '../test/mocks/fake_local_database.dart';
 import '../test/mocks/fake_secure_storage.dart';
+import '../test/mocks/firebase_analytics.dart';
 import '../test/mocks/mock_online_database.dart';
 
 void main() {
@@ -37,12 +41,30 @@ void main() {
       importance: Importance.important,
     );
 
-    when(() => onlineDatabase.createToDo(any())).thenAnswer((_) async => createdToDo);
+    when(() => onlineDatabase.createToDo(any()))
+        .thenAnswer((_) async => createdToDo);
     when(onlineDatabase.getToDoList).thenAnswer((_) async => null);
-    when(() => onlineDatabase.updateToDoList(any<List<ToDo>>())).thenAnswer((_) async => <ToDo>[]);
+    when(() => onlineDatabase.updateToDoList(any<List<ToDo>>()))
+        .thenAnswer((_) async => <ToDo>[]);
     when(() => onlineDatabase.updateToDo(any())).thenAnswer((_) async => null);
 
-    await tester.pumpWidget(MaterialApp(home: FakeInitScreen(onlineDatabase, local, storage, deviceIdProvider)));
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp();
+    final firebaseAnalytics = MockFirebaseAnalytics();
+    when(() => firebaseAnalytics.logEvent(name: any(named: 'name')))
+        .thenAnswer((_) async {});
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: FakeInitScreen(
+          onlineDatabase,
+          local,
+          storage,
+          deviceIdProvider,
+          firebaseAnalytics,
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     final doneCount = find.textContaining('1');
@@ -64,7 +86,9 @@ void main() {
 
     await tester.tap(
       find.byWidgetPredicate(
-        (widget) => widget is DropdownMenuItem<Importance> && widget.value == Importance.important,
+        (widget) =>
+            widget is DropdownMenuItem<Importance> &&
+            widget.value == Importance.important,
       ),
     );
     await tester.pumpAndSettle();
@@ -76,13 +100,16 @@ void main() {
     final todo = find.text(descriptionForCreatedToDo);
     expect(todo, findsOne);
 
-    final uncheckedCheckbox =
-        find.byWidgetPredicate((widget) => widget is Checkbox && (widget.value ?? false) == false);
+    final uncheckedCheckbox = find.byWidgetPredicate(
+      (widget) => widget is Checkbox && (widget.value ?? false) == false,
+    );
     expect(uncheckedCheckbox, findsOne);
     await tester.tap(uncheckedCheckbox);
     await tester.pumpAndSettle();
 
-    final checkedCheckbox = find.byWidgetPredicate((widget) => widget is Checkbox && (widget.value ?? false) == true);
+    final checkedCheckbox = find.byWidgetPredicate(
+      (widget) => widget is Checkbox && (widget.value ?? false) == true,
+    );
     expect(checkedCheckbox, findsOne);
     await tester.pumpAndSettle();
 
