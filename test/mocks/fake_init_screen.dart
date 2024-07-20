@@ -13,9 +13,11 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
+import 'package:yandex_summer_school/core/data/data_sources/obfuscation/gzip_obfuscation.dart';
 import 'package:yandex_summer_school/core/data/data_sources/online_database/online_database_abst.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
+import 'package:yandex_summer_school/core/data/providers/share_provider.dart';
 import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme.dart';
@@ -55,8 +57,9 @@ class FakeInitScreen extends InitScreen {
       deviceIdProvider: deviceIdProvider,
       firebaseAnalytics: firebaseAnalytics,
     );
-
-    final router = _createRouter(todoRepository, deviceIdProvider, true);
+    final shareProvider = ShareProvider(obfuscation: GZipObfuscation());
+    final router =
+        _createRouter(todoRepository, deviceIdProvider, shareProvider, true);
     final themeBloc = ThemeBloc();
 
     // Attempt to fix: https://github.com/Glootea/TooDooKeeper/pull/2#discussion_r1650971004
@@ -87,11 +90,17 @@ class FakeInitScreen extends InitScreen {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
-  GoRouter _createRouter(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider, bool userLoggedIn) {
+  GoRouter _createRouter(
+    ToDoRepository todoRepository,
+    DeviceIdProvider deviceIdProvider,
+    ShareProvider shareProvider,
+    bool userLoggedIn,
+  ) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
-        if (state.path == '/edit' && !state.uri.queryParameters.containsKey('data')) return '/new';
+        if (state.path == '/edit' &&
+            !state.uri.queryParameters.containsKey('data')) return '/new';
         return null;
       },
       routes: [
@@ -102,13 +111,21 @@ class FakeInitScreen extends InitScreen {
             create: (context) => ToDoListBloc(todoRepository),
             child: const TodoListScreen(),
           ),
-          routes: _editRoutes(todoRepository, deviceIdProvider),
+          routes: _editRoutes(
+            todoRepository: todoRepository,
+            deviceIdProvider: deviceIdProvider,
+            shareProvider: shareProvider,
+          ),
         ),
       ],
     );
   }
 
-  List<RouteBase> _editRoutes(ToDoRepository todoRepository, DeviceIdProvider deviceIdProvider) {
+  List<RouteBase> _editRoutes({
+    required ToDoRepository todoRepository,
+    required DeviceIdProvider deviceIdProvider,
+    required ShareProvider shareProvider,
+  }) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -119,8 +136,12 @@ class FakeInitScreen extends InitScreen {
             return const TodoListScreen();
           }
           return BlocProvider(
-            create: (context) =>
-                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, passedId: id),
+            create: (context) => ToDoEditBloc(
+              todoRepository: todoRepository,
+              deviceIdProvider: deviceIdProvider,
+              shareProvider: shareProvider,
+              passedId: id,
+            ),
             child: const ToDoEditScreen(),
           );
         },
@@ -131,8 +152,12 @@ class FakeInitScreen extends InitScreen {
           logger.d(state.pathParameters);
           final data = state.uri.queryParameters['data']; // from deep link
           return BlocProvider(
-            create: (context) =>
-                ToDoEditBloc(todoRepository: todoRepository, deviceIdProvider: deviceIdProvider, data: data),
+            create: (context) => ToDoEditBloc(
+              todoRepository: todoRepository,
+              deviceIdProvider: deviceIdProvider,
+              shareProvider: shareProvider,
+              data: data,
+            ),
             child: const ToDoEditScreen(),
           );
         },
@@ -143,6 +168,7 @@ class FakeInitScreen extends InitScreen {
           create: (context) => ToDoEditBloc(
             todoRepository: todoRepository,
             deviceIdProvider: deviceIdProvider,
+            shareProvider: shareProvider,
           ),
           child: const ToDoEditScreen(),
         ),
@@ -179,8 +205,11 @@ class FakeInitScreen extends InitScreen {
         backgroundColor: theme.backColors.secondary,
       ),
       dividerColor: theme.supportColors.separator,
-      pageTransitionsTheme:
-          const PageTransitionsTheme(builders: {TargetPlatform.android: PredictiveBackPageTransitionsBuilder()}),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        },
+      ),
     );
   }
 

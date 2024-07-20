@@ -4,7 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:yandex_summer_school/core/data/data_sources/obfuscation/gzip_obfuscation.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
+import 'package:yandex_summer_school/core/data/providers/share_provider.dart';
 import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/entities/importance.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
@@ -25,6 +27,7 @@ void main() async {
   late FakeSecureStorage storage;
   late DeviceIdProvider deviceIdProvider;
   late FirebaseAnalytics firebaseAnalytics;
+  late ShareProvider shareProvider;
 
   const createdToDoID = '1';
   const descriptionForCreatedToDo = 'Test description';
@@ -49,19 +52,24 @@ void main() async {
       local = FakeLocalDatabase();
       storage = FakeSecureStorage();
       deviceIdProvider = await DeviceIdProvider.create(storage: storage);
+      shareProvider = ShareProvider(obfuscation: GZipObfuscation());
 
       final todoRepository = ToDoRepository(
-          localDatabase: local,
-          onlineProvider: online,
-          deviceIdProvider: deviceIdProvider,
-          firebaseAnalytics: firebaseAnalytics,);
+        localDatabase: local,
+        onlineProvider: online,
+        deviceIdProvider: deviceIdProvider,
+        firebaseAnalytics: firebaseAnalytics,
+      );
 
       when(online.database.getToDoList).thenAnswer((_) async => null);
       when(() => online.database.updateToDoList(any<List<ToDo>>()))
           .thenAnswer((_) async => null);
 
       bloc = ToDoEditBloc(
-          todoRepository: todoRepository, deviceIdProvider: deviceIdProvider,);
+        todoRepository: todoRepository,
+        deviceIdProvider: deviceIdProvider,
+        shareProvider: shareProvider,
+      );
 
       final time = DateTime(2024, 7, 10, 14, 23, 10);
       createdToDo = ToDo.justCreated(
@@ -81,7 +89,7 @@ void main() async {
             .thenAnswer((_) async => null);
         await local.createToDo(companion: createdToDo.parseToDoItemCompanion);
       },
-      act: (bloc) => bloc.add(const LoadByIdEvent(createdToDoID)),
+      act: (bloc) => bloc.add(const LoadByIdEvent(id: createdToDoID)),
       expect: () => [MainState(todo: createdToDo)],
     );
 
@@ -98,7 +106,7 @@ void main() async {
         when(() => online.database.getToDoById(any()))
             .thenAnswer((_) async => null);
       },
-      act: (bloc) => bloc.add(const LoadByIdEvent(createdToDoID)),
+      act: (bloc) => bloc.add(const LoadByIdEvent(id: createdToDoID)),
       expect: () => <ToDoEditState>[], // already contains empty todo
     );
 
@@ -111,7 +119,7 @@ void main() async {
         await local.createToDo(companion: createdToDo.parseToDoItemCompanion);
       },
       act: (bloc) => bloc
-        ..add(const LoadByIdEvent(createdToDoID))
+        ..add(const LoadByIdEvent(id: createdToDoID))
         ..add(UpdateEvent(todo: updatedToDo))
         ..add(UpdateEvent(todo: createdToDo)),
       expect: () => [
@@ -132,7 +140,7 @@ void main() async {
         await local.createToDo(companion: createdToDo.parseToDoItemCompanion);
       }),
       act: (bloc) => bloc
-        ..add(const LoadByIdEvent(createdToDoID))
+        ..add(const LoadByIdEvent(id: createdToDoID))
         ..add(const SaveEvent()),
       expect: () => [
         MainState(todo: createdToDo),
@@ -152,7 +160,7 @@ void main() async {
         await local.createToDo(companion: createdToDo.parseToDoItemCompanion);
       }),
       act: (bloc) => bloc
-        ..add(const LoadByIdEvent(createdToDoID))
+        ..add(const LoadByIdEvent(id: createdToDoID))
         ..add(const DeleteEvent()),
       expect: () => [
         MainState(todo: createdToDo),

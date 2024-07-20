@@ -1,56 +1,45 @@
-// ignore_for_file: always_put_required_named_parameters_first, avoid_equals_and_hash_code_on_mutable_classes
+// ignore_for_file: always_put_required_named_parameters_first, avoid_equals_and_hash_code_on_mutable_classes, invalid_annotation_target
 
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:yandex_summer_school/core/entities/importance.dart';
+import 'package:yandex_summer_school/core/extensions/json_converter_extension.dart';
 
 part 'todo.freezed.dart';
+part 'todo.g.dart';
 
-@Freezed(fromJson: false, toJson: false, equal: false)
+@Freezed(fromJson: true, toJson: true)
 sealed class ToDo extends Equatable with _$ToDo {
   const factory ToDo({
     required String id,
-    required String description,
+    @JsonKey(name: 'text') required String description,
     @Default(Importance.basic) Importance importance,
-    DateTime? deadline,
+    @EpochDateTimeConverter() DateTime? deadline,
     @Default(false) bool done,
     int? color,
-    required DateTime createdAt,
-    required DateTime changedAt,
-    required String lastUpdatedBy,
+    @JsonKey(name: 'created_at') @EpochDateTimeConverter() required DateTime createdAt,
+    @JsonKey(name: 'changed_at') @EpochDateTimeConverter() required DateTime changedAt,
+    @JsonKey(name: 'last_updated_by') required String lastUpdatedBy,
   }) = _ToDo;
 
   const factory ToDo.justCreated({
     String? id,
-    @Default('') String description,
+    @JsonKey(name: 'text') @Default('') String description,
     @Default(Importance.basic) Importance importance,
-    DateTime? deadline,
+    @EpochDateTimeConverter() DateTime? deadline,
     @Default(false) bool done,
     int? color,
-    DateTime? createdAt,
-    DateTime? changedAt,
-    String? lastUpdatedBy,
+    @JsonKey(name: 'created_at') @EpochDateTimeConverter() DateTime? createdAt,
+    @JsonKey(name: 'changed_at') @EpochDateTimeConverter() DateTime? changedAt,
+    @JsonKey(name: 'last_updated_by') String? lastUpdatedBy,
   }) = _ToDoEmpty;
 
   const ToDo._();
 
-  factory ToDo.fromJson(Map<String, dynamic> json) {
-    final dead = json['deadline'] as int?;
-    final color = json['color'] as String?;
-    return ToDo.justCreated(
-      id: json['id'] as String?,
-      description: json['text'] as String,
-      importance: Importance.fromString(json['importance'] as String),
-      deadline: dead != null ? DateTime.fromMillisecondsSinceEpoch(dead) : null,
-      done: json['done'] as bool,
-      color: color != null ? int.parse(color.substring(1), radix: 16) : null,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['created_at'] as int),
-      changedAt: DateTime.fromMillisecondsSinceEpoch(json['changed_at'] as int),
-      lastUpdatedBy: json['last_updated_by'] as String,
-    );
-  }
+  factory ToDo.fromJson(Map<String, dynamic> json) => _$ToDoEmptyImpl.fromJson(json);
+
   factory ToDo.justCreatedFromJson(String json) {
     final jsonMap = jsonDecode(json) as Map<String, dynamic>;
     final parsed = ToDo.fromJson(jsonMap);
@@ -65,22 +54,6 @@ sealed class ToDo extends Equatable with _$ToDo {
       changedAt: parsed.changedAt,
       lastUpdatedBy: parsed.lastUpdatedBy,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    assert(lastUpdatedBy != null, 'lastUpdatedBy must not be null');
-    return {
-      'id': id, // уникальный идентификатор элемента
-      'text': description,
-      'importance':
-          importance.toString(), // importance = low | basic | important
-      'deadline': deadline?.millisecondsSinceEpoch,
-      'done': done,
-      'color': null, // может отсутствовать
-      'created_at': createdAt!.millisecondsSinceEpoch,
-      'changed_at': changedAt!.millisecondsSinceEpoch,
-      'last_updated_by': lastUpdatedBy,
-    };
   }
 
   String dataToExport(String deviceID) => jsonEncode(

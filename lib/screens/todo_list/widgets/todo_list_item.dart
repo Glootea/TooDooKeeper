@@ -180,28 +180,27 @@ class _ToDoInlinedTextfield extends StatefulWidget {
 class _ToDoInlinedTextfieldState extends State<_ToDoInlinedTextfield> {
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
-
+  late final ToDoListBloc bloc;
   @override
   void initState() {
     super.initState();
+    bloc = context.read<ToDoListBloc>();
     _controller = TextEditingController();
     _focusNode = FocusNode();
     _focusNode.requestFocus();
   }
 
+  void onDone() {
+    _controller.value = TextEditingValue(text: _controller.text.trim());
+    _focusNode.unfocus();
+    bloc.add(SaveJustCreatedEvent(_controller.text));
+  }
+
+  void onUpdate(String value) =>
+      _controller.value = TextEditingValue(text: value);
+
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<ToDoListBloc>();
-
-    void onDone() {
-      _controller.value = TextEditingValue(text: _controller.text.trim());
-      _focusNode.unfocus();
-      bloc.add(SaveJustCreatedEvent(_controller.text));
-    }
-
-    void onUpdate(String value) =>
-        _controller.value = TextEditingValue(text: value);
-
     return TextField(
       focusNode: _focusNode,
       controller: _controller,

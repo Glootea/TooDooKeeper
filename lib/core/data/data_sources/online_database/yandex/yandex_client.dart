@@ -1,19 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:yandex_summer_school/core/data/data_sources/online_database/online_database_abst.dart';
 import 'package:yandex_summer_school/core/entities/todo.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
-class YandexOnlineDatabase implements OnlineDatabase {
-  YandexOnlineDatabase._(this._dio, this._secureStorage, this._revision);
-
-  static Future<YandexOnlineDatabase> create(
-    String authKey,
-    FlutterSecureStorage secureStorage,
-  ) async {
-    final revision =
-        int.parse(await secureStorage.read(key: _revisionKey) ?? '0');
-
+class YandexOnlineClient {
+  const YandexOnlineClient._(this._dio);
+  factory YandexOnlineClient.create(String authKey) {
     final dio = Dio(
       BaseOptions(
         baseUrl: 'https://hive.mrdekk.ru/todo',
@@ -22,42 +13,34 @@ class YandexOnlineDatabase implements OnlineDatabase {
         },
       ),
     );
-    return YandexOnlineDatabase._(dio, secureStorage, revision);
+    return YandexOnlineClient._(dio);
   }
 
-  final FlutterSecureStorage _secureStorage;
   final Dio _dio;
-  int _revision;
-  static const String _revisionKey = 'revision';
+  String get _listPath => '/list';
+  String _todoIdPath(String id) => '$_listPath/$id';
 
-  final listPath = '/list';
-
-  Future<void> _updateRevision(int revision) async {
-    _revision = revision;
-    logger.i('Got revision: $_revision');
-    return _secureStorage.write(key: _revisionKey, value: revision.toString());
-  }
-
-  Future<List<ToDo>> _parseList(Map<String, dynamic> data) async {
+  Future<(List<ToDo> todos, int revision)> _parseList(
+    Map<String, dynamic> data,
+  ) async {
     final todos = (data['list'] as List<dynamic>)
         .map((e) => e as Map<String, dynamic>)
         .toList();
-    final revision = data['revision'] as int;
-    await _updateRevision(revision);
-    return todos.map<ToDo>(ToDo.fromJson).toList();
+    final revision = _getRevision(data);
+    return (todos.map<ToDo>(ToDo.fromJson).toList(), revision);
   }
 
-  Future<ToDo> _parseElement(Map<String, dynamic> data) async {
+  Future<(ToDo todo, int revision)> _parseElement(
+    Map<String, dynamic> data,
+  ) async {
     final todo = data['element'] as Map<String, dynamic>;
-    final revision = data['revision'] as int;
-    await _updateRevision(revision);
-    return ToDo.fromJson(todo);
+    final revision = _getRevision(data);
+    return (ToDo.fromJson(todo), revision);
   }
 
-  @override
-  Future<List<ToDo>?> getToDoList() async {
+  Future<(List<ToDo> todos, int revision)?> getToDoList() async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>(listPath);
+      final response = await _dio.get<Map<String, dynamic>>(_listPath);
       final data = response.data;
       if (data != null && data['status'] == 'ok') {
         logger.i('Received data for getToDoList');
@@ -70,13 +53,15 @@ class YandexOnlineDatabase implements OnlineDatabase {
     }
   }
 
-  @override
-  Future<List<ToDo>?> updateToDoList(List<ToDo> todos) async {
+  Future<(List<ToDo> todos, int revision)?> updateToDoList(
+    List<ToDo> todos,
+    int revision,
+  ) async {
     try {
       final response = await _dio.patch<Map<String, dynamic>>(
-        listPath,
+        _listPath,
         data: {'list': todos.map((e) => e.toJson()).toList()},
-        options: Options(headers: {'X-Last-Known-Revision': _revision}),
+        options: _getRevisionOptions(revision),
       );
       final data = response.data;
       if (data != null && data['status'] == 'ok') {
@@ -90,10 +75,9 @@ class YandexOnlineDatabase implements OnlineDatabase {
     }
   }
 
-  @override
-  Future<ToDo?> getToDoById(String id) async {
+  Future<(ToDo todo, int revision)?> getToDoById(String id) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('$listPath/$id');
+      final response = await _dio.get<Map<String, dynamic>>(_todoIdPath(id));
       final data = response.data;
       if (data != null && data['status'] == 'ok') {
         logger.i('Received data for getToDoById');
@@ -106,18 +90,14 @@ class YandexOnlineDatabase implements OnlineDatabase {
     }
   }
 
-  @override
-  Future<ToDo?> createToDo(ToDo todo) async {
+  Future<(ToDo todo, int revision)?> createToDo(ToDo todo, int revision) async {
     try {
-      final updatedToDo = todo.copyWith(
-        createdAt: DateTime.now(),
-        changedAt: DateTime.now(),
-      );
-      final todoJson = updatedToDo.toJson();
+      final todoJson = todo.toJson();
+      logger.d(todoJson);
       final response = await _dio.post<Map<String, dynamic>>(
-        listPath,
-        data: {'element': todoJson},
-        options: Options(headers: {'X-Last-Known-Revision': _revision}),
+        _listPath,
+        data: _getToDoData(todoJson),
+        options: _getRevisionOptions(revision),
       );
       final data = response.data;
       if (data != null && data['status'] == 'ok') {
@@ -131,15 +111,15 @@ class YandexOnlineDatabase implements OnlineDatabase {
     }
   }
 
-  @override
-  Future<ToDo?> updateToDo(ToDo todo) async {
+  Future<(ToDo todo, int revision)?> updateToDo(ToDo todo, int revision) async {
     try {
-      final updatedToDo = todo.copyWith(changedAt: DateTime.now());
-      final todoJson = updatedToDo.toJson();
+      final todoJson = todo.toJson();
+      final id = todo.id;
+      if (id == null) return null;
       final response = await _dio.put<Map<String, dynamic>>(
-        '$listPath/${todo.id}',
-        data: {'element': todoJson},
-        options: Options(headers: {'X-Last-Known-Revision': _revision}),
+        _todoIdPath(id),
+        data: _getToDoData(todoJson),
+        options: _getRevisionOptions(revision),
       );
       final data = response.data;
       if (data != null && data['status'] == 'ok') {
@@ -153,12 +133,11 @@ class YandexOnlineDatabase implements OnlineDatabase {
     }
   }
 
-  @override
-  Future<ToDo?> deleteToDo(String id) async {
+  Future<(ToDo todo, int revision)?> deleteToDo(String id, int revision) async {
     try {
       final response = await _dio.delete<Map<String, dynamic>>(
-        '$listPath/$id',
-        options: Options(headers: {'X-Last-Known-Revision': _revision}),
+        _todoIdPath(id),
+        options: _getRevisionOptions(revision),
       );
       final data = response.data;
       if (data != null && data['status'] == 'ok') {
@@ -172,6 +151,11 @@ class YandexOnlineDatabase implements OnlineDatabase {
     }
   }
 
-  @override
-  Future<void> logout() => _secureStorage.deleteAll();
+  Options _getRevisionOptions(int revision) =>
+      Options(headers: {'X-Last-Known-Revision': revision});
+
+  Map<String, dynamic> _getToDoData(Map<String, dynamic> todoJson) =>
+      {'element': todoJson};
+
+  int _getRevision(Map<String, dynamic> data) => data['revision'] as int;
 }

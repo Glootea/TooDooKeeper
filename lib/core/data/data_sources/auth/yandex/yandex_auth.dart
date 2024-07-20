@@ -1,6 +1,6 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:yandex_summer_school/core/data/data_sources/auth/auth_method_abst.dart';
+import 'package:yandex_summer_school/core/data/data_sources/auth/yandex/yandex_native_auth.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 
 class YandexAuth extends AuthMethod {
@@ -8,17 +8,18 @@ class YandexAuth extends AuthMethod {
   YandexAuth._key(this._secureStorage, this.authToken);
 
   final FlutterSecureStorage _secureStorage;
-  static const String _keyString = 'auth-key';
-  static const String _keyExpires = 'auth-expires';
+  static const String _keyToken = 'auth-key';
+  static const String _keyExpiresToken = 'auth-expires';
 
   String? authToken;
   @override
   bool get isLoggedIn => authToken != null;
 
   static Future<YandexAuth> create(FlutterSecureStorage secureStorage) async {
-    final expires = await secureStorage.read(key: _keyExpires);
-    if (expires != null && int.parse(expires) > DateTime.now().millisecondsSinceEpoch) {
-      final authToken = await secureStorage.read(key: _keyString);
+    final expires = await secureStorage.read(key: _keyExpiresToken);
+    if (expires != null &&
+        int.parse(expires) > DateTime.now().millisecondsSinceEpoch) {
+      final authToken = await secureStorage.read(key: _keyToken);
       return YandexAuth._key(secureStorage, authToken);
     }
     return YandexAuth._(secureStorage);
@@ -27,18 +28,16 @@ class YandexAuth extends AuthMethod {
   @override
   Future<bool> login() async {
     if (authToken != null) return true;
-    final savedKey = await _secureStorage.read(key: _keyString);
-    final savedExpires = await _secureStorage.read(key: _keyExpires);
+    final savedKey = await _secureStorage.read(key: _keyToken);
+    final savedExpires = await _secureStorage.read(key: _keyExpiresToken);
     if (savedKey != null && savedExpires != null) {
       if (!_keyExpired(savedExpires)) {
         authToken = savedKey;
         return true;
-      } else {
-        await logout();
       }
+      await logout();
     }
-    const platform = MethodChannel('com.glootea.toodookeeper/todo');
-    final data = await platform.invokeMethod<Map<Object?, Object?>>('yandexLogin');
+    final data = await YandexNativeAuth.auth();
     if (data == null) {
       throw Exception('Failed to login user as no data was provided');
     }
@@ -68,18 +67,20 @@ class YandexAuth extends AuthMethod {
       throw Exception('Failed to login user as no data was provided');
     }
     await _secureStorage.write(
-      key: _keyString,
+      key: _keyToken,
       value: token as String,
     );
 
     final expires = DateTime.now().add(Duration(minutes: expiresIn as int));
-    await _secureStorage.write(key: _keyExpires, value: expires.millisecondsSinceEpoch.toString());
+    await _secureStorage.write(
+        key: _keyExpiresToken,
+        value: expires.millisecondsSinceEpoch.toString());
     return token;
   }
 
   @override
   Future<void> logout() async {
     authToken = null;
-    await Future.wait([_secureStorage.delete(key: _keyString), _secureStorage.delete(key: _keyExpires)]);
+    await _secureStorage.deleteAll();
   }
 }

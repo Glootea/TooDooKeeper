@@ -133,7 +133,7 @@ class __$$LoadByIdEventImplCopyWithImpl<$Res>
     Object? id = null,
   }) {
     return _then(_$LoadByIdEventImpl(
-      null == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
@@ -144,7 +144,7 @@ class __$$LoadByIdEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadByIdEventImpl extends LoadByIdEvent with DiagnosticableTreeMixin {
-  const _$LoadByIdEventImpl(this.id) : super._();
+  const _$LoadByIdEventImpl({required this.id}) : super._();
 
   @override
   final String id;
@@ -279,7 +279,7 @@ class _$LoadByIdEventImpl extends LoadByIdEvent with DiagnosticableTreeMixin {
 }
 
 abstract class LoadByIdEvent extends ToDoEditEvent {
-  const factory LoadByIdEvent(final String id) = _$LoadByIdEventImpl;
+  const factory LoadByIdEvent({required final String id}) = _$LoadByIdEventImpl;
   const LoadByIdEvent._() : super._();
 
   String get id;

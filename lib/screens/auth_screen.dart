@@ -31,12 +31,10 @@ class AuthScreen extends StatelessWidget {
             OutlinedButton(
               onPressed: () async {
                 final result = await onlineProvider.login();
-                if (result == true) {
-                  if (context.mounted) {
+                if (context.mounted) {
+                  if (result == true) {
                     context.pushReplacement('/');
-                  }
-                } else {
-                  if (context.mounted) {
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(

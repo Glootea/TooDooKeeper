@@ -8,17 +8,17 @@ import com.yandex.authsdk.YandexAuthOptions
 import com.yandex.authsdk.YandexAuthResult
 import com.yandex.authsdk.YandexAuthSdk
 import com.yandex.authsdk.YandexAuthToken
-import com.yandex.authsdk.internal.strategy.LoginType
 import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import org.json.JSONObject
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.glootea.toodookeeper/todo"
     private val requestLoginYandex = 1
     private var result: MethodChannel.Result? = null
+    private var  yandexSdk: YandexAuthSdk? = null
+
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -27,35 +27,49 @@ class MainActivity : FlutterActivity() {
             CHANNEL
         ).setMethodCallHandler { call, result ->
             this.result = result
-            if (call.method == "share") {
-                try {
-                    val text = call.argument<Map<String, String>>("text").toString()
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, text)
-                        type = "text/plain"
-                    }
-
-                    val shareIntent = Intent.createChooser(sendIntent, null)
-                    startActivity(shareIntent)
-                    result.success(null)
-                } catch (e: Exception) {
-                    result.error(e.message ?: "Share exception", e.localizedMessage, e.stackTrace)
-                }
-
-            }
-            if (call.method == "yandexLogin") {
-                val yandexSdk = YandexAuthSdk.create(YandexAuthOptions(applicationContext))
-                val loginOptions = YandexAuthLoginOptions()
-                val intent: Intent = yandexSdk.contract.createIntent(
-                    applicationContext, loginOptions
-                )
-                startActivityForResult(intent, requestLoginYandex);
-            } else {
-                result.error("Not method found", "No method found: ${call.method}", null)
+            when(call.method){
+                MethodNames.SHARE.methodName -> share(call, result)
+                MethodNames.YANDEXLOGIN.methodName ->  yandexLogin()
+                else -> unknownMethod(call)
             }
         }
     }
+
+    private fun yandexLogin() {
+        yandexSdk = yandexSdk ?: YandexAuthSdk.create(YandexAuthOptions(applicationContext))
+        val loginOptions = YandexAuthLoginOptions()
+        val intent = yandexSdk?.contract?.createIntent(
+            applicationContext, loginOptions
+        )
+        if(intent != null) {
+            startActivityForResult(intent, requestLoginYandex);
+        } else {
+            result?.error("0", "Intent is null", "");
+        }
+    }
+
+    private fun share(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
+        try {
+            val text = call.argument<Map<String, String>>("text").toString()
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, text)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+            result.success(null)
+        } catch (e: Exception) {
+            result.error(e.message ?: "Share exception", e.localizedMessage, e.stackTrace)
+        }
+    }
+
+private fun unknownMethod(call: MethodCall) {
+    result?.error("Not method found", "No method found: ${call.method}", null)
+}
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == requestLoginYandex) {
@@ -68,8 +82,8 @@ class MainActivity : FlutterActivity() {
     private fun handleResult(result: YandexAuthResult) {
         when (result) {
             is YandexAuthResult.Success -> onSuccessAuth(result.token)
-            is YandexAuthResult.Failure -> onProccessError(result.exception)
-            YandexAuthResult.Cancelled -> onCancelled()
+            is YandexAuthResult.Failure -> onProcessError(result.exception)
+            is YandexAuthResult.Cancelled -> onCancelled()
         }
     }
 
@@ -79,16 +93,16 @@ class MainActivity : FlutterActivity() {
             "token" to token.value,
             "expiresIn" to token.expiresIn,
         )
-        result!!.success(res)
+        result?.success(res)
     }
 
-    private fun onProccessError(exception: YandexAuthException) {
+    private fun onProcessError(exception: YandexAuthException) {
         val res = mapOf(
             "success" to false,
             "provider" to "yandex",
             "error" to exception.toString()
         )
-        result!!.success(res)
+        result?.success(res)
     }
 
     private fun onCancelled() {
@@ -98,8 +112,12 @@ class MainActivity : FlutterActivity() {
                 "provider" to "yandex",
                 "cancelled" to true
             )
-            result!!.success(res)
+            result?.success(res)
         }
     }
+}
 
+enum class MethodNames(val methodName:String) {
+    SHARE("share"),
+    YANDEXLOGIN("yandexLogin")
 }

@@ -14,40 +14,68 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+ToDo _$ToDoFromJson(Map<String, dynamic> json) {
+  switch (json['runtimeType']) {
+    case 'default':
+      return _ToDo.fromJson(json);
+    case 'justCreated':
+      return _ToDoEmpty.fromJson(json);
+
+    default:
+      throw CheckedFromJsonException(json, 'runtimeType', 'ToDo',
+          'Invalid union type "${json['runtimeType']}"!');
+  }
+}
+
 /// @nodoc
 mixin _$ToDo {
   String? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'text')
   String get description => throw _privateConstructorUsedError;
   Importance get importance => throw _privateConstructorUsedError;
+  @EpochDateTimeConverter()
   DateTime? get deadline => throw _privateConstructorUsedError;
   bool get done => throw _privateConstructorUsedError;
   int? get color => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at')
+  @EpochDateTimeConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'changed_at')
+  @EpochDateTimeConverter()
   DateTime? get changedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'last_updated_by')
   String? get lastUpdatedBy => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)
         $default, {
     required TResult Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)
         justCreated,
   }) =>
       throw _privateConstructorUsedError;
@@ -55,25 +83,33 @@ mixin _$ToDo {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)?
         $default, {
     TResult? Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)?
         justCreated,
   }) =>
       throw _privateConstructorUsedError;
@@ -81,25 +117,33 @@ mixin _$ToDo {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)?
         $default, {
     TResult Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)?
         justCreated,
     required TResult orElse(),
   }) =>
@@ -123,7 +167,7 @@ mixin _$ToDo {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ToDoCopyWith<ToDo> get copyWith => throw _privateConstructorUsedError;
 }
@@ -135,14 +179,14 @@ abstract class $ToDoCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String description,
+      @JsonKey(name: 'text') String description,
       Importance importance,
-      DateTime? deadline,
+      @EpochDateTimeConverter() DateTime? deadline,
       bool done,
       int? color,
-      DateTime createdAt,
-      DateTime changedAt,
-      String lastUpdatedBy});
+      @JsonKey(name: 'created_at') @EpochDateTimeConverter() DateTime createdAt,
+      @JsonKey(name: 'changed_at') @EpochDateTimeConverter() DateTime changedAt,
+      @JsonKey(name: 'last_updated_by') String lastUpdatedBy});
 }
 
 /// @nodoc
@@ -218,14 +262,14 @@ abstract class _$$ToDoImplCopyWith<$Res> implements $ToDoCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String description,
+      @JsonKey(name: 'text') String description,
       Importance importance,
-      DateTime? deadline,
+      @EpochDateTimeConverter() DateTime? deadline,
       bool done,
       int? color,
-      DateTime createdAt,
-      DateTime changedAt,
-      String lastUpdatedBy});
+      @JsonKey(name: 'created_at') @EpochDateTimeConverter() DateTime createdAt,
+      @JsonKey(name: 'changed_at') @EpochDateTimeConverter() DateTime changedAt,
+      @JsonKey(name: 'last_updated_by') String lastUpdatedBy});
 }
 
 /// @nodoc
@@ -290,28 +334,39 @@ class __$$ToDoImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$ToDoImpl extends _ToDo {
   const _$ToDoImpl(
       {required this.id,
-      required this.description,
+      @JsonKey(name: 'text') required this.description,
       this.importance = Importance.basic,
-      this.deadline,
+      @EpochDateTimeConverter() this.deadline,
       this.done = false,
       this.color,
+      @JsonKey(name: 'created_at')
+      @EpochDateTimeConverter()
       required this.createdAt,
+      @JsonKey(name: 'changed_at')
+      @EpochDateTimeConverter()
       required this.changedAt,
-      required this.lastUpdatedBy})
-      : super._();
+      @JsonKey(name: 'last_updated_by') required this.lastUpdatedBy,
+      final String? $type})
+      : $type = $type ?? 'default',
+        super._();
+
+  factory _$ToDoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ToDoImplFromJson(json);
 
   @override
   final String id;
   @override
+  @JsonKey(name: 'text')
   final String description;
   @override
   @JsonKey()
   final Importance importance;
   @override
+  @EpochDateTimeConverter()
   final DateTime? deadline;
   @override
   @JsonKey()
@@ -319,11 +374,19 @@ class _$ToDoImpl extends _ToDo {
   @override
   final int? color;
   @override
+  @JsonKey(name: 'created_at')
+  @EpochDateTimeConverter()
   final DateTime createdAt;
   @override
+  @JsonKey(name: 'changed_at')
+  @EpochDateTimeConverter()
   final DateTime changedAt;
   @override
+  @JsonKey(name: 'last_updated_by')
   final String lastUpdatedBy;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @JsonKey(ignore: true)
   @override
@@ -336,25 +399,33 @@ class _$ToDoImpl extends _ToDo {
   TResult when<TResult extends Object?>(
     TResult Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)
         $default, {
     required TResult Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)
         justCreated,
   }) {
     return $default(id, description, importance, deadline, done, color,
@@ -366,25 +437,33 @@ class _$ToDoImpl extends _ToDo {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)?
         $default, {
     TResult? Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)?
         justCreated,
   }) {
     return $default?.call(id, description, importance, deadline, done, color,
@@ -396,25 +475,33 @@ class _$ToDoImpl extends _ToDo {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)?
         $default, {
     TResult Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)?
         justCreated,
     required TResult orElse(),
   }) {
@@ -455,38 +542,59 @@ class _$ToDoImpl extends _ToDo {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ToDoImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _ToDo extends ToDo {
   const factory _ToDo(
       {required final String id,
-      required final String description,
+      @JsonKey(name: 'text') required final String description,
       final Importance importance,
-      final DateTime? deadline,
+      @EpochDateTimeConverter() final DateTime? deadline,
       final bool done,
       final int? color,
+      @JsonKey(name: 'created_at')
+      @EpochDateTimeConverter()
       required final DateTime createdAt,
+      @JsonKey(name: 'changed_at')
+      @EpochDateTimeConverter()
       required final DateTime changedAt,
+      @JsonKey(name: 'last_updated_by')
       required final String lastUpdatedBy}) = _$ToDoImpl;
   const _ToDo._() : super._();
+
+  factory _ToDo.fromJson(Map<String, dynamic> json) = _$ToDoImpl.fromJson;
 
   @override
   String get id;
   @override
+  @JsonKey(name: 'text')
   String get description;
   @override
   Importance get importance;
   @override
+  @EpochDateTimeConverter()
   DateTime? get deadline;
   @override
   bool get done;
   @override
   int? get color;
   @override
+  @JsonKey(name: 'created_at')
+  @EpochDateTimeConverter()
   DateTime get createdAt;
   @override
+  @JsonKey(name: 'changed_at')
+  @EpochDateTimeConverter()
   DateTime get changedAt;
   @override
+  @JsonKey(name: 'last_updated_by')
   String get lastUpdatedBy;
   @override
   @JsonKey(ignore: true)
@@ -503,14 +611,18 @@ abstract class _$$ToDoEmptyImplCopyWith<$Res> implements $ToDoCopyWith<$Res> {
   @useResult
   $Res call(
       {String? id,
-      String description,
+      @JsonKey(name: 'text') String description,
       Importance importance,
-      DateTime? deadline,
+      @EpochDateTimeConverter() DateTime? deadline,
       bool done,
       int? color,
+      @JsonKey(name: 'created_at')
+      @EpochDateTimeConverter()
       DateTime? createdAt,
+      @JsonKey(name: 'changed_at')
+      @EpochDateTimeConverter()
       DateTime? changedAt,
-      String? lastUpdatedBy});
+      @JsonKey(name: 'last_updated_by') String? lastUpdatedBy});
 }
 
 /// @nodoc
@@ -576,29 +688,35 @@ class __$$ToDoEmptyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$ToDoEmptyImpl extends _ToDoEmpty {
   const _$ToDoEmptyImpl(
       {this.id,
-      this.description = '',
+      @JsonKey(name: 'text') this.description = '',
       this.importance = Importance.basic,
-      this.deadline,
+      @EpochDateTimeConverter() this.deadline,
       this.done = false,
       this.color,
-      this.createdAt,
-      this.changedAt,
-      this.lastUpdatedBy})
-      : super._();
+      @JsonKey(name: 'created_at') @EpochDateTimeConverter() this.createdAt,
+      @JsonKey(name: 'changed_at') @EpochDateTimeConverter() this.changedAt,
+      @JsonKey(name: 'last_updated_by') this.lastUpdatedBy,
+      final String? $type})
+      : $type = $type ?? 'justCreated',
+        super._();
+
+  factory _$ToDoEmptyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ToDoEmptyImplFromJson(json);
 
   @override
   final String? id;
   @override
-  @JsonKey()
+  @JsonKey(name: 'text')
   final String description;
   @override
   @JsonKey()
   final Importance importance;
   @override
+  @EpochDateTimeConverter()
   final DateTime? deadline;
   @override
   @JsonKey()
@@ -606,11 +724,19 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   @override
   final int? color;
   @override
+  @JsonKey(name: 'created_at')
+  @EpochDateTimeConverter()
   final DateTime? createdAt;
   @override
+  @JsonKey(name: 'changed_at')
+  @EpochDateTimeConverter()
   final DateTime? changedAt;
   @override
+  @JsonKey(name: 'last_updated_by')
   final String? lastUpdatedBy;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @JsonKey(ignore: true)
   @override
@@ -623,25 +749,33 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   TResult when<TResult extends Object?>(
     TResult Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)
         $default, {
     required TResult Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)
         justCreated,
   }) {
     return justCreated(id, description, importance, deadline, done, color,
@@ -653,25 +787,33 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)?
         $default, {
     TResult? Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)?
         justCreated,
   }) {
     return justCreated?.call(id, description, importance, deadline, done, color,
@@ -683,25 +825,33 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
             String id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime changedAt,
-            String lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String lastUpdatedBy)?
         $default, {
     TResult Function(
             String? id,
-            String description,
+            @JsonKey(name: 'text') String description,
             Importance importance,
-            DateTime? deadline,
+            @EpochDateTimeConverter() DateTime? deadline,
             bool done,
             int? color,
+            @JsonKey(name: 'created_at')
+            @EpochDateTimeConverter()
             DateTime? createdAt,
+            @JsonKey(name: 'changed_at')
+            @EpochDateTimeConverter()
             DateTime? changedAt,
-            String? lastUpdatedBy)?
+            @JsonKey(name: 'last_updated_by') String? lastUpdatedBy)?
         justCreated,
     required TResult orElse(),
   }) {
@@ -742,38 +892,60 @@ class _$ToDoEmptyImpl extends _ToDoEmpty {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ToDoEmptyImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _ToDoEmpty extends ToDo {
   const factory _ToDoEmpty(
-      {final String? id,
-      final String description,
-      final Importance importance,
-      final DateTime? deadline,
-      final bool done,
-      final int? color,
-      final DateTime? createdAt,
-      final DateTime? changedAt,
-      final String? lastUpdatedBy}) = _$ToDoEmptyImpl;
+          {final String? id,
+          @JsonKey(name: 'text') final String description,
+          final Importance importance,
+          @EpochDateTimeConverter() final DateTime? deadline,
+          final bool done,
+          final int? color,
+          @JsonKey(name: 'created_at')
+          @EpochDateTimeConverter()
+          final DateTime? createdAt,
+          @JsonKey(name: 'changed_at')
+          @EpochDateTimeConverter()
+          final DateTime? changedAt,
+          @JsonKey(name: 'last_updated_by') final String? lastUpdatedBy}) =
+      _$ToDoEmptyImpl;
   const _ToDoEmpty._() : super._();
+
+  factory _ToDoEmpty.fromJson(Map<String, dynamic> json) =
+      _$ToDoEmptyImpl.fromJson;
 
   @override
   String? get id;
   @override
+  @JsonKey(name: 'text')
   String get description;
   @override
   Importance get importance;
   @override
+  @EpochDateTimeConverter()
   DateTime? get deadline;
   @override
   bool get done;
   @override
   int? get color;
   @override
+  @JsonKey(name: 'created_at')
+  @EpochDateTimeConverter()
   DateTime? get createdAt;
   @override
+  @JsonKey(name: 'changed_at')
+  @EpochDateTimeConverter()
   DateTime? get changedAt;
   @override
+  @JsonKey(name: 'last_updated_by')
   String? get lastUpdatedBy;
   @override
   @JsonKey(ignore: true)

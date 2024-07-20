@@ -16,9 +16,11 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_summer_school/core/data/data_sources/local_database/local_database.dart';
+import 'package:yandex_summer_school/core/data/data_sources/obfuscation/gzip_obfuscation.dart';
 import 'package:yandex_summer_school/core/data/providers/device_id_provider.dart';
 import 'package:yandex_summer_school/core/data/providers/online/online_provider_abst.dart';
 import 'package:yandex_summer_school/core/data/providers/online/yandex_online_provider.dart';
+import 'package:yandex_summer_school/core/data/providers/share_provider.dart';
 import 'package:yandex_summer_school/core/data/repositories/todo_repository.dart';
 import 'package:yandex_summer_school/core/logger.dart';
 import 'package:yandex_summer_school/core/ui/theme/theme.dart';
@@ -65,11 +67,12 @@ class InitScreen extends StatelessWidget {
       deviceIdProvider: deviceIdProvider,
       firebaseAnalytics: firebaseAnalytics,
     );
-
+    final shareProvider = ShareProvider(obfuscation: GZipObfuscation());
     final router = _createRouter(
-      todoRepository,
-      deviceIdProvider,
-      onlineProvider.auth.isLoggedIn,
+      todoRepository: todoRepository,
+      deviceIdProvider: deviceIdProvider,
+      shareProvider: shareProvider,
+      userLoggedIn: onlineProvider.auth.isLoggedIn,
     );
     final themeBloc = ThemeBloc();
 
@@ -124,11 +127,12 @@ class InitScreen extends StatelessWidget {
     };
   }
 
-  GoRouter _createRouter(
-    ToDoRepository todoRepository,
-    DeviceIdProvider deviceIdProvider,
-    bool userLoggedIn,
-  ) {
+  GoRouter _createRouter({
+    required ToDoRepository todoRepository,
+    required DeviceIdProvider deviceIdProvider,
+    required ShareProvider shareProvider,
+    required bool userLoggedIn,
+  }) {
     return GoRouter(
       initialLocation: userLoggedIn ? '/' : '/auth',
       redirect: (context, state) {
@@ -144,16 +148,20 @@ class InitScreen extends StatelessWidget {
             create: (context) => ToDoListBloc(todoRepository),
             child: const TodoListScreen(),
           ),
-          routes: _editRoutes(todoRepository, deviceIdProvider),
+          routes: _editRoutes(
+              todoRepository: todoRepository,
+              deviceIdProvider: deviceIdProvider,
+              shareProvider: shareProvider),
         ),
       ],
     );
   }
 
-  List<RouteBase> _editRoutes(
-    ToDoRepository todoRepository,
-    DeviceIdProvider deviceIdProvider,
-  ) {
+  List<RouteBase> _editRoutes({
+    required ToDoRepository todoRepository,
+    required DeviceIdProvider deviceIdProvider,
+    required ShareProvider shareProvider,
+  }) {
     return [
       GoRoute(
         path: 'edit/:id',
@@ -167,6 +175,7 @@ class InitScreen extends StatelessWidget {
             create: (context) => ToDoEditBloc(
               todoRepository: todoRepository,
               deviceIdProvider: deviceIdProvider,
+              shareProvider: shareProvider,
               passedId: id,
             ),
             child: const ToDoEditScreen(),
@@ -182,6 +191,7 @@ class InitScreen extends StatelessWidget {
             create: (context) => ToDoEditBloc(
               todoRepository: todoRepository,
               deviceIdProvider: deviceIdProvider,
+              shareProvider: shareProvider,
               data: data,
             ),
             child: const ToDoEditScreen(),
@@ -194,6 +204,7 @@ class InitScreen extends StatelessWidget {
           create: (context) => ToDoEditBloc(
             todoRepository: todoRepository,
             deviceIdProvider: deviceIdProvider,
+            shareProvider: shareProvider,
           ),
           child: const ToDoEditScreen(),
         ),
